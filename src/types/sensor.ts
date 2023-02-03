@@ -1,3 +1,5 @@
+export type SensorID = `sensor.${string}`;
+
 export interface Sensor {
   platform: string;
   name: string;

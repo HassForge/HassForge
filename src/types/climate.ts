@@ -1,3 +1,5 @@
+export type ClimateID = `climate.${string}`;
+
 export interface Climate {
   platform: string;
   unique_id: string;

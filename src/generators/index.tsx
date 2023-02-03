@@ -1,6 +1,8 @@
 import { capitalCase, snakeCase } from "change-case";
 import { ClimateTarget } from "../types/climate";
+import { SensorID } from "../types/sensor";
 import { TemplateSensor } from "../types/template";
+
 
 /**
  *
@@ -20,24 +22,27 @@ import { TemplateSensor } from "../types/template";
 export const generateAverageTemperatureTemplateSensor = (
   areaName: string,
   climates: ClimateTarget[]
-): TemplateSensor => {
+): [SensorID, TemplateSensor] => {
   const temperatureSets = climates.map((climate) => ({
     id: snakeCase(climate.name),
     jinjaString: `{% set ${snakeCase(climate.name)} = state_attr('${
       climate.climateId
     }', '${climate.temperatureAttribute}') | float %}`,
   }));
-  return {
-    name: `Average ${capitalCase(areaName)} Temperature`,
-    unique_id: `average_${snakeCase(areaName)}_temperature`,
-    unit_of_measurement: "°C",
-    state: `
+  return [
+    `sensor.average_${snakeCase(areaName)}_temperature`,
+    {
+      name: `Average ${capitalCase(areaName)} Temperature`,
+      unique_id: `average_${snakeCase(areaName)}_temperature`,
+      unit_of_measurement: "°C",
+      state: `
       ${temperatureSets.map((set) => set.jinjaString).join("\n    ")} 
       {{ ((${temperatureSets.map((set) => set.id).join(" + ")}) / ${
-      temperatureSets.length
-    }) | round(1, default=0) }}
+        temperatureSets.length
+      }) | round(1, default=0) }}
 `,
-  };
+    },
+  ];
 };
 
 /**
@@ -56,19 +61,20 @@ export const generateAverageTemperatureTemplateSensor = (
  *          {{ ((rad) / 1) | round(1, default=0) }}
  *         {% endif %}
  */
-export const generateDesiredTemperatureTemplateSensor = ({
-  name,
-  climateId,
-  setpointAttribute,
-  temperatureAttribute,
-}: ClimateTarget): TemplateSensor => ({
-  name: `Desired ${capitalCase(name)} Temperature`,
-  unique_id: `desired_${snakeCase(name)}_temperature`,
-  unit_of_measurement: "°C",
-  state: `    {% if state_attr('${climateId}', '${setpointAttribute}') == "off" %}
+export const generateDesiredTemperatureTemplateSensor = (
+  roomName: string,
+  { name, climateId, setpointAttribute, temperatureAttribute }: ClimateTarget
+): [SensorID, TemplateSensor] => [
+  `sensor.desired_${snakeCase(roomName)}_${snakeCase(name)}_temperature`,
+  {
+    name: `Desired ${capitalCase(roomName)} ${capitalCase(name)} Temperature`,
+    unique_id: `desired_${snakeCase(roomName)}_${snakeCase(name)}_temperature`,
+    unit_of_measurement: "°C",
+    state: `    {% if state_attr('${climateId}', '${setpointAttribute}') == "off" %}
               0
           {% else %}
               state_attr('${climateId}', '${temperatureAttribute}') | float
           {% endif %}
 `,
-});
+  },
+];

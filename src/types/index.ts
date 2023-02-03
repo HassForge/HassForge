@@ -1,3 +1,4 @@
+import { Automation } from "./automation";
 import { Climate } from "./climate";
 import { Homeassistant } from "./homeassistant";
 import { Sensor } from "./sensor";
@@ -8,4 +9,5 @@ export interface Package {
   template?: Template[];
   homeassistant?: Homeassistant;
   sensor?: Sensor[];
+  automation?: Automation[];
 }

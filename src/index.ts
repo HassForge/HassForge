@@ -1,5 +1,10 @@
-import { HassBuilder } from "./builder";
+import { BoilerBuilder } from "./boiler-builder";
 import { RoomBuilder } from "./room-builder";
+
+import { Package } from "./types";
+import { snakeCase } from "change-case";
+import { Card } from "./types/frontend";
+import { writeFiles } from "./utils/write-files";
 
 const mainBedroom = new RoomBuilder("Main Bedroom")
   .addTRV({
@@ -48,7 +53,7 @@ const endBedroom = new RoomBuilder("End Bedroom").addGenericThermostat({
   targetSensor: "sensor.0xa4c138bf686fe61c_temperature",
 });
 
-const spareBedrom = new RoomBuilder("Spare Bedroom")
+const spareBedroom = new RoomBuilder("Spare Bedroom")
   .addGenericThermostat({
     name: "Electric",
     heater: "switch.0x7cb03eaa0a085bbe",
@@ -56,11 +61,40 @@ const spareBedrom = new RoomBuilder("Spare Bedroom")
   })
   .addTRV({ climateId: "climate.0xa4c138c11ef4092f", name: "TRV" });
 
-new HassBuilder()
-  .addRoomBuilder(mainBedroom)
-  .addRoomBuilder(lounge)
-  .addRoomBuilder(kitchen)
-  .addRoomBuilder(tomsOffice)
-  .addRoomBuilder(endBedroom)
-  .addRoomBuilder(spareBedrom)
-  .writePackages("./dist");
+const rooms = [
+  mainBedroom,
+  lounge,
+  kitchen,
+  tomsOffice,
+  endBedroom,
+  spareBedroom,
+];
+
+const boiler = new BoilerBuilder({
+  switchID: "switch.0x000474000009ebe5",
+  powerConsumptionSensorID: "sensor.0x000474000009ebe5_power",
+  powerConsumptionSensorStandbyRange: [130, 200],
+}).addClimate(...rooms.flatMap((room) => room.trvs));
+
+writeFiles("../packages/temperature/", {
+  "0_boiler": boiler.buildBackend(),
+  ...rooms.reduce<{ [fileName: string]: Package }>(
+    (prev, roomBuilder, i) => ({
+      ...prev,
+      [`${snakeCase(`${i + 1}_${roomBuilder.name}`)}`]:
+        roomBuilder.buildBackend(),
+    }),
+    {}
+  ),
+});
+writeFiles("../dashboards/cards/heating/rooms/", {
+  "0_boiler": boiler.buildFrontend(),
+  ...rooms.reduce<{ [fileName: string]: Card }>(
+    (prev, roomBuilder, i) => ({
+      ...prev,
+      [`${snakeCase(`${i + 1}_${roomBuilder.name}`)}`]:
+        roomBuilder.buildFrontend(),
+    }),
+    {}
+  ),
+});
