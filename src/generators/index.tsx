@@ -30,10 +30,10 @@ export const generateAverageTemperatureTemplateSensor = (
     }', '${climate.temperatureAttribute}') | float %}`,
   }));
   return [
-    `sensor.average_${snakeCase(areaName)}_temperature`,
+    `sensor.avg_${snakeCase(areaName)}_temperature`,
     {
-      name: `Average ${capitalCase(areaName)} Temperature`,
-      unique_id: `average_${snakeCase(areaName)}_temperature`,
+      name: `Avg ${capitalCase(areaName)} Temperature`,
+      unique_id: `avg_${snakeCase(areaName)}_temperature`,
       unit_of_measurement: "°C",
       state: `
       ${temperatureSets.map((set) => set.jinjaString).join("\n    ")} 

@@ -5,6 +5,7 @@ import { Package } from "./types";
 import { snakeCase } from "change-case";
 import { Card } from "./types/frontend";
 import { writeFiles } from "./utils/write-files";
+import { ClimateTarget } from "./types/climate";
 
 const mainBedroom = new RoomBuilder("Main Bedroom")
   .addTRV({
@@ -61,6 +62,11 @@ const spareBedroom = new RoomBuilder("Spare Bedroom")
   })
   .addTRV({ climateId: "climate.0xa4c138c11ef4092f", name: "TRV" });
 
+const musicRoom = new RoomBuilder("Music Room").addTRV({
+  climateId: "climate.0xa4c1384a0d461833",
+  name: "TRV",
+});
+
 const rooms = [
   mainBedroom,
   lounge,
@@ -68,13 +74,22 @@ const rooms = [
   tomsOffice,
   endBedroom,
   spareBedroom,
+  musicRoom,
 ];
 
 const boiler = new BoilerBuilder({
   switchID: "switch.0x000474000009ebe5",
   powerConsumptionSensorID: "sensor.0x000474000009ebe5_power",
   powerConsumptionSensorStandbyRange: [130, 200],
-}).addClimate(...rooms.flatMap((room) => room.trvs));
+}).addRoomClimate(
+  ...rooms.reduce<{ room: string; climate: ClimateTarget }[]>(
+    (prev, room) => [
+      ...prev,
+      ...room.trvs.map((trv) => ({ climate: trv, room: room.name })),
+    ],
+    []
+  )
+);
 
 writeFiles("../packages/temperature/", {
   "0_boiler": boiler.buildBackend(),

@@ -24,13 +24,13 @@ interface BoilerConfig {
 
 export class BoilerBuilder {
   boilerConfig: BoilerConfig;
-  climates: ClimateTarget[] = [];
+  climates: { room: string; climate: ClimateTarget }[] = [];
 
   constructor(boilerConfig: BoilerConfig) {
     this.boilerConfig = boilerConfig;
   }
 
-  addClimate(...targets: ClimateTarget[]) {
+  addRoomClimate(...targets: { room: string; climate: ClimateTarget }[]) {
     this.climates = [...this.climates, ...targets];
     return this;
   }
@@ -80,10 +80,12 @@ export class BoilerBuilder {
   private radiatorsRequestingHeatSensor(): [SensorID, TemplateSensor] {
     const sets = this.climates.map(
       ({
-        climateId,
-        setpointAttribute,
-        temperatureAttribute,
-        heatModeAttribute,
+        climate: {
+          climateId,
+          setpointAttribute,
+          temperatureAttribute,
+          heatModeAttribute,
+        },
       }) => `
 {% if state_attr('${climateId}', '${temperatureAttribute}') < state_attr('${climateId}', '${setpointAttribute}') and state_attr('${climateId}', '${heatModeAttribute}') != "off"  %}
     {% set requesting = requesting + 1 %}
@@ -97,18 +99,49 @@ export class BoilerBuilder {
         state: `{% set requesting = 0 %}
             ${sets.join("")}
 {{ requesting }}`,
-        attributes: this.climates.reduce(
-          (
-            prev,
-            { climateId, name, temperatureAttribute, setpointAttribute }
-          ) => ({
-            ...prev,
-            [`${snakeCase(
-              name
-            )}_diff`]: `{{ state_attr('${climateId}', '${temperatureAttribute}') - state_attr('${climateId}', '${setpointAttribute}') | float }}`,
-          }),
-          {} as { [key: string]: string }
-        ),
+        attributes: {
+          ...this.climates.reduce(
+            (
+              prev,
+              {
+                room,
+                climate: {
+                  climateId,
+                  name,
+                  temperatureAttribute,
+                  setpointAttribute,
+                  heatModeAttribute,
+                },
+              }
+            ) => ({
+              ...prev,
+              [`${snakeCase(room)}_${snakeCase(
+                name
+              )}`]: `{{state_attr('${climateId}', '${temperatureAttribute}') < state_attr('${climateId}', '${setpointAttribute}') and state_attr('${climateId}', '${heatModeAttribute}') != "off"}}`,
+            }),
+            {} as { [key: string]: string }
+          ),
+          ...this.climates.reduce(
+            (
+              prev,
+              {
+                room,
+                climate: {
+                  climateId,
+                  name,
+                  temperatureAttribute,
+                  setpointAttribute,
+                },
+              }
+            ) => ({
+              ...prev,
+              [`${snakeCase(room)}_${snakeCase(
+                name
+              )}_diff`]: `{{ state_attr('${climateId}', '${temperatureAttribute}') - state_attr('${climateId}', '${setpointAttribute}') | float }}`,
+            }),
+            {} as { [key: string]: string }
+          ),
+        },
       },
     ];
   }
@@ -128,6 +161,14 @@ export class BoilerBuilder {
         {
           condition: "template",
           value_template: `{{ states('${radiatorsRequestingHeatSensorID}') | float == 0 }}`,
+        },
+        {
+          condition: "template",
+          value_template: `{% set changed = as_timestamp(states.switch['0x000474000009ebe5'].last_changed) %}
+{% set now = as_timestamp(now()) %}
+{% set time = now - changed %}
+{% set minutes = (time / 60) | int %}
+{{ minutes > 5 }}`,
         },
       ],
       action: [
@@ -156,6 +197,14 @@ export class BoilerBuilder {
         {
           condition: "template",
           value_template: `{{ states('${radiatorsRequestingHeatSensorID}') | float > 0 }}`,
+        },
+        {
+          condition: "template",
+          value_template: `{% set changed = as_timestamp(states.switch['0x000474000009ebe5'].last_changed) %}
+{% set now = as_timestamp(now()) %}
+{% set time = now - changed %}
+{% set minutes = (time / 60) | int %}
+{{ minutes > 5 }}`,
         },
       ],
       action: [
