@@ -10,46 +10,46 @@ import { ClimateTarget } from "./types/climate";
 const mainBedroom = new RoomBuilder("Main Bedroom")
   .addTRV({
     name: "Bedroom TRV",
-    climateId: "climate.0xa4c138a26993e5e1",
+    climateId: "climate.tze200_6rdj8dzm_ts0601_thermostat_8",
   })
   .addTRV({
     name: "Wardrobe TRV",
-    climateId: "climate.0xa4c138105b3d9398",
+    climateId: "climate.tze200_6rdj8dzm_ts0601_thermostat_9",
   })
   .addGenericThermostat({
     name: "Electric",
-    heater: "switch.0x000474000009edc2",
-    targetSensor: "sensor.0xa4c13850c63b787e_temperature",
+    heater: "switch.legrand_connected_outlet_switch_3",
+    targetSensor: "sensor.tz3000_fllyghyj_ts0201_temperature",
   });
 
 const lounge = new RoomBuilder("Lounge")
   .addTRV({
     name: "Near kitchen TRV",
-    climateId: "climate.0xa4c138cbb0075703",
+    climateId: "climate.tze200_6rdj8dzm_ts0601_thermostat_5",
   })
   .addTRV({
     name: "Near windows TRV",
-    climateId: "climate.0xa4c1380f35e39620",
+    climateId: "climate.tze200_6rdj8dzm_ts0601_thermostat",
   })
   .addTRV({
     name: "Corner TRV",
-    climateId: "climate.0xa4c138bb1f4f3ae4",
+    climateId: "climate.tze200_6rdj8dzm_ts0601_thermostat_2",
   });
 
 const kitchen = new RoomBuilder("Kitchen")
   .addTRV({
     name: "Sofa TRV",
-    climateId: "climate.0xa4c13886f09c422c",
+    climateId: "climate.tze200_6rdj8dzm_ts0601_thermostat_6",
   })
   .addTRV({
     name: "Door TRV",
-    climateId: "climate.0xa4c138527e6954d7",
+    climateId: "climate.tze200_6rdj8dzm_ts0601_thermostat_4",
   });
 
 const tomsOffice = new RoomBuilder("Toms Office").addGenericThermostat({
   name: "Electric",
   heater: "switch.shelly_shsw_1_e89f6d86a7a1",
-  targetSensor: "sensor.0xa4c1385befd737e3_temperature",
+  targetSensor: "sensor.tze200_dwcarsat_ts0601_temperature",
 });
 
 const endBedroom = new RoomBuilder("End Bedroom").addGenericThermostat({
@@ -59,15 +59,10 @@ const endBedroom = new RoomBuilder("End Bedroom").addGenericThermostat({
 });
 
 const spareBedroom = new RoomBuilder("Spare Bedroom")
-  .addGenericThermostat({
-    name: "Electric",
-    heater: "switch.0x7cb03eaa0a085bbe",
-    targetSensor: "sensor.0xa4c138744d5c67c3_temperature",
-  })
-  .addTRV({ climateId: "climate.0xa4c138c11ef4092f", name: "TRV" });
+  .addTRV({ climateId: "climate.tze200_6rdj8dzm_ts0601_thermostat_7", name: "TRV" });
 
 const musicRoom = new RoomBuilder("Music Room").addTRV({
-  climateId: "climate.0xa4c1384a0d461833",
+  climateId: "climate.tze200_6rdj8dzm_ts0601_thermostat_3",
   name: "TRV",
 });
 
@@ -82,8 +77,8 @@ const rooms = [
 ];
 
 const boiler = new BoilerBuilder({
-  switchID: "switch.0x000474000009ebe5",
-  powerConsumptionSensorID: "sensor.0x000474000009ebe5_power",
+  switchID: "switch.legrand_connected_outlet_switch_4",
+  powerConsumptionSensorID: "sensor.legrand_connected_outlet_active_power_4",
   powerConsumptionSensorStandbyRange: [130, 200],
 }).addRoomClimate(
   ...rooms.reduce<{ room: string; climate: ClimateTarget }[]>(
