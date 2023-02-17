@@ -7,9 +7,10 @@ import {
 } from "./types/frontend";
 import { ClimateTarget } from "./types/climate";
 import { TemplateSensor } from "./types/template";
-import { Sensor, SensorID } from "./types/sensor";
+import { Sensor, SensorID, SwitchID } from "./types/sensor";
 import { Automation } from "./types/automation";
-import { snakeCase } from "change-case";
+import { snakeCase, sentenceCase } from "change-case";
+import { statesNotationTransform } from "./utils/states-notation-transform";
 
 export interface Output {
   packages: { [fileName: string]: Package };
@@ -17,8 +18,8 @@ export interface Output {
 }
 
 interface BoilerConfig {
-  switchID: string;
-  powerConsumptionSensorID: string;
+  switchID: SwitchID;
+  powerConsumptionSensorID: SensorID;
   powerConsumptionSensorStandbyRange: [number, number];
 }
 
@@ -42,10 +43,10 @@ export class BoilerBuilder {
       switchID,
     } = this.boilerConfig;
     return [
-      "sensor.boiler_burning",
+      "sensor.boiler_burning_state",
       {
-        name: "Boiler Burning",
-        unique_id: "boiler_burning",
+        name: "Boiler Burning State",
+        unique_id: "boiler_burning_state",
         state: `
     {% if is_state('${switchID}', 'off') %}
       off
@@ -77,71 +78,61 @@ export class BoilerBuilder {
     ];
   }
 
-  private radiatorsRequestingHeatSensor(): [SensorID, TemplateSensor] {
-    const sets = this.climates.map(
+  private radiatorHeatNeededSensors(): [SensorID, TemplateSensor][] {
+    return this.climates.map(
       ({
+        room,
         climate: {
           climateId,
-          setpointAttribute,
+          name,
           temperatureAttribute,
+          setpointAttribute,
           heatModeAttribute,
         },
-      }) => `
-{% if state_attr('${climateId}', '${temperatureAttribute}') < state_attr('${climateId}', '${setpointAttribute}') and state_attr('${climateId}', '${heatModeAttribute}') != "off"  %}
-    {% set requesting = requesting + 1 %}
-{% endif %}`
+      }) => {
+        const unique_id = `${snakeCase(room)}_${snakeCase(name)}_heat_needed`;
+        const sensorId = `sensor.${unique_id}` as const;
+        const sensor: TemplateSensor = {
+          name: `${sentenceCase(room)} ${sentenceCase(name)} Heat Needed`,
+          state: `{{ state_attr('${climateId}', '${temperatureAttribute}') < state_attr('${climateId}', '${setpointAttribute}') and state_attr('${climateId}', '${heatModeAttribute}') != "off" }}`,
+          unique_id,
+        };
+        return [sensorId, sensor];
+      }
     );
+  }
+
+  private radiatorTempDiffSensors(): [SensorID, TemplateSensor][] {
+    return this.climates.map(
+      ({
+        room,
+        climate: { climateId, name, temperatureAttribute, setpointAttribute },
+      }) => {
+        const unique_id = `${snakeCase(room)}_${snakeCase(name)}_temp_diff`;
+        const sensorId = `sensor.${unique_id}` as const;
+        const sensor: TemplateSensor = {
+          name: `${sentenceCase(room)} ${sentenceCase(name)} Temp Diff`,
+          state: `{{ state_attr('${climateId}', '${temperatureAttribute}') - state_attr('${climateId}', '${setpointAttribute}') | float }}`,
+          unique_id,
+        };
+        return [sensorId, sensor];
+      }
+    );
+  }
+
+  private radiatorsRequestingHeatSensor(): [SensorID, TemplateSensor] {
+    const radiatorHeatNeededSensors = this.radiatorHeatNeededSensors().map(
+      (sensor) => sensor[0]
+    );
+    const heatNeededIdList = `[ ${radiatorHeatNeededSensors
+      .map((sensorId) => `'${sensorId}'`)
+      .join(", ")} ]`;
     return [
       "sensor.radiators_requesting_heat",
       {
         name: "Radiators Requesting Heat",
         unique_id: "radiators_requesting_heat",
-        state: `{% set requesting = 0 %}
-            ${sets.join("")}
-{{ requesting }}`,
-        attributes: {
-          ...this.climates.reduce(
-            (
-              prev,
-              {
-                room,
-                climate: {
-                  climateId,
-                  name,
-                  temperatureAttribute,
-                  setpointAttribute,
-                  heatModeAttribute,
-                },
-              }
-            ) => ({
-              ...prev,
-              [`${snakeCase(room)}_${snakeCase(
-                name
-              )}`]: `{{state_attr('${climateId}', '${temperatureAttribute}') < state_attr('${climateId}', '${setpointAttribute}') and state_attr('${climateId}', '${heatModeAttribute}') != "off"}}`,
-            }),
-            {} as { [key: string]: string }
-          ),
-          ...this.climates.reduce(
-            (
-              prev,
-              {
-                room,
-                climate: {
-                  climateId,
-                  name,
-                  temperatureAttribute,
-                  setpointAttribute,
-                },
-              }
-            ) => ({
-              ...prev,
-              [`${snakeCase(room)}_${snakeCase(
-                name
-              )}_diff`]: `{{ state_attr('${climateId}', '${temperatureAttribute}') - state_attr('${climateId}', '${setpointAttribute}') | float }}`,
-            }),
-            {} as { [key: string]: string }
-          ),
-        },
+        state: `{{ ${heatNeededIdList} | select('is_state', 'True') | list | length }}`,
       },
     ];
   }
@@ -164,7 +155,9 @@ export class BoilerBuilder {
         },
         {
           condition: "template",
-          value_template: `{% set changed = as_timestamp(states.switch['0x000474000009ebe5'].last_changed) %}
+          value_template: `{% set changed = as_timestamp(${statesNotationTransform(
+            this.boilerConfig.switchID
+          )}.last_changed) %}
 {% set now = as_timestamp(now()) %}
 {% set time = now - changed %}
 {% set minutes = (time / 60) | int %}
@@ -226,6 +219,8 @@ export class BoilerBuilder {
           sensor: [
             this.boilerBurningSensor()[1],
             this.radiatorsRequestingHeatSensor()[1],
+            ...this.radiatorHeatNeededSensors().map(([_, sensor]) => sensor),
+            ...this.radiatorTempDiffSensors().map(([_, sensor]) => sensor),
           ],
         },
       ],

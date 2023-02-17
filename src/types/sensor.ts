@@ -1,4 +1,8 @@
+
+export type EntityIDType = 'sensor' | 'switch'
 export type SensorID = `sensor.${string}`;
+export type SwitchID = `switch.${string}`;
+export type EntityID = `${EntityIDType}.${string}`;
 
 export interface Sensor {
   platform: string;

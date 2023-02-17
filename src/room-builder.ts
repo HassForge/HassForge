@@ -14,6 +14,7 @@ import {
   VerticalStackCard,
 } from "./types/frontend";
 import { CustomizeDictionary } from "./types/homeassistant";
+import { SensorID, SwitchID } from "./types/sensor";
 
 const colorThresholds: MiniGraphCardColorThresholds = [
   { value: 10, color: "#0284c7" },
@@ -24,8 +25,8 @@ const colorThresholds: MiniGraphCardColorThresholds = [
 interface GenericThermostat {
   name: string;
   climateIdOverride?: string;
-  heater: string;
-  targetSensor: string;
+  heater: SwitchID;
+  targetSensor: SensorID;
 }
 
 export interface Room {

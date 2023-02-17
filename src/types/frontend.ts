@@ -1,3 +1,5 @@
+import { EntityID } from "./sensor";
+
 export interface Card {
   type: string;
 }
@@ -33,6 +35,28 @@ export interface EntityRowCard extends Card {
   toggle: boolean;
   state_header?: string;
   entities: EntityRowCardEntity[];
+  secondary_info?:
+    | string
+    | {
+        entity: EntityID;
+        attribute?: string;
+        name?: string;
+        unit?: string;
+        hide_unavailable?: boolean;
+        hide_if?: { above?: number; below?: number; value?: string[] | string };
+        format:
+          | "relative"
+          | "total"
+          | "date"
+          | "datetime"
+          | "brightness"
+          | "duration"
+          | "duration-m"
+          | "invert"
+          | "kilo"
+          | "position"
+          | `precision-${NumberRange<0, 9>}`;
+      };
 }
 
 ///////// MINI GRAPH CARD /////////

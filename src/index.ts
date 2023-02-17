@@ -9,8 +9,12 @@ import { ClimateTarget } from "./types/climate";
 
 const mainBedroom = new RoomBuilder("Main Bedroom")
   .addTRV({
-    name: "TRV",
+    name: "Bedroom TRV",
     climateId: "climate.0xa4c138a26993e5e1",
+  })
+  .addTRV({
+    name: "Wardrobe TRV",
+    climateId: "climate.0xa4c138105b3d9398",
   })
   .addGenericThermostat({
     name: "Electric",

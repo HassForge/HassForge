@@ -14,7 +14,9 @@ export const writeFiles = (
   Object.entries(data).forEach(([fileName, hassPackage]) =>
     writeFileSync(
       path.join(directory, `${fileName}.yaml`),
-      stringify(hassPackage)
+      stringify(hassPackage, {
+        version: "1.1"
+      })
     )
   );
 };

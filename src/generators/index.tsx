@@ -63,17 +63,17 @@ export const generateAverageTemperatureTemplateSensor = (
  */
 export const generateDesiredTemperatureTemplateSensor = (
   roomName: string,
-  { name, climateId, setpointAttribute, temperatureAttribute }: ClimateTarget
+  { name, climateId, setpointAttribute, heatModeAttribute }: ClimateTarget
 ): [SensorID, TemplateSensor] => [
   `sensor.desired_${snakeCase(roomName)}_${snakeCase(name)}_temperature`,
   {
     name: `Desired ${capitalCase(roomName)} ${capitalCase(name)} Temperature`,
     unique_id: `desired_${snakeCase(roomName)}_${snakeCase(name)}_temperature`,
     unit_of_measurement: "°C",
-    state: `    {% if state_attr('${climateId}', '${setpointAttribute}') == "off" %}
+    state: `    {% if state_attr('${climateId}', '${heatModeAttribute}') == "off" %}
               0
           {% else %}
-              state_attr('${climateId}', '${temperatureAttribute}') | float
+              {{ state_attr('${climateId}', '${setpointAttribute}') | float }}
           {% endif %}
 `,
   },
