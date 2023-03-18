@@ -1,0 +1,13 @@
+{
+  "name": "@hassbuilder/base",
+  "packageManager": "yarn@3.3.1",
+  "dependencies": {
+    "change-case": "^4.1.2",
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "@hassbuilder/types": "workspace:workspaces/types",
+    "@types/node": "^18.11.18"
+  },
+  "main": "src/index.ts"
+}

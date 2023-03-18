@@ -14,11 +14,31 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {\
         "name": "hassbuilder",\
         "reference": "workspace:."\
+      },\
+      {\
+        "name": "@hassbuilder/base",\
+        "reference": "workspace:workspaces/base"\
+      },\
+      {\
+        "name": "@hassbuilder/heating",\
+        "reference": "workspace:workspaces/heating"\
+      },\
+      {\
+        "name": "@hassbuilder/jinja",\
+        "reference": "workspace:workspaces/jinja"\
+      },\
+      {\
+        "name": "@hassbuilder/types",\
+        "reference": "workspace:workspaces/types"\
       }\
     ],\
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
+      ["@hassbuilder/base", ["workspace:workspaces/base"]],\
+      ["@hassbuilder/heating", ["workspace:workspaces/heating"]],\
+      ["@hassbuilder/jinja", ["workspace:workspaces/jinja"]],\
+      ["@hassbuilder/types", ["workspace:workspaces/types"]],\
       ["hassbuilder", ["workspace:."]]\
     ],\
     "fallbackPool": [\
@@ -46,6 +66,58 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jridgewell/trace-mapping", "npm:0.3.9"]\
           ],\
           "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@hassbuilder/base", [\
+        ["workspace:workspaces/base", {\
+          "packageLocation": "./workspaces/base/",\
+          "packageDependencies": [\
+            ["@hassbuilder/base", "workspace:workspaces/base"],\
+            ["@hassbuilder/types", "workspace:workspaces/types"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["change-case", "npm:4.1.2"],\
+            ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@hassbuilder/heating", [\
+        ["workspace:workspaces/heating", {\
+          "packageLocation": "./workspaces/heating/",\
+          "packageDependencies": [\
+            ["@hassbuilder/heating", "workspace:workspaces/heating"],\
+            ["@hassbuilder/base", "workspace:workspaces/base"],\
+            ["@hassbuilder/types", "workspace:workspaces/types"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["change-case", "npm:4.1.2"],\
+            ["ts-node", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1"],\
+            ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@hassbuilder/jinja", [\
+        ["workspace:workspaces/jinja", {\
+          "packageLocation": "./workspaces/jinja/",\
+          "packageDependencies": [\
+            ["@hassbuilder/jinja", "workspace:workspaces/jinja"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["change-case", "npm:4.1.2"],\
+            ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@hassbuilder/types", [\
+        ["workspace:workspaces/types", {\
+          "packageLocation": "./workspaces/types/",\
+          "packageDependencies": [\
+            ["@hassbuilder/types", "workspace:workspaces/types"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["change-case", "npm:4.1.2"],\
+            ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
+          ],\
+          "linkType": "SOFT"\
         }]\
       ]],\
       ["@jridgewell/resolve-uri", [\

@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "paths": {
+      "@hassbuilder/types": ["../types/src"],
+      "@hassbuilder/base": ["../base/src"]
+    }
+  },
+  "references": [
+    {
+      "path": "../types"
+    },
+    {
+      "path": "../base"
+    },
+  ]
+}

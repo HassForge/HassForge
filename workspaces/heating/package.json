@@ -1,0 +1,18 @@
+{
+  "name": "@hassbuilder/heating",
+  "packageManager": "yarn@3.3.1",
+  "scripts": {
+    
+    "test": "ts-node ./src/test.ts"
+  },
+  "dependencies": {
+    "@hassbuilder/types": "workspace:workspaces/types",
+    "@hassbuilder/base": "workspace:workspaces/base",
+    "change-case": "^4.1.2",
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "ts-node": "^10.9.1"
+  }
+}
