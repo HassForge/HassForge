@@ -2,6 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "./src",
+    "outDir": "./dist",
+    "composite": true,
     "paths": {
       "@hassbuilder/types": ["../types/src"],
       "@hassbuilder/base": ["../base/src"]
@@ -13,6 +15,6 @@
     },
     {
       "path": "../base"
-    },
+    }
   ]
 }

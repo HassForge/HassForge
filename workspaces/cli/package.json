@@ -1,18 +1,16 @@
 {
-  "name": "@hassbuilder/heating",
+  "name": "@hassbuilder/cli",
   "packageManager": "yarn@3.3.1",
-  "main": "src/index.ts",
-  "scripts": {
-    "test": "ts-node ./src/test.ts"
-  },
   "dependencies": {
     "@hassbuilder/base": "workspace:workspaces/base",
+    "@hassbuilder/heating": "workspace:workspaces/heating",
     "@hassbuilder/types": "workspace:workspaces/types",
     "change-case": "^4.1.2",
-    "typescript": "^4.9.4"
+    "commander": "^10.0.0",
+    "typescript": "^4.9.4",
+    "yaml": "^2.2.1"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
-    "ts-node": "^10.9.1"
+    "@types/node": "^18.11.18"
   }
 }

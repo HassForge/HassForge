@@ -20,12 +20,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:workspaces/base"\
       },\
       {\
-        "name": "@hassbuilder/heating",\
-        "reference": "workspace:workspaces/heating"\
+        "name": "@hassbuilder/cli",\
+        "reference": "workspace:workspaces/cli"\
       },\
       {\
-        "name": "@hassbuilder/jinja",\
-        "reference": "workspace:workspaces/jinja"\
+        "name": "@hassbuilder/heating",\
+        "reference": "workspace:workspaces/heating"\
       },\
       {\
         "name": "@hassbuilder/types",\
@@ -36,8 +36,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
       ["@hassbuilder/base", ["workspace:workspaces/base"]],\
+      ["@hassbuilder/cli", ["workspace:workspaces/cli"]],\
       ["@hassbuilder/heating", ["workspace:workspaces/heating"]],\
-      ["@hassbuilder/jinja", ["workspace:workspaces/jinja"]],\
       ["@hassbuilder/types", ["workspace:workspaces/types"]],\
       ["hassbuilder", ["workspace:."]]\
     ],\
@@ -52,6 +52,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["change-case", "npm:4.1.2"],\
             ["nunjucks", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:3.2.3"],\
             ["ts-node", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1"],\
+            ["tsconfig-paths", "npm:4.1.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
             ["yaml", "npm:2.2.1"]\
           ],\
@@ -81,6 +82,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
+      ["@hassbuilder/cli", [\
+        ["workspace:workspaces/cli", {\
+          "packageLocation": "./workspaces/cli/",\
+          "packageDependencies": [\
+            ["@hassbuilder/cli", "workspace:workspaces/cli"],\
+            ["@hassbuilder/base", "workspace:workspaces/base"],\
+            ["@hassbuilder/heating", "workspace:workspaces/heating"],\
+            ["@hassbuilder/types", "workspace:workspaces/types"],\
+            ["@types/node", "npm:18.11.18"],\
+            ["change-case", "npm:4.1.2"],\
+            ["commander", "npm:10.0.0"],\
+            ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
+            ["yaml", "npm:2.2.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
       ["@hassbuilder/heating", [\
         ["workspace:workspaces/heating", {\
           "packageLocation": "./workspaces/heating/",\
@@ -91,18 +109,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:18.11.18"],\
             ["change-case", "npm:4.1.2"],\
             ["ts-node", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1"],\
-            ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
-      ["@hassbuilder/jinja", [\
-        ["workspace:workspaces/jinja", {\
-          "packageLocation": "./workspaces/jinja/",\
-          "packageDependencies": [\
-            ["@hassbuilder/jinja", "workspace:workspaces/jinja"],\
-            ["@types/node", "npm:18.11.18"],\
-            ["change-case", "npm:4.1.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
           ],\
           "linkType": "SOFT"\
@@ -284,6 +290,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["commander", [\
+        ["npm:10.0.0", {\
+          "packageLocation": "./.yarn/cache/commander-npm-10.0.0-2e6f452447-9f6495651f.zip/node_modules/commander/",\
+          "packageDependencies": [\
+            ["commander", "npm:10.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:5.1.0", {\
           "packageLocation": "./.yarn/cache/commander-npm-5.1.0-7e939e7832-0b7fec1712.zip/node_modules/commander/",\
           "packageDependencies": [\
@@ -342,6 +355,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["change-case", "npm:4.1.2"],\
             ["nunjucks", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:3.2.3"],\
             ["ts-node", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1"],\
+            ["tsconfig-paths", "npm:4.1.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
             ["yaml", "npm:2.2.1"]\
           ],\
@@ -355,6 +369,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["header-case", "npm:2.0.4"],\
             ["capital-case", "npm:1.0.4"],\
             ["tslib", "npm:2.4.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["json5", [\
+        ["npm:2.2.3", {\
+          "packageLocation": "./.yarn/cache/json5-npm-2.2.3-9962c55073-2a7436a933.zip/node_modules/json5/",\
+          "packageDependencies": [\
+            ["json5", "npm:2.2.3"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -374,6 +397,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/make-error-npm-1.3.6-ccb85d9458-b86e5e0e25.zip/node_modules/make-error/",\
           "packageDependencies": [\
             ["make-error", "npm:1.3.6"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["minimist", [\
+        ["npm:1.2.8", {\
+          "packageLocation": "./.yarn/cache/minimist-npm-1.2.8-d7af7b1dce-75a6d645fb.zip/node_modules/minimist/",\
+          "packageDependencies": [\
+            ["minimist", "npm:1.2.8"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -470,6 +502,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["strip-bom", [\
+        ["npm:3.0.0", {\
+          "packageLocation": "./.yarn/cache/strip-bom-npm-3.0.0-71e8f81ff9-8d50ff27b7.zip/node_modules/strip-bom/",\
+          "packageDependencies": [\
+            ["strip-bom", "npm:3.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["ts-node", [\
         ["npm:10.9.1", {\
           "packageLocation": "./.yarn/cache/ts-node-npm-10.9.1-6c268be7f4-090adff130.zip/node_modules/ts-node/",\
@@ -511,6 +552,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "@types/swc__wasm",\
             "@types/typescript",\
             "typescript"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["tsconfig-paths", [\
+        ["npm:4.1.2", {\
+          "packageLocation": "./.yarn/cache/tsconfig-paths-npm-4.1.2-7a84ac2b29-3d9151ecea.zip/node_modules/tsconfig-paths/",\
+          "packageDependencies": [\
+            ["tsconfig-paths", "npm:4.1.2"],\
+            ["json5", "npm:2.2.3"],\
+            ["minimist", "npm:1.2.8"],\
+            ["strip-bom", "npm:3.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\
