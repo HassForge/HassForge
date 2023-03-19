@@ -15,35 +15,41 @@ import {
   HATemplateSensor,
 } from "@hassbuilder/types";
 import { EntityTarget } from "./configuration";
+import { JsonIgnore, toJSON } from "./utils";
 
 export type NonCreatable<T> = T extends CreatableEntity ? never : T;
 
 export class HassBuilderPackage implements HAPackage {
+  @JsonIgnore
   climateMap: { [key: string]: HAClimate } = {};
+  @JsonIgnore
   templateMap: { [key: string]: HATemplateSensor } = {};
+  @JsonIgnore
   sensorMap: { [key: string]: HASensor } = {};
+  @JsonIgnore
   customize: HACustomizeDictionary = {};
+  @JsonIgnore
   automationMap: { [key: string]: HAAutomation } = {};
 
-  get climate() {
+  public get climate() {
     return Object.values(this.climateMap);
   }
 
-  get template() {
+  public get template() {
     return [{ sensor: Object.values(this.templateMap) }];
   }
 
-  get sensor() {
+  public get sensor() {
     return Object.values(this.sensorMap);
   }
 
-  get homeassistant() {
+  public get homeassistant() {
     return {
       customize: this.customize,
     };
   }
 
-  get automation() {
+  public get automation() {
     return Object.values(this.automationMap);
   }
 
@@ -55,6 +61,7 @@ export class HassBuilderPackage implements HAPackage {
       if (pkg.sensor) this.addSensor(...pkg.sensor);
       if (pkg.template) this.addTemplate(...pkg.template);
     });
+    return this;
   }
 
   public addClimate(...climates: HAClimate[]) {
@@ -119,5 +126,9 @@ export class HassBuilderPackage implements HAPackage {
           {}
         )
     );
+  }
+
+  toJSON() {
+    return toJSON.bind(this)()
   }
 }

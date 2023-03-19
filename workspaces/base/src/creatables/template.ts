@@ -22,11 +22,12 @@ export class TemplateSensor<P extends any = undefined>
       ? [PartialBy<HATemplateSensor, "unique_id">, undefined?]
       : [PartialBy<HATemplateSensor, "unique_id">, P]
   ) {
-    super("sensor", {
+    const fullEntity = {
       ...entity,
       unique_id: entity.unique_id ?? snakeCase(entity.name),
-    });
+    };
+    super("sensor", fullEntity);
     this.parent = parent as any;
-    Object.assign(this, entity);
+    Object.assign(this, fullEntity);
   }
 }

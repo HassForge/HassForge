@@ -14,7 +14,7 @@ import {
   EntityRowCard,
 } from "@hassbuilder/types";
 
-export class HassBasicThermostat implements HAPackage {
+export class HassBasicThermostatPackage implements HAPackage {
   boilerOptions: BoilerBurningTemplateSensorOptions;
   isBurningSensor: BoilerBurningTemplateSensor;
   burningTimeSensor: BoilerBurningTimeSensor;

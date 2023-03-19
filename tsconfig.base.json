@@ -16,7 +16,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "lib": ["dom", "es2017", "ESNext"],
-    "module": "NodeNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,

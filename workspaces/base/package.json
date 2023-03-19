@@ -9,5 +9,5 @@
     "@hassbuilder/types": "workspace:workspaces/types",
     "@types/node": "^18.11.18"
   },
-  "main": "src/index.ts"
+  "main": "dist/index.js"
 }

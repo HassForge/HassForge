@@ -1,5 +1,5 @@
 import { snakeCase } from "change-case";
-import { JsonIgnore, toJson } from "../utils/json-ignore";
+import { JsonIgnore, toJSON } from "../utils/json-ignore";
 import { EntityClass, EntityID } from "@hassbuilder/types";
 
 /**
@@ -12,17 +12,14 @@ export class CreatableEntity<
   @JsonIgnore
   entityClass: C;
   @JsonIgnore
-  entity: E;
-  @JsonIgnore
   id: EntityID<C>;
 
   constructor(entityClass: C, entity: E) {
-    this.entity = entity;
     this.entityClass = entityClass;
     this.id = `${entityClass}.${snakeCase(entity.name)}`;
   }
 
-  toJson() {
-    return toJson();
+  public toJSON() {
+    return toJSON.bind(this)();
   }
 }

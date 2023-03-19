@@ -77,7 +77,7 @@ export class Room implements HAPackage {
       customize: entities.reduce<HACustomizeDictionary>(
         (prev, target) => ({
           ...prev,
-          [target.id]: { friendly_name: target.id },
+          [target.id]: { friendly_name: target.name },
         }),
         {}
       ),

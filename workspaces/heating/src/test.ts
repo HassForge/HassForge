@@ -1,7 +1,10 @@
 import {
   Room,
   GenericThermostatClimate,
+  HassBuilderPackage,
 } from "@hassbuilder/base";
+import { HassBasicThermostatPackage } from "./basic-thermostat";
+import { HassRoomHeating } from "./room-heating";
 
 const mainBedroom = new Room("Main Bedroom")
   .addClimate({
@@ -70,6 +73,18 @@ const musicRoom = new Room("Music Room").addClimate({
   id: "climate.tze200_6rdj8dzm_ts0601_thermostat_3",
 });
 
+const boilerSwitch = {
+  name: "Boiler switch",
+  id: "switch.legrand_connected_outlet_switch_4",
+} as const;
+
+const boilerPowerConsumptionSensor = {
+  name: "Boiler power consumption",
+  id: "sensor.legrand_connected_outlet_active_power_4",
+} as const;
+
+const boilerRoom = new Room("Boiler Room").addSwitches(boilerSwitch)
+
 const rooms = [
   mainBedroom,
   lounge,
@@ -80,27 +95,31 @@ const rooms = [
   musicRoom,
 ];
 
-console.log(JSON.stringify(rooms, null, 4));
+const basicThermostatPkg = new HassBasicThermostatPackage({
+  boiler: {
+    haSwitch: boilerSwitch,
+    powerConsumptionSensor: boilerPowerConsumptionSensor,
+    powerConsumptionStandbyRange: [130, 200],
+  },
+  trvs: rooms
+    .flatMap((room) => room.climates)
+    .filter((climate) => climate.id.includes("ts0601")),
+});
 
-// const boilerSwitch = {
-//   name: "Boiler switch",
-//   id: "switch.legrand_connected_outlet_switch_4",
-// } as const;
-// const boilerPowerConsumptionSensor = {
-//   name: "Boiler power consumption",
-//   id: "sensor.legrand_connected_outlet_active_power_4",
-// } as const;
+const heating = rooms.map((room) => new HassRoomHeating(room));
 
-// const pkg = new HassBuilderPackage().mergePackage(
-//   new HassBasicThermostat({
-//     boiler: {
-//       haSwitch: boilerSwitch,
-//       powerConsumptionSensor: boilerPowerConsumptionSensor,
-//       powerConsumptionStandbyRange: [130, 200],
-//     },
-//     trvs: rooms.flatMap((room) => room.climates).filter(),
-//   })
-// );
+const pkg = new HassBuilderPackage().mergePackage(
+  ...rooms,
+  boilerRoom,
+  ...heating,
+  basicThermostatPkg
+);
+
+const dashboard = [basicThermostatPkg.card(), ...heating.map(heating => heating.card())]
+
+
+console.log(JSON.stringify(pkg, null, 4));
+console.log(JSON.stringify(dashboard, null, 4));
 
 // writeFiles("../packages/temperature/", {
 //   "0_boiler": boiler.buildBackend(),

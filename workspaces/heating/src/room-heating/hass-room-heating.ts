@@ -1,5 +1,9 @@
 import { sentenceCase } from "change-case";
-import { ClimateTarget } from "@hassbuilder/base";
+import {
+  ClimateTarget,
+  DEFAULT_SETPOINT_ATTRIBUTE,
+  DEFAULT_TEMPERATURE_ATTRIBUTE,
+} from "@hassbuilder/base";
 import {
   HAPackage,
   EntityRowCard,
@@ -52,7 +56,8 @@ export class HassRoomHeating implements HAPackage {
             entities: [
               {
                 entity: climate.id,
-                attribute: climate.temperatureAttribute,
+                attribute:
+                  climate.temperatureAttribute ?? DEFAULT_TEMPERATURE_ATTRIBUTE,
               },
               {
                 entity: desiredTemperatureTemplate.id,
@@ -108,8 +113,15 @@ export class HassRoomHeating implements HAPackage {
       toggle: true,
       state_header: "On/Off",
       entities: [
-        { name: "Desired", attribute: climate.setpointAttribute },
-        { name: "Current", attribute: climate.temperatureAttribute },
+        {
+          name: "Desired",
+          attribute: climate.setpointAttribute ?? DEFAULT_SETPOINT_ATTRIBUTE,
+        },
+        {
+          name: "Current",
+          attribute:
+            climate.temperatureAttribute ?? DEFAULT_TEMPERATURE_ATTRIBUTE,
+        },
       ],
     }));
   }
