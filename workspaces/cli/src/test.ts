@@ -7,7 +7,10 @@ import {
   HassBasicThermostatPackage,
   HassHumidityTrendSwitch,
   HassRoomHeating,
+  SchedulerBuilder,
 } from "@hassbuilder/packages";
+import { HAView } from "@hassbuilder/types";
+
 import { writeFiles } from "./write-files";
 
 const mainBedroom = new Room("Main Bedroom")
@@ -132,16 +135,22 @@ const pkg = new HassBuilderPackage().mergePackage(
   ensuiteShowering
 );
 
-const dashboard = [
-  basicThermostatPkg.card(),
-  ...heating.map((heating) => heating.card()),
-];
-
-console.log(JSON.stringify(pkg, null, 4));
-console.log(JSON.stringify(dashboard, null, 4));
+const scheduler = new SchedulerBuilder().addRoom(...rooms)
+const heatingTab: HAView = {
+  panel: false,
+  title: "Heating",
+  path: "heating",
+  badges: [],
+  cards: [
+    scheduler.card(),
+    basicThermostatPkg.card(),
+    ...heating.map((heating) => heating.card()),
+  ],
+};
 
 writeFiles("./out", {
-    backend: pkg
+  backend: pkg,
+  heating: heatingTab,
 });
 // writeFiles("../dashboards/cards/heating/rooms/", {
 //   "0_boiler": boiler.buildFrontend(),

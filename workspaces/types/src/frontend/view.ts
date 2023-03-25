@@ -4,6 +4,7 @@ import { HACard } from "./card";
 
 export interface HAView {
   title: string;
+  panel?: boolean
   visible?: boolean | { user: string }[];
   cards: HACard[];
   theme?: string;
