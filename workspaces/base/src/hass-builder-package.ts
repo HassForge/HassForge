@@ -9,6 +9,7 @@ import {
   HABinarySensor,
   HABayesianBinarySensor,
   HATrendBinarySensor,
+  HATrendBinarySensorMap,
 } from "@hassbuilder/types";
 import { JsonIgnore, toJSON } from "./utils";
 
@@ -21,6 +22,8 @@ export class HassBuilderPackage implements HAPackage {
   sensorMap: { [key: string]: HASensor } = {};
   @JsonIgnore
   binarySensorMap: { [key: string]: HABinarySensor } = {};
+  @JsonIgnore
+  trendSensorMap: HATrendBinarySensorMap = {};
   @JsonIgnore
   customize: HACustomizeDictionary = {};
   @JsonIgnore
@@ -39,7 +42,11 @@ export class HassBuilderPackage implements HAPackage {
   }
 
   public get binary_sensor() {
-    return Object.values(this.binarySensorMap);
+    const trendSensors: HATrendBinarySensor = {
+      platform: "trend",
+      sensors: this.trendSensorMap,
+    };
+    return [...Object.values(this.binarySensorMap), trendSensors];
   }
 
   public get homeassistant() {
@@ -84,9 +91,14 @@ export class HassBuilderPackage implements HAPackage {
 
   public addBinarySensor(...sensors: HABinarySensor[]) {
     sensors.forEach((sensor) => {
-      const name = ((sensor as HABayesianBinarySensor).name ??
-        (sensor as HATrendBinarySensor).friendly_name)!;
-      this.binarySensorMap[name] = sensor;
+      if ((sensor as HABayesianBinarySensor).name) {
+        this.binarySensorMap[(sensor as HABayesianBinarySensor).name] = sensor;
+      } else if ((sensor as HATrendBinarySensor).sensors) {
+        this.trendSensorMap = {
+          ...this.trendSensorMap,
+          ...(sensor as HATrendBinarySensor).sensors,
+        };
+      }
     });
     return this;
   }
