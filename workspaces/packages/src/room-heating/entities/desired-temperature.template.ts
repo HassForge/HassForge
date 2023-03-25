@@ -35,12 +35,12 @@ export class DesiredTemperatureTemplateSensor extends TemplateSensor<ClimateTarg
       {
         name: `Desired ${capitalCase(nameOverride ?? name)} Temperature`,
         unit_of_measurement: "°C",
-        state: `    {% if state_attr('${id}', '${heatModeAttribute}') == "off" %}
+        state: `
+            {% if state_attr('${id}', '${heatModeAttribute}') == "off" %}
                 0
             {% else %}
                 {{ state_attr('${id}', '${setpointAttribute}') | float }}
-            {% endif %}
-  `,
+            {% endif %}`,
       },
       target
     );

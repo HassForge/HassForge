@@ -1,5 +1,6 @@
 export interface HAAutomation {
   alias: string;
+  description?: string;
   trigger: Trigger[];
   condition?: Condition[];
   action: Action[];
@@ -35,6 +36,7 @@ export interface Trigger {
   event?: string;
   offset?: string;
   entity_id?: string;
+  from?: string;
   to?: string;
   zone?: string;
   event_type?: string;

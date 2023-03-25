@@ -2,6 +2,7 @@ import { Action, Condition, HAAutomation, Trigger } from "@hassbuilder/types";
 
 export class Automation implements HAAutomation {
   alias!: string;
+  description?: string;
   trigger!: Trigger[];
   condition?: Condition[] | undefined;
   action!: Action[];

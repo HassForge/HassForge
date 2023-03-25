@@ -1,0 +1,377 @@
+climate:
+  - platform: generic_thermostat
+    unique_id: main_bedroom_electric
+    name: Main bedroom electric
+    heater: switch.legrand_connected_outlet_switch_3
+    target_sensor: sensor.tz3000_fllyghyj_ts0201_temperature
+    ac_mode: false
+    min_temp: 10
+    max_temp: 25
+    target_temp: 21
+  - platform: generic_thermostat
+    unique_id: toms_office_electric
+    name: Toms office electric
+    heater: switch.shelly_shsw_1_e89f6d86a7a1
+    target_sensor: sensor.tze200_dwcarsat_ts0601_temperature
+    ac_mode: false
+    min_temp: 10
+    max_temp: 25
+    target_temp: 21
+  - platform: generic_thermostat
+    unique_id: end_bedroom_electric
+    name: End bedroom electric
+    heater: switch.0x04cf8cdf3c89dcdd
+    target_sensor: sensor.0xa4c138bf686fe61c_temperature
+    ac_mode: false
+    min_temp: 10
+    max_temp: 25
+    target_temp: 21
+template:
+  - sensor:
+      - name: Desired Main Bedroom Trv Temperature
+        unique_id: desired_main_bedroom_trv_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_8', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_8', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Desired Wardrobe Trv Temperature
+        unique_id: desired_wardrobe_trv_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_9', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_9', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Desired Main Bedroom Electric Temperature
+        unique_id: desired_main_bedroom_electric_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.main_bedroom_electric', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.main_bedroom_electric', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Average Main Bedroom temperature
+        unique_id: average_main_bedroom_temperature
+        state: >2
+          
+              {% set main_bedroom_trv = states('climate.tze200_6rdj8dzm_ts0601_thermostat_8') | float %}
+              {% set wardrobe_trv = states('climate.tze200_6rdj8dzm_ts0601_thermostat_9') | float %}
+              {% set main_bedroom_electric = states('climate.main_bedroom_electric') | float %} 
+              {{ ((main_bedroom_trv + wardrobe_trv + main_bedroom_electric) / 3) | round(1, default=0) }}
+      - name: Desired Lounge Near Kitchen Trv Temperature
+        unique_id: desired_lounge_near_kitchen_trv_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_5', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_5', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Desired Lounge Near Windows Trv Temperature
+        unique_id: desired_lounge_near_windows_trv_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Desired Lounge Corner Trv Temperature
+        unique_id: desired_lounge_corner_trv_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_2', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_2', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Average Lounge temperature
+        unique_id: average_lounge_temperature
+        state: >2
+          
+              {% set lounge_near_kitchen_trv = states('climate.tze200_6rdj8dzm_ts0601_thermostat_5') | float %}
+              {% set lounge_near_windows_trv = states('climate.tze200_6rdj8dzm_ts0601_thermostat') | float %}
+              {% set lounge_corner_trv = states('climate.tze200_6rdj8dzm_ts0601_thermostat_2') | float %} 
+              {{ ((lounge_near_kitchen_trv + lounge_near_windows_trv + lounge_corner_trv) / 3) | round(1, default=0) }}
+      - name: Desired Kitchen Sofa Trv Temperature
+        unique_id: desired_kitchen_sofa_trv_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_6', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_6', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Desired Kitchen Door Trv Temperature
+        unique_id: desired_kitchen_door_trv_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_4', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_4', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Average Kitchen temperature
+        unique_id: average_kitchen_temperature
+        state: >2
+          
+              {% set kitchen_sofa_trv = states('climate.tze200_6rdj8dzm_ts0601_thermostat_6') | float %}
+              {% set kitchen_door_trv = states('climate.tze200_6rdj8dzm_ts0601_thermostat_4') | float %} 
+              {{ ((kitchen_sofa_trv + kitchen_door_trv) / 2) | round(1, default=0) }}
+      - name: Desired Toms Office Electric Temperature
+        unique_id: desired_toms_office_electric_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.toms_office_electric', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.toms_office_electric', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Average Toms Office temperature
+        unique_id: average_toms_office_temperature
+        state: >2
+          
+              {% set toms_office_electric = states('climate.toms_office_electric') | float %} 
+              {{ ((toms_office_electric) / 1) | round(1, default=0) }}
+      - name: Desired End Bedroom Electric Temperature
+        unique_id: desired_end_bedroom_electric_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.end_bedroom_electric', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.end_bedroom_electric', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Average End Bedroom temperature
+        unique_id: average_end_bedroom_temperature
+        state: >2
+          
+              {% set end_bedroom_electric = states('climate.end_bedroom_electric') | float %} 
+              {{ ((end_bedroom_electric) / 1) | round(1, default=0) }}
+      - name: Desired Spare Bedroom Trv Temperature
+        unique_id: desired_spare_bedroom_trv_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_7', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_7', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Average Spare Bedroom temperature
+        unique_id: average_spare_bedroom_temperature
+        state: >2
+          
+              {% set spare_bedroom_trv = states('climate.tze200_6rdj8dzm_ts0601_thermostat_7') | float %} 
+              {{ ((spare_bedroom_trv) / 1) | round(1, default=0) }}
+      - name: Desired Music Room Trv Temperature
+        unique_id: desired_music_room_trv_temperature
+        state: >2-
+          
+                      {% if state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_3', 'hvac_action') == "off" %}
+                          0
+                      {% else %}
+                          {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_3', 'temperature') | float }}
+                      {% endif %}
+        unit_of_measurement: °C
+      - name: Average Music Room temperature
+        unique_id: average_music_room_temperature
+        state: >2
+          
+              {% set music_room_trv = states('climate.tze200_6rdj8dzm_ts0601_thermostat_3') | float %} 
+              {{ ((music_room_trv) / 1) | round(1, default=0) }}
+      - name: Boiler Burning State
+        unique_id: boiler_burning_state
+        state: >2-
+          
+                        {% if is_state('switch.legrand_connected_outlet_switch_4', 'off') %}
+                          off
+                        {% elif states('sensor.legrand_connected_outlet_active_power_4') | float < 130 %}
+                          standby
+                        {% elif states('sensor.legrand_connected_outlet_active_power_4') | float > 200 %}
+                          on
+                        {% else %}
+                          failed
+                        {% endif %}
+      - name: Main bedroom trv Heat Needed
+        unique_id: main_bedroom_trv_heat_needed
+        state: >2-
+          
+                  {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_8', 'current_temperature') < state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_8', 'temperature') 
+                  and state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_8', 'hvac_action') != "off" }}
+      - name: Wardrobe trv Heat Needed
+        unique_id: wardrobe_trv_heat_needed
+        state: >2-
+          
+                  {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_9', 'current_temperature') < state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_9', 'temperature') 
+                  and state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_9', 'hvac_action') != "off" }}
+      - name: Lounge near kitchen trv Heat Needed
+        unique_id: lounge_near_kitchen_trv_heat_needed
+        state: >2-
+          
+                  {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_5', 'current_temperature') < state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_5', 'temperature') 
+                  and state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_5', 'hvac_action') != "off" }}
+      - name: Lounge near windows trv Heat Needed
+        unique_id: lounge_near_windows_trv_heat_needed
+        state: >2-
+          
+                  {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat', 'current_temperature') < state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat', 'temperature') 
+                  and state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat', 'hvac_action') != "off" }}
+      - name: Lounge corner trv Heat Needed
+        unique_id: lounge_corner_trv_heat_needed
+        state: >2-
+          
+                  {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_2', 'current_temperature') < state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_2', 'temperature') 
+                  and state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_2', 'hvac_action') != "off" }}
+      - name: Kitchen sofa trv Heat Needed
+        unique_id: kitchen_sofa_trv_heat_needed
+        state: >2-
+          
+                  {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_6', 'current_temperature') < state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_6', 'temperature') 
+                  and state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_6', 'hvac_action') != "off" }}
+      - name: Kitchen door trv Heat Needed
+        unique_id: kitchen_door_trv_heat_needed
+        state: >2-
+          
+                  {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_4', 'current_temperature') < state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_4', 'temperature') 
+                  and state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_4', 'hvac_action') != "off" }}
+      - name: Spare bedroom trv Heat Needed
+        unique_id: spare_bedroom_trv_heat_needed
+        state: >2-
+          
+                  {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_7', 'current_temperature') < state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_7', 'temperature') 
+                  and state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_7', 'hvac_action') != "off" }}
+      - name: Music room trv Heat Needed
+        unique_id: music_room_trv_heat_needed
+        state: >2-
+          
+                  {{ state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_3', 'current_temperature') < state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_3', 'temperature') 
+                  and state_attr('climate.tze200_6rdj8dzm_ts0601_thermostat_3', 'hvac_action') != "off" }}
+      - name: Radiators Requesting Heat
+        unique_id: radiators_requesting_heat
+        state: "{{ [ 'sensor.main_bedroom_trv_heat_needed',
+          'sensor.wardrobe_trv_heat_needed',
+          'sensor.lounge_near_kitchen_trv_heat_needed',
+          'sensor.lounge_near_windows_trv_heat_needed',
+          'sensor.lounge_corner_trv_heat_needed',
+          'sensor.kitchen_sofa_trv_heat_needed',
+          'sensor.kitchen_door_trv_heat_needed',
+          'sensor.spare_bedroom_trv_heat_needed',
+          'sensor.music_room_trv_heat_needed' ] | select('is_state', 'True') |
+          list | length }}"
+sensor:
+  - platform: history_stats
+    name: Boiler burning today
+    entity_id: sensor.boiler_burning_state
+    state: "on"
+    type: time
+    start: "{{ now().replace(day=now().day-1, month=now().month, hour=now().hour,
+      minute=now().minute, second=now().second, microsecond=0) }}"
+    end: "{{ now() }}"
+binary_sensor:
+  - platform: trend
+    entity_id: sensor.tz3000_fllyghyj_ts0201_humidity_2
+    friendly_name: showering trend humidity trend
+    max_samples: 2
+    min_gradient: 0.0033333333333333335
+    sample_duration: 300
+homeassistant:
+  customize:
+    climate.tze200_6rdj8dzm_ts0601_thermostat_8:
+      friendly_name: Main bedroom TRV
+    climate.tze200_6rdj8dzm_ts0601_thermostat_9:
+      friendly_name: Wardrobe TRV
+    climate.tze200_6rdj8dzm_ts0601_thermostat_5:
+      friendly_name: Lounge near kitchen TRV
+    climate.tze200_6rdj8dzm_ts0601_thermostat:
+      friendly_name: Lounge near windows TRV
+    climate.tze200_6rdj8dzm_ts0601_thermostat_2:
+      friendly_name: Lounge corner TRV
+    climate.tze200_6rdj8dzm_ts0601_thermostat_6:
+      friendly_name: Kitchen sofa TRV
+    climate.tze200_6rdj8dzm_ts0601_thermostat_4:
+      friendly_name: Kitchen door TRV
+    climate.tze200_6rdj8dzm_ts0601_thermostat_7:
+      friendly_name: Spare bedroom TRV
+    climate.tze200_6rdj8dzm_ts0601_thermostat_3:
+      friendly_name: Music room TRV
+    switch.legrand_connected_outlet_switch_4:
+      friendly_name: Boiler switch
+automation:
+  - alias: Turn off boiler when all rads satisfied
+    trigger:
+      - platform: state
+        entity_id: sensor.radiators_requesting_heat
+    condition:
+      - condition: template
+        value_template: "{{ states('sensor.radiators_requesting_heat') | float == 0 }}"
+      - condition: template
+        value_template: >-
+          {% set changed =
+          as_timestamp(states.switch.legrand_connected_outlet_switch_4.last_changed)
+          %}
+                      {% set now = as_timestamp(now()) %}
+                      {% set time = now - changed %}
+                      {% set minutes = (time / 60) | int %}
+                      {{ minutes > 5 }}
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.legrand_connected_outlet_switch_4
+  - alias: Turn on boiler when heat needed
+    trigger:
+      - platform: state
+        entity_id: sensor.radiators_requesting_heat
+    condition:
+      - condition: template
+        value_template: "{{ states('sensor.radiators_requesting_heat') | float > 0 }}"
+      - condition: template
+        value_template: >-
+          {% set changed =
+          as_timestamp(states.switch.legrand_connected_outlet_switch_4.last_changed)
+          %}
+              {% set now = as_timestamp(now()) %}
+              {% set time = now - changed %}
+              {% set minutes = (time / 60) | int %}
+              {{ minutes > 5 }}
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.legrand_connected_outlet_switch_4
+  - alias: Turn off Ensuite VMC when 'showering trend' is off
+    description: humidity increases by 10% over 5 minutes
+    trigger:
+      - platform: state
+        entity_id: sensor.showering_trend_humidity_trend
+        from: "off"
+        to: "on"
+    action:
+      - service: switch.turn_on
+        target:
+          entity_id: switch.shelly_shellypro4pm_84cca87f95dc_4
+  - alias: Turn on Ensuite VMC when 'showering trend' is on
+    description: humidity increases by 10% over 5 minutes
+    trigger:
+      - platform: state
+        entity_id: sensor.showering_trend_humidity_trend
+        from: "on"
+        to: "off"
+    action:
+      - service: switch.turn_off
+        target:
+          entity_id: switch.shelly_shellypro4pm_84cca87f95dc_4

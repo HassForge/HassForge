@@ -1,11 +1,4 @@
 import {
-  Automation,
-  CreatableEntity,
-  GenericThermostatClimate,
-  Sensor,
-  TemplateSensor,
-} from "./creatables";
-import {
   HAPackage,
   HAClimate,
   HASensor,
@@ -13,11 +6,11 @@ import {
   HATemplate,
   HACustomizeDictionary,
   HATemplateSensor,
+  HABinarySensor,
+  HABayesianBinarySensor,
+  HATrendBinarySensor,
 } from "@hassbuilder/types";
-import { EntityTarget } from "./configuration";
 import { JsonIgnore, toJSON } from "./utils";
-
-export type NonCreatable<T> = T extends CreatableEntity ? never : T;
 
 export class HassBuilderPackage implements HAPackage {
   @JsonIgnore
@@ -26,6 +19,8 @@ export class HassBuilderPackage implements HAPackage {
   templateMap: { [key: string]: HATemplateSensor } = {};
   @JsonIgnore
   sensorMap: { [key: string]: HASensor } = {};
+  @JsonIgnore
+  binarySensorMap: { [key: string]: HABinarySensor } = {};
   @JsonIgnore
   customize: HACustomizeDictionary = {};
   @JsonIgnore
@@ -41,6 +36,10 @@ export class HassBuilderPackage implements HAPackage {
 
   public get sensor() {
     return Object.values(this.sensorMap);
+  }
+
+  public get binary_sensor() {
+    return Object.values(this.binarySensorMap);
   }
 
   public get homeassistant() {
@@ -60,6 +59,7 @@ export class HassBuilderPackage implements HAPackage {
       if (pkg.homeassistant) this.addCustomization(pkg.homeassistant.customize);
       if (pkg.sensor) this.addSensor(...pkg.sensor);
       if (pkg.template) this.addTemplate(...pkg.template);
+      if (pkg.binary_sensor) this.addBinarySensor(...pkg.binary_sensor);
     });
     return this;
   }
@@ -82,6 +82,15 @@ export class HassBuilderPackage implements HAPackage {
     return this;
   }
 
+  public addBinarySensor(...sensors: HABinarySensor[]) {
+    sensors.forEach((sensor) => {
+      const name = ((sensor as HABayesianBinarySensor).name ??
+        (sensor as HATrendBinarySensor).friendly_name)!;
+      this.binarySensorMap[name] = sensor;
+    });
+    return this;
+  }
+
   public addSensor(...sensors: HASensor[]) {
     sensors.forEach((sensor) => (this.sensorMap[sensor.name] = sensor));
     return this;
@@ -99,36 +108,7 @@ export class HassBuilderPackage implements HAPackage {
     return this;
   }
 
-  addEntity(...entities: CreatableEntity[]) {
-    entities.forEach((entity) => {
-      if (entity instanceof GenericThermostatClimate) {
-        this.addClimate(entity);
-      } else if (entity instanceof Automation) {
-        this.addAutomation(entity);
-      } else if (entity instanceof Sensor) {
-        this.addSensor(entity);
-      } else if (entity instanceof TemplateSensor) {
-        this.addTemplateSensor(entity);
-      }
-    });
-    return this;
-  }
-
-  addExistingEntity(...entities: NonCreatable<EntityTarget>[]) {
-    return this.addCustomization(
-      entities
-        .filter((entity) => !(entity instanceof CreatableEntity))
-        .reduce<HACustomizeDictionary>(
-          (prev, curr) => ({
-            ...prev,
-            [curr.id]: { friendly_name: curr.name },
-          }),
-          {}
-        )
-    );
-  }
-
   toJSON() {
-    return toJSON.bind(this)()
+    return toJSON.bind(this)();
   }
 }

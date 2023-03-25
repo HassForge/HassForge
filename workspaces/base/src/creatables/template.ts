@@ -5,7 +5,7 @@ import { snakeCase } from "change-case";
 import { SensorTarget } from "../configuration";
 
 export class TemplateSensor<P extends any = undefined>
-  extends CreatableEntity<"sensor", HATemplateSensor>
+  extends CreatableEntity<"sensor">
   implements HATemplateSensor, SensorTarget
 {
   name!: string;
@@ -26,7 +26,7 @@ export class TemplateSensor<P extends any = undefined>
       ...entity,
       unique_id: entity.unique_id ?? snakeCase(entity.name),
     };
-    super("sensor", fullEntity);
+    super("sensor", `sensor.${snakeCase(entity.name)}`);
     this.parent = parent as any;
     Object.assign(this, fullEntity);
   }

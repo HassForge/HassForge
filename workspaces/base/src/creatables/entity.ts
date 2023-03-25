@@ -1,22 +1,18 @@
-import { snakeCase } from "change-case";
 import { JsonIgnore, toJSON } from "../utils/json-ignore";
 import { EntityClass, EntityID } from "@hassbuilder/types";
 
 /**
  * Describes a backend (Package) yaml output
  */
-export class CreatableEntity<
-  C extends EntityClass = EntityClass,
-  E extends { name: string } = { name: string }
-> {
+export class CreatableEntity<C extends EntityClass = EntityClass> {
   @JsonIgnore
   entityClass: C;
   @JsonIgnore
   id: EntityID<C>;
 
-  constructor(entityClass: C, entity: E) {
+  constructor(entityClass: C, id: EntityID<C>) {
     this.entityClass = entityClass;
-    this.id = `${entityClass}.${snakeCase(entity.name)}`;
+    this.id = id;
   }
 
   public toJSON() {

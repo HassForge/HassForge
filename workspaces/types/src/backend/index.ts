@@ -4,3 +4,4 @@ export * from "./homeassistant";
 export * from "./package";
 export * from "./sensor";
 export * from "./template";
+export * from "./binary-sensor";

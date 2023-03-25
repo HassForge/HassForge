@@ -23,8 +23,7 @@ export class BoilerBurningTemplateSensor extends TemplateSensor {
                 on
               {% else %}
                 failed
-              {% endif %}
-            `,
+              {% endif %}`,
     });
   }
 }

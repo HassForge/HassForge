@@ -3,5 +3,16 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist"
-  }
+  },
+  "references": [
+    {
+      "path": "../types"
+    },
+    {
+      "path": "../base"
+    },
+    {
+      "path": "../packages"
+    }
+  ]
 }

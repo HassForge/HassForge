@@ -1,9 +1,10 @@
 import { CreatableEntity } from "./entity";
 import { HASensor } from "@hassbuilder/types";
 import { SensorTarget } from "../configuration";
+import { snakeCase } from "change-case";
 
 export class Sensor
-  extends CreatableEntity<"sensor", HASensor>
+  extends CreatableEntity<"sensor">
   implements HASensor, SensorTarget
 {
   platform!: string;
@@ -15,7 +16,7 @@ export class Sensor
   end!: string;
 
   constructor(entity: HASensor) {
-    super("sensor", entity);
+    super("sensor", `sensor.${snakeCase(entity.name)}`);
     Object.assign(this, entity);
   }
 }

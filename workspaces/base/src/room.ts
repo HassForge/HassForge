@@ -75,10 +75,13 @@ export class Room implements HAPackage {
     ].filter((entity) => !(entity instanceof CreatableEntity));
     return {
       customize: entities.reduce<HACustomizeDictionary>(
-        (prev, target) => ({
-          ...prev,
-          [target.id]: { friendly_name: target.name },
-        }),
+        (prev, target) =>
+          target.name
+            ? {
+                ...prev,
+                [target.id]: { friendly_name: target.name },
+              }
+            : prev,
         {}
       ),
     };

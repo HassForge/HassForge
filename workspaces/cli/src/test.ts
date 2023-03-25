@@ -3,8 +3,12 @@ import {
   GenericThermostatClimate,
   HassBuilderPackage,
 } from "@hassbuilder/base";
-import { HassBasicThermostatPackage } from "./basic-thermostat";
-import { HassRoomHeating } from "./room-heating";
+import {
+  HassBasicThermostatPackage,
+  HassHumidityTrendSwitch,
+  HassRoomHeating,
+} from "@hassbuilder/packages";
+import { writeFiles } from "./write-files";
 
 const mainBedroom = new Room("Main Bedroom")
   .addClimate({
@@ -19,7 +23,7 @@ const mainBedroom = new Room("Main Bedroom")
     new GenericThermostatClimate({
       name: "Main bedroom electric",
       heater: "switch.legrand_connected_outlet_switch_3",
-      targetSensor: "sensor.tz3000_fllyghyj_ts0201_temperature",
+      target_sensor: "sensor.tz3000_fllyghyj_ts0201_temperature",
     })
   );
 
@@ -51,7 +55,7 @@ const tomsOffice = new Room("Toms Office").addClimate(
   new GenericThermostatClimate({
     name: "Toms office electric",
     heater: "switch.shelly_shsw_1_e89f6d86a7a1",
-    targetSensor: "sensor.tze200_dwcarsat_ts0601_temperature",
+    target_sensor: "sensor.tze200_dwcarsat_ts0601_temperature",
   })
 );
 
@@ -59,7 +63,7 @@ const endBedroom = new Room("End Bedroom").addClimate(
   new GenericThermostatClimate({
     name: "End bedroom electric",
     heater: "switch.0x04cf8cdf3c89dcdd",
-    targetSensor: "sensor.0xa4c138bf686fe61c_temperature",
+    target_sensor: "sensor.0xa4c138bf686fe61c_temperature",
   })
 );
 
@@ -83,7 +87,7 @@ const boilerPowerConsumptionSensor = {
   id: "sensor.legrand_connected_outlet_active_power_4",
 } as const;
 
-const boilerRoom = new Room("Boiler Room").addSwitches(boilerSwitch)
+const boilerRoom = new Room("Boiler Room").addSwitches(boilerSwitch);
 
 const rooms = [
   mainBedroom,
@@ -94,6 +98,18 @@ const rooms = [
   spareBedroom,
   musicRoom,
 ];
+
+const ensuiteShowering = new HassHumidityTrendSwitch({
+  name: "showering",
+  sensorTarget: {
+    id: "sensor.tz3000_fllyghyj_ts0201_humidity_2",
+    name: "Ensuite Humidity Sensor",
+  },
+  switchTarget: {
+    id: "switch.shelly_shellypro4pm_84cca87f95dc_4",
+    name: "Ensuite VMC",
+  },
+});
 
 const basicThermostatPkg = new HassBasicThermostatPackage({
   boiler: {
@@ -112,26 +128,21 @@ const pkg = new HassBuilderPackage().mergePackage(
   ...rooms,
   boilerRoom,
   ...heating,
-  basicThermostatPkg
+  basicThermostatPkg,
+  ensuiteShowering
 );
 
-const dashboard = [basicThermostatPkg.card(), ...heating.map(heating => heating.card())]
-
+const dashboard = [
+  basicThermostatPkg.card(),
+  ...heating.map((heating) => heating.card()),
+];
 
 console.log(JSON.stringify(pkg, null, 4));
 console.log(JSON.stringify(dashboard, null, 4));
 
-// writeFiles("../packages/temperature/", {
-//   "0_boiler": boiler.buildBackend(),
-//   ...rooms.reduce<{ [fileName: string]: Package }>(
-//     (prev, roomBuilder, i) => ({
-//       ...prev,
-//       [`${snakeCase(`${i + 1}_${roomBuilder.name}`)}`]:
-//         roomBuilder.buildBackend(),
-//     }),
-//     {}
-//   ),
-// });
+writeFiles("./out", {
+    backend: pkg
+});
 // writeFiles("../dashboards/cards/heating/rooms/", {
 //   "0_boiler": boiler.buildFrontend(),
 //   ...rooms.reduce<{ [fileName: string]: Card }>(

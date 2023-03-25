@@ -19,7 +19,9 @@ export class RadiatorHeatNeededTemplateSensor extends TemplateSensor<ClimateTarg
     super(
       {
         name: `${sentenceCase(name)} Heat Needed`,
-        state: `{{ state_attr('${id}', '${temperatureAttribute}') < state_attr('${id}', '${setpointAttribute}') and state_attr('${id}', '${heatModeAttribute}') != "off" }}`,
+        state: `
+        {{ state_attr('${id}', '${temperatureAttribute}') < state_attr('${id}', '${setpointAttribute}') 
+        and state_attr('${id}', '${heatModeAttribute}') != "off" }}`,
       },
       climate
     );

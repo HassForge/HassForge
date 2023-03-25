@@ -24,8 +24,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:workspaces/cli"\
       },\
       {\
-        "name": "@hassbuilder/heating",\
-        "reference": "workspace:workspaces/heating"\
+        "name": "@hassbuilder/packages",\
+        "reference": "workspace:workspaces/packages"\
       },\
       {\
         "name": "@hassbuilder/types",\
@@ -37,7 +37,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "fallbackExclusionList": [\
       ["@hassbuilder/base", ["workspace:workspaces/base"]],\
       ["@hassbuilder/cli", ["workspace:workspaces/cli"]],\
-      ["@hassbuilder/heating", ["workspace:workspaces/heating"]],\
+      ["@hassbuilder/packages", ["workspace:workspaces/packages"]],\
       ["@hassbuilder/types", ["workspace:workspaces/types"]],\
       ["hassbuilder", ["workspace:."]]\
     ],\
@@ -88,7 +88,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@hassbuilder/cli", "workspace:workspaces/cli"],\
             ["@hassbuilder/base", "workspace:workspaces/base"],\
-            ["@hassbuilder/heating", "workspace:workspaces/heating"],\
+            ["@hassbuilder/packages", "workspace:workspaces/packages"],\
             ["@hassbuilder/types", "workspace:workspaces/types"],\
             ["@types/node", "npm:18.11.18"],\
             ["change-case", "npm:4.1.2"],\
@@ -99,15 +99,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
-      ["@hassbuilder/heating", [\
-        ["workspace:workspaces/heating", {\
-          "packageLocation": "./workspaces/heating/",\
+      ["@hassbuilder/packages", [\
+        ["workspace:workspaces/packages", {\
+          "packageLocation": "./workspaces/packages/",\
           "packageDependencies": [\
-            ["@hassbuilder/heating", "workspace:workspaces/heating"],\
+            ["@hassbuilder/packages", "workspace:workspaces/packages"],\
             ["@hassbuilder/base", "workspace:workspaces/base"],\
             ["@hassbuilder/types", "workspace:workspaces/types"],\
             ["@types/node", "npm:18.11.18"],\
             ["change-case", "npm:4.1.2"],\
+            ["date-fns", "npm:2.29.3"],\
             ["ts-node", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
           ],\
@@ -322,6 +323,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/create-require-npm-1.1.1-839884ca2e-a9a1503d43.zip/node_modules/create-require/",\
           "packageDependencies": [\
             ["create-require", "npm:1.1.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["date-fns", [\
+        ["npm:2.29.3", {\
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.29.3-fef7e3c72c-e01cf5b62a.zip/node_modules/date-fns/",\
+          "packageDependencies": [\
+            ["date-fns", "npm:2.29.3"]\
           ],\
           "linkType": "HARD"\
         }]\
