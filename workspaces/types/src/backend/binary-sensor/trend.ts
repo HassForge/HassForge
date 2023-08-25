@@ -9,9 +9,11 @@ export interface HATrendBinarySensorMapSensor {
   sample_duration?: number;
 }
 
-export type HATrendBinarySensorMap = { [key: string]: HATrendBinarySensorMapSensor}
+export type HATrendBinarySensorMap = {
+  [key: string]: HATrendBinarySensorMapSensor;
+};
 
 export interface HATrendBinarySensor {
   platform: "trend";
-  sensors: HATrendBinarySensorMap
+  sensors: HATrendBinarySensorMap;
 }

@@ -5,3 +5,4 @@ export * from "./package";
 export * from "./sensor";
 export * from "./template";
 export * from "./binary-sensor";
+export * from "./device-class";

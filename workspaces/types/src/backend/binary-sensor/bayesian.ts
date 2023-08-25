@@ -2,6 +2,7 @@
  * Represents a Home Assistant Bayesian binary sensor.
  */
 export interface HABayesianBinarySensor {
+  platform: "bayesian";
   /**
    * The prior probability of the event (0 to 1).
    * At any point in time (ignoring all external influences) how likely is this event to be occurring?
@@ -67,7 +68,7 @@ interface HABayesianBinarySensorObservation {
    * requiring to_state (for state), below and/or above (for numeric_state)
    * and value_template (for template).
    */
-  platform: string;
+  platform: "state" | "numberic_state" | "template";
 
   /**
    * Name of the entity to monitor.

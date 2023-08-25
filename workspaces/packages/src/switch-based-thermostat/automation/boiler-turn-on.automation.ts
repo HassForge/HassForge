@@ -4,14 +4,17 @@ import {
   SwitchTarget,
   statesNotationTransform,
 } from "@hassbuilder/base";
+import { snakeCase } from "change-case";
 
-export class BoilerShutOffAutomation extends Automation {
+export class BoilerTurnOnAutomation extends Automation {
   constructor(
     radiatorHeatNeededSensor: SensorTarget,
     boilerSwitch: SwitchTarget
   ) {
+    const alias = "Turn on boiler when heat needed";
     super({
-      alias: "Turn off boiler when all rads satisfied",
+      alias,
+      id: snakeCase(alias),
       trigger: [
         {
           platform: "state",
@@ -21,22 +24,22 @@ export class BoilerShutOffAutomation extends Automation {
       condition: [
         {
           condition: "template",
-          value_template: `{{ states('${radiatorHeatNeededSensor.id}') | float == 0 }}`,
+          value_template: `{{ states('${radiatorHeatNeededSensor.id}') | float > 0 }}`,
         },
         {
           condition: "template",
           value_template: `{% set changed = as_timestamp(${statesNotationTransform(
             boilerSwitch.id
           )}.last_changed) %}
-            {% set now = as_timestamp(now()) %}
-            {% set time = now - changed %}
-            {% set minutes = (time / 60) | int %}
-            {{ minutes > 5 }}`,
+    {% set now = as_timestamp(now()) %}
+    {% set time = now - changed %}
+    {% set minutes = (time / 60) | int %}
+    {{ minutes > 5 }}`,
         },
       ],
       action: [
         {
-          service: "switch.turn_off",
+          service: "switch.turn_on",
           target: {
             entity_id: boilerSwitch.id,
           },

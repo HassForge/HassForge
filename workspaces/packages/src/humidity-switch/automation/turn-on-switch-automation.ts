@@ -1,4 +1,5 @@
 import { Automation, SensorTarget, SwitchTarget } from "@hassbuilder/base";
+import { snakeCase } from "change-case";
 
 export class TurnOnSwitchBinarySensorAutomation extends Automation {
   constructor(
@@ -9,6 +10,7 @@ export class TurnOnSwitchBinarySensorAutomation extends Automation {
   ) {
     super({
       alias: name,
+      id: snakeCase(name),
       description,
       trigger: [
         {

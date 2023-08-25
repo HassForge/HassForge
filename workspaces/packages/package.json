@@ -2,8 +2,6 @@
   "name": "@hassbuilder/packages",
   "packageManager": "yarn@3.3.1",
   "main": "dist/index.js",
-  "scripts": {
-  },
   "dependencies": {
     "@hassbuilder/base": "workspace:workspaces/base",
     "@hassbuilder/types": "workspace:workspaces/types",
