@@ -12,34 +12,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     ],\
     "dependencyTreeRoots": [\
       {\
-        "name": "hassbuilder",\
+        "name": "hassforge",\
         "reference": "workspace:."\
       },\
       {\
-        "name": "@hassbuilder/base",\
+        "name": "@hassforge/base",\
         "reference": "workspace:workspaces/base"\
       },\
       {\
-        "name": "@hassbuilder/cli",\
+        "name": "@hassforge/cli",\
         "reference": "workspace:workspaces/cli"\
       },\
       {\
-        "name": "@hassbuilder/packages",\
+        "name": "@hassforge/packages",\
         "reference": "workspace:workspaces/packages"\
       },\
       {\
-        "name": "@hassbuilder/types",\
+        "name": "@hassforge/types",\
         "reference": "workspace:workspaces/types"\
       }\
     ],\
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
-      ["@hassbuilder/base", ["workspace:workspaces/base"]],\
-      ["@hassbuilder/cli", ["workspace:workspaces/cli"]],\
-      ["@hassbuilder/packages", ["workspace:workspaces/packages"]],\
-      ["@hassbuilder/types", ["workspace:workspaces/types"]],\
-      ["hassbuilder", ["workspace:."]]\
+      ["@hassforge/base", ["workspace:workspaces/base"]],\
+      ["@hassforge/cli", ["workspace:workspaces/cli"]],\
+      ["@hassforge/packages", ["workspace:workspaces/packages"]],\
+      ["@hassforge/types", ["workspace:workspaces/types"]],\
+      ["hassforge", ["workspace:."]]\
     ],\
     "fallbackPool": [\
     ],\
@@ -50,8 +50,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/node", "npm:18.11.18"],\
             ["change-case", "npm:4.1.2"],\
-            ["nunjucks", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:3.2.3"],\
-            ["ts-node", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1"],\
+            ["nunjucks", "virtual:addcdecc76b9f0b69c2e28c322d139c8db0af34fc6eca6107c8f51c0107c0950c06cd00fa94a331f22796b5e242547e08a868082dbd1ba7902ced9096a35c97a#npm:3.2.3"],\
+            ["ts-node", "virtual:addcdecc76b9f0b69c2e28c322d139c8db0af34fc6eca6107c8f51c0107c0950c06cd00fa94a331f22796b5e242547e08a868082dbd1ba7902ced9096a35c97a#npm:10.9.1"],\
             ["tsconfig-paths", "npm:4.1.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
             ["yaml", "npm:2.2.1"]\
@@ -100,12 +100,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["@hassbuilder/base", [\
+      ["@hassforge/base", [\
         ["workspace:workspaces/base", {\
           "packageLocation": "./workspaces/base/",\
           "packageDependencies": [\
-            ["@hassbuilder/base", "workspace:workspaces/base"],\
-            ["@hassbuilder/types", "workspace:workspaces/types"],\
+            ["@hassforge/base", "workspace:workspaces/base"],\
+            ["@hassforge/types", "workspace:workspaces/types"],\
             ["@types/node", "npm:18.11.18"],\
             ["change-case", "npm:4.1.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
@@ -113,14 +113,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
-      ["@hassbuilder/cli", [\
+      ["@hassforge/cli", [\
         ["workspace:workspaces/cli", {\
           "packageLocation": "./workspaces/cli/",\
           "packageDependencies": [\
-            ["@hassbuilder/cli", "workspace:workspaces/cli"],\
-            ["@hassbuilder/base", "workspace:workspaces/base"],\
-            ["@hassbuilder/packages", "workspace:workspaces/packages"],\
-            ["@hassbuilder/types", "workspace:workspaces/types"],\
+            ["@hassforge/cli", "workspace:workspaces/cli"],\
+            ["@hassforge/base", "workspace:workspaces/base"],\
+            ["@hassforge/packages", "workspace:workspaces/packages"],\
+            ["@hassforge/types", "workspace:workspaces/types"],\
             ["@types/node", "npm:18.11.18"],\
             ["change-case", "npm:4.1.2"],\
             ["commander", "npm:10.0.0"],\
@@ -131,27 +131,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT"\
         }]\
       ]],\
-      ["@hassbuilder/packages", [\
+      ["@hassforge/packages", [\
         ["workspace:workspaces/packages", {\
           "packageLocation": "./workspaces/packages/",\
           "packageDependencies": [\
-            ["@hassbuilder/packages", "workspace:workspaces/packages"],\
-            ["@hassbuilder/base", "workspace:workspaces/base"],\
-            ["@hassbuilder/types", "workspace:workspaces/types"],\
+            ["@hassforge/packages", "workspace:workspaces/packages"],\
+            ["@hassforge/base", "workspace:workspaces/base"],\
+            ["@hassforge/types", "workspace:workspaces/types"],\
             ["@types/node", "npm:18.11.18"],\
             ["change-case", "npm:4.1.2"],\
             ["date-fns", "npm:2.29.3"],\
-            ["ts-node", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1"],\
+            ["ts-node", "virtual:addcdecc76b9f0b69c2e28c322d139c8db0af34fc6eca6107c8f51c0107c0950c06cd00fa94a331f22796b5e242547e08a868082dbd1ba7902ced9096a35c97a#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
           ],\
           "linkType": "SOFT"\
         }]\
       ]],\
-      ["@hassbuilder/types", [\
+      ["@hassforge/types", [\
         ["workspace:workspaces/types", {\
           "packageLocation": "./workspaces/types/",\
           "packageDependencies": [\
-            ["@hassbuilder/types", "workspace:workspaces/types"],\
+            ["@hassforge/types", "workspace:workspaces/types"],\
             ["@types/node", "npm:18.11.18"],\
             ["change-case", "npm:4.1.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"]\
@@ -488,15 +488,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["hassbuilder", [\
+      ["hassforge", [\
         ["workspace:.", {\
           "packageLocation": "./",\
           "packageDependencies": [\
-            ["hassbuilder", "workspace:."],\
+            ["hassforge", "workspace:."],\
             ["@types/node", "npm:18.11.18"],\
             ["change-case", "npm:4.1.2"],\
-            ["nunjucks", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:3.2.3"],\
-            ["ts-node", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1"],\
+            ["nunjucks", "virtual:addcdecc76b9f0b69c2e28c322d139c8db0af34fc6eca6107c8f51c0107c0950c06cd00fa94a331f22796b5e242547e08a868082dbd1ba7902ced9096a35c97a#npm:3.2.3"],\
+            ["ts-node", "virtual:addcdecc76b9f0b69c2e28c322d139c8db0af34fc6eca6107c8f51c0107c0950c06cd00fa94a331f22796b5e242547e08a868082dbd1ba7902ced9096a35c97a#npm:10.9.1"],\
             ["tsconfig-paths", "npm:4.1.2"],\
             ["typescript", "patch:typescript@npm%3A4.9.4#~builtin<compat/typescript>::version=4.9.4&hash=ad5954"],\
             ["yaml", "npm:2.2.1"]\
@@ -628,10 +628,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:3.2.3", {\
-          "packageLocation": "./.yarn/__virtual__/nunjucks-virtual-17b5656b96/0/cache/nunjucks-npm-3.2.3-ae8b5fd14c-9d0125acf9.zip/node_modules/nunjucks/",\
+        ["virtual:addcdecc76b9f0b69c2e28c322d139c8db0af34fc6eca6107c8f51c0107c0950c06cd00fa94a331f22796b5e242547e08a868082dbd1ba7902ced9096a35c97a#npm:3.2.3", {\
+          "packageLocation": "./.yarn/__virtual__/nunjucks-virtual-dc98b131ab/0/cache/nunjucks-npm-3.2.3-ae8b5fd14c-9d0125acf9.zip/node_modules/nunjucks/",\
           "packageDependencies": [\
-            ["nunjucks", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:3.2.3"],\
+            ["nunjucks", "virtual:addcdecc76b9f0b69c2e28c322d139c8db0af34fc6eca6107c8f51c0107c0950c06cd00fa94a331f22796b5e242547e08a868082dbd1ba7902ced9096a35c97a#npm:3.2.3"],\
             ["@types/chokidar", null],\
             ["a-sync-waterfall", "npm:1.0.1"],\
             ["asap", "npm:2.0.6"],\
@@ -769,10 +769,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1", {\
-          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-3f272b0baf/0/cache/ts-node-npm-10.9.1-6c268be7f4-090adff130.zip/node_modules/ts-node/",\
+        ["virtual:addcdecc76b9f0b69c2e28c322d139c8db0af34fc6eca6107c8f51c0107c0950c06cd00fa94a331f22796b5e242547e08a868082dbd1ba7902ced9096a35c97a#npm:10.9.1", {\
+          "packageLocation": "./.yarn/__virtual__/ts-node-virtual-f8feecbfbd/0/cache/ts-node-npm-10.9.1-6c268be7f4-090adff130.zip/node_modules/ts-node/",\
           "packageDependencies": [\
-            ["ts-node", "virtual:1b7f364e2a42277e30d4cb01afea47a0fa5e8f9ac8a4636068de97faa496bba96c2271ec16280c33bed357d2c508c274b3dc4edc6d5366ed07d174bb0f045f3b#npm:10.9.1"],\
+            ["ts-node", "virtual:addcdecc76b9f0b69c2e28c322d139c8db0af34fc6eca6107c8f51c0107c0950c06cd00fa94a331f22796b5e242547e08a868082dbd1ba7902ced9096a35c97a#npm:10.9.1"],\
             ["@cspotcode/source-map-support", "npm:0.8.1"],\
             ["@swc/core", null],\
             ["@swc/wasm", null],\

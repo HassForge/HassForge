@@ -1,4 +1,4 @@
-import { HACard } from "@hassbuilder/types";
+import { HACard } from "@hassforge/types";
 
 export type CardGenerator = (...args: any[]) => HACard | HACard[];
 

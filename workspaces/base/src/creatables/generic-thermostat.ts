@@ -1,5 +1,5 @@
 import { CreatableEntity } from "./entity";
-import { HAGenericThermostat } from "@hassbuilder/types";
+import { HAGenericThermostat } from "@hassforge/types";
 import { ClimateTarget } from "../configuration";
 import { snakeCase } from "change-case";
 

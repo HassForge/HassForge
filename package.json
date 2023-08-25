@@ -1,5 +1,5 @@
 {
-  "name": "hassbuilder",
+  "name": "hassforge",
   "packageManager": "yarn@3.3.1",
   "scripts": {
     "build": "tsc --build",

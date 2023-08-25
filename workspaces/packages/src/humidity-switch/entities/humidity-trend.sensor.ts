@@ -1,4 +1,4 @@
-import { SensorTarget, TrendBinarySensor } from "@hassbuilder/base";
+import { SensorTarget, TrendBinarySensor } from "@hassforge/base";
 
 export interface HumidityTrendSensorOptions {
   name: string;

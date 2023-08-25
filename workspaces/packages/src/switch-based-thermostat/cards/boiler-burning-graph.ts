@@ -1,4 +1,4 @@
-import { MiniGraphCard } from "@hassbuilder/types";
+import { MiniGraphCard } from "@hassforge/types";
 import { SwitchBasedThermostat } from "../extension";
 
 export const boilerBurningGraph = ({ isBurningSensor }: SwitchBasedThermostat): MiniGraphCard => {

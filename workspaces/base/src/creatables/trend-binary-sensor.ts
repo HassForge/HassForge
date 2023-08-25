@@ -4,7 +4,7 @@ import {
   HATrendBinarySensor,
   HATrendBinarySensorMap,
   HATrendBinarySensorMapSensor,
-} from "@hassbuilder/types";
+} from "@hassforge/types";
 import { snakeCase } from "change-case";
 
 export class TrendBinarySensor

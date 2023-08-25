@@ -4,7 +4,7 @@ import {
   DEFAULT_HEAT_MODE_ATTRIBUTE,
   DEFAULT_SETPOINT_ATTRIBUTE,
   DEFAULT_TEMPERATURE_ATTRIBUTE,
-} from "@hassbuilder/base";
+} from "@hassforge/base";
 import { sentenceCase } from "change-case";
 
 export class RadiatorHeatNeededTemplateSensor extends TemplateSensor<ClimateTarget> {

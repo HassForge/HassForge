@@ -1,4 +1,4 @@
-import { Automation, SensorTarget, SwitchTarget } from "@hassbuilder/base";
+import { Automation, SensorTarget, SwitchTarget } from "@hassforge/base";
 import { snakeCase } from "change-case";
 
 export class TurnOffSwitchBinarySensorAutomation extends Automation {

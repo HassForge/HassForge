@@ -1,4 +1,4 @@
-import { Room } from "@hassbuilder/base";
+import { Room } from "@hassforge/base";
 import { sentenceCase } from "change-case";
 import { RoomHeating } from "../extension";
 import { averageTemperatureGraph } from "./average-temperature-graph";

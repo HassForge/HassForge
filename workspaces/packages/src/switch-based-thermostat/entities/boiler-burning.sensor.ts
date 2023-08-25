@@ -1,4 +1,4 @@
-import { TemplateSensor, SwitchTarget, SensorTarget } from "@hassbuilder/base";
+import { TemplateSensor, SwitchTarget, SensorTarget } from "@hassforge/base";
 
 export interface BoilerBurningTemplateSensorOptions {
   haSwitch: SwitchTarget;

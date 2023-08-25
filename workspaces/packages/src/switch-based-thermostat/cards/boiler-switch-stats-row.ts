@@ -1,4 +1,4 @@
-import { EntityRowCard } from "@hassbuilder/types";
+import { EntityRowCard } from "@hassforge/types";
 import { SwitchBasedThermostat } from "../extension";
 
 export const boilerSwitchStatsRow = ({

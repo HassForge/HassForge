@@ -1,4 +1,4 @@
-import { EntityID, EntityClass } from "@hassbuilder/types";
+import { EntityID, EntityClass } from "@hassforge/types";
 
 type StatesNotation =
   | `states.${EntityClass}.${string}`

@@ -1,6 +1,6 @@
 import { JsonIgnore } from "../utils/json-ignore";
 import { CreatableEntity } from "./entity";
-import { HATemplateSensor } from "@hassbuilder/types";
+import { HATemplateSensor } from "@hassforge/types";
 import { snakeCase } from "change-case";
 import { SensorTarget } from "../configuration";
 

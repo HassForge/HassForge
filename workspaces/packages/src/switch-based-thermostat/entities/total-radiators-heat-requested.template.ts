@@ -2,7 +2,7 @@ import {
   TemplateSensor,
   SensorTarget,
   toJinjaArrayLiteral,
-} from "@hassbuilder/base";
+} from "@hassforge/base";
 
 export class TotalRadiatorsHeatRequestedSensor extends TemplateSensor<
   SensorTarget[]

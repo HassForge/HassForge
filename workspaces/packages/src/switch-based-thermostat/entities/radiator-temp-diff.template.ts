@@ -1,4 +1,4 @@
-import { TemplateSensor, ClimateTarget } from "@hassbuilder/base";
+import { TemplateSensor, ClimateTarget } from "@hassforge/base";
 import { sentenceCase } from "change-case";
 
 export class RadiatorTempDiffTemplateSensor extends TemplateSensor<ClimateTarget> {

@@ -3,7 +3,7 @@ import {
   ClimateTarget,
   Room,
   RoomExtension,
-} from "@hassbuilder/base";
+} from "@hassforge/base";
 import {
   BoilerBurningTemplateSensor,
   BoilerBurningTemplateSensorOptions,

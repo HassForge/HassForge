@@ -1,7 +1,7 @@
 import {
   heatingColorThresholds,
   MiniGraphCardEntity,
-} from "@hassbuilder/types";
+} from "@hassforge/types";
 import { RoomHeating } from "../extension";
 
 export const averageTemperatureGraph = ({

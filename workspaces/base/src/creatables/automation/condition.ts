@@ -11,7 +11,7 @@ import {
   TimeCondition,
   TriggerCondition,
   ZoneCondition,
-} from "@hassbuilder/types";
+} from "@hassforge/types";
 
 export namespace Condition {
   export function and(...conditions: HACondition[]): AndCondition {

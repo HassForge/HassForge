@@ -1,14 +1,14 @@
 {
-  "name": "@hassbuilder/cli",
+  "name": "@hassforge/cli",
   "packageManager": "yarn@3.3.1",
   "scripts": {
     "build": "tsc --build",
     "test": "node ./dist/test.js"
   },
   "dependencies": {
-    "@hassbuilder/base": "workspace:workspaces/base",
-    "@hassbuilder/packages": "workspace:workspaces/packages",
-    "@hassbuilder/types": "workspace:workspaces/types",
+    "@hassforge/base": "workspace:workspaces/base",
+    "@hassforge/packages": "workspace:workspaces/packages",
+    "@hassforge/types": "workspace:workspaces/types",
     "change-case": "^4.1.2",
     "commander": "^10.0.0",
     "cosmiconfig": "^8.1.3",

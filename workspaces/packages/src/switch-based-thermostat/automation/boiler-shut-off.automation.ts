@@ -6,7 +6,7 @@ import {
   Trigger,
   Condition,
   Action,
-} from "@hassbuilder/base";
+} from "@hassforge/base";
 import { snakeCase } from "change-case";
 
 export class BoilerShutOffAutomation extends Automation {

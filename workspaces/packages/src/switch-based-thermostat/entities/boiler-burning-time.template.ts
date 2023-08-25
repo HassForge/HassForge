@@ -1,4 +1,4 @@
-import { Sensor, SensorTarget } from "@hassbuilder/base";
+import { Sensor, SensorTarget } from "@hassforge/base";
 
 export class BoilerBurningTimeSensor extends Sensor {
   constructor({ id }: SensorTarget) {

@@ -1,5 +1,5 @@
-import { Room } from "@hassbuilder/base";
-import { EntityID } from "@hassbuilder/types";
+import { Room } from "@hassforge/base";
+import { EntityID } from "@hassforge/types";
 
 export interface SchedulerCardGroup {
   name: string;

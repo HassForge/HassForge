@@ -3,7 +3,7 @@ import {
   SensorTarget,
   SwitchTarget,
   statesNotationTransform,
-} from "@hassbuilder/base";
+} from "@hassforge/base";
 import { snakeCase } from "change-case";
 
 export class BoilerTurnOnAutomation extends Automation {

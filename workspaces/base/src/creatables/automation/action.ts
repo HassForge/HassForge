@@ -28,7 +28,7 @@ import {
   SceneID,
   ScriptID,
   WaterHeaterID,
-} from "@hassbuilder/types";
+} from "@hassforge/types";
 
 export namespace Action {
   export function callService(

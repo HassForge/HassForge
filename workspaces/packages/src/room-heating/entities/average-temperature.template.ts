@@ -1,5 +1,5 @@
 import { snakeCase } from "change-case";
-import { TemplateSensor, ClimateTarget } from "@hassbuilder/base";
+import { TemplateSensor, ClimateTarget } from "@hassforge/base";
 
 const getTemperatureJinjaString = (
   id: TemplateSensor["id"] | ClimateTarget["id"],

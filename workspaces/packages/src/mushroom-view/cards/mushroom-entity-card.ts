@@ -1,4 +1,4 @@
-import { EntityID } from "@hassbuilder/types";
+import { EntityID } from "@hassforge/types";
 
 export interface MushroomEntityCard {
   type: "custom:mushroom-entity-card";

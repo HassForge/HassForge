@@ -1,5 +1,5 @@
 import { JsonIgnore, toJSON } from "../utils/json-ignore";
-import { EntityClass, EntityID } from "@hassbuilder/types";
+import { EntityClass, EntityID } from "@hassforge/types";
 import { EntityTarget } from "../configuration";
 
 /**

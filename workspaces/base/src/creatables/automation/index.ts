@@ -3,7 +3,7 @@ import {
   HACondition,
   HAAutomation,
   HATrigger,
-} from "@hassbuilder/types";
+} from "@hassforge/types";
 
 export class Automation implements HAAutomation {
   alias!: string;

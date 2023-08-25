@@ -1,5 +1,5 @@
-import { SensorTarget, SwitchTarget } from "@hassbuilder/base";
-import { HAPackage } from "@hassbuilder/types";
+import { SensorTarget, SwitchTarget } from "@hassforge/base";
+import { HAPackage } from "@hassforge/types";
 import { TurnOffSwitchBinarySensorAutomation } from "./automation/turn-off-switch-automation";
 import { TurnOnSwitchBinarySensorAutomation } from "./automation/turn-on-switch-automation";
 import { HumidityTrendSensor } from "./entities/humidity-trend.sensor";

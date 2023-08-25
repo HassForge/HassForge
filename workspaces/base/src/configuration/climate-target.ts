@@ -1,4 +1,4 @@
-import { ClimateID } from "@hassbuilder/types/src/id";
+import { ClimateID } from "@hassforge/types/src/id";
 import { EntityTarget } from "./entity";
 
 export interface ClimateTarget extends EntityTarget<"climate"> {

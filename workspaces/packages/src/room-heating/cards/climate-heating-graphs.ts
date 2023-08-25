@@ -1,5 +1,5 @@
-import { DEFAULT_TEMPERATURE_ATTRIBUTE } from "@hassbuilder/base";
-import { heatingColorThresholds, MiniGraphCard } from "@hassbuilder/types";
+import { DEFAULT_TEMPERATURE_ATTRIBUTE } from "@hassforge/base";
+import { heatingColorThresholds, MiniGraphCard } from "@hassforge/types";
 import { RoomHeating } from "../extension";
 
 export const climateHeatingGraphs = ({

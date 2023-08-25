@@ -4,7 +4,7 @@ import {
   ClimateTarget,
   DEFAULT_SETPOINT_ATTRIBUTE,
   DEFAULT_HEAT_MODE_ATTRIBUTE,
-} from "@hassbuilder/base";
+} from "@hassforge/base";
 
 /**
  * Example:

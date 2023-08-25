@@ -2,14 +2,14 @@ import {
   Room,
   GenericThermostatClimate,
   HassBuilderPackage,
-} from "@hassbuilder/base";
+} from "@hassforge/base";
 import {
   ClimateSchedulerCards,
   MushroomView,
   WithRoomHeating,
   WithSwitchBasedThermostat,
-} from "@hassbuilder/packages";
-import { HAView } from "@hassbuilder/types";
+} from "@hassforge/packages";
+import { HAView } from "@hassforge/types";
 
 import { writeFiles } from "./write-files";
 

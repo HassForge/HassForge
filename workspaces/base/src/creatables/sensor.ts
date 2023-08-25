@@ -1,5 +1,5 @@
 import { CreatableEntity } from "./entity";
-import { HASensor } from "@hassbuilder/types";
+import { HASensor } from "@hassforge/types";
 import { SensorTarget } from "../configuration";
 import { snakeCase } from "change-case";
 

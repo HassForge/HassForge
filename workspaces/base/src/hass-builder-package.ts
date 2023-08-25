@@ -10,7 +10,7 @@ import {
   HABayesianBinarySensor,
   HATrendBinarySensor,
   HATrendBinarySensorMap,
-} from "@hassbuilder/types";
+} from "@hassforge/types";
 import { JsonIgnore, toJSON } from "./utils";
 
 export class HassBuilderPackage implements HAPackage {

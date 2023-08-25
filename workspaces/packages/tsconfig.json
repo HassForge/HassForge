@@ -5,8 +5,8 @@
     "outDir": "./dist",
     "composite": true,
     "paths": {
-      "@hassbuilder/types": ["../types/src"],
-      "@hassbuilder/base": ["../base/src"]
+      "@hassforge/types": ["../types/src"],
+      "@hassforge/base": ["../base/src"]
     }
   },
   "references": [

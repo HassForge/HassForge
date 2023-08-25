@@ -1,4 +1,4 @@
-import { BackendProvider, RoomExtension } from "@hassbuilder/base";
+import { BackendProvider, RoomExtension } from "@hassforge/base";
 import { DesiredTemperatureTemplateSensor } from "./entities/desired-temperature.template";
 import { AverageTemperatureTemplateSensor } from "./entities/average-temperature.template";
 

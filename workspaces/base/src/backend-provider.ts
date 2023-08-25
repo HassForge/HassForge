@@ -1,4 +1,4 @@
-import { HAAutomation, HACustomizeDictionary, HAPackage } from "@hassbuilder/types";
+import { HAAutomation, HACustomizeDictionary, HAPackage } from "@hassforge/types";
 import {
   ClimateTarget,
   LightTarget,

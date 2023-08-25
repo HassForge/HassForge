@@ -1,5 +1,5 @@
 {
-  "name": "@hassbuilder/types",
+  "name": "@hassforge/types",
   "packageManager": "yarn@3.3.1",
   "main": "./dist/index.js",
   "dependencies": {

@@ -15,7 +15,7 @@ import {
   DeviceTrigger,
   CalendarTrigger,
   CalendarID,
-} from "@hassbuilder/types";
+} from "@hassforge/types";
 
 export namespace Trigger {
   export function event(

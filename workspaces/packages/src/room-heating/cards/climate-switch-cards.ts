@@ -3,8 +3,8 @@ import {
   DEFAULT_SETPOINT_ATTRIBUTE,
   DEFAULT_TEMPERATURE_ATTRIBUTE,
   Room,
-} from "@hassbuilder/base";
-import { EntityRowCard } from "@hassbuilder/types";
+} from "@hassforge/base";
+import { EntityRowCard } from "@hassforge/types";
 import { RoomHeating } from "../extension";
 
 export const climateSwitchCard = (climate: ClimateTarget): EntityRowCard => ({
