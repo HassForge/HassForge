@@ -6,6 +6,7 @@
     "outDir": "./dist",
     "module": "ES2020",
     "moduleResolution": "bundler",
+    "exactOptionalPropertyTypes": false,
     "noEmit": true
   },
   "references": [

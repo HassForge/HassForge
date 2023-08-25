@@ -1,0 +1,17 @@
+{
+  "name": "@hassforge/switch-controlled-thermostat",
+  "packageManager": "yarn@3.3.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@hassforge/base": "workspace:workspaces/base",
+    "@hassforge/types": "workspace:workspaces/types",
+    "change-case": "^4.1.2",
+    "date-fns": "^2.30.0",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.17.11",
+    "ts-node": "^10.9.1"
+  }
+}

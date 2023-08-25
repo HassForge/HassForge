@@ -6,9 +6,9 @@ import { render, Text } from "ink";
 import React, { useEffect, useState } from "react";
 import { to } from "await-to-js";
 import Spinner from "ink-spinner";
-import "@hassforge/base"
-import "@hassforge/packages"
-import "@hassforge/types"
+import "@hassforge/base";
+import "@hassforge/packages";
+import "@hassforge/types";
 
 const explorer = cosmiconfig("hassforge", {
   loaders: {
@@ -39,7 +39,9 @@ interface BuildAppProps {
 const BuildApp: React.FC<BuildAppProps> = ({ configFilePath }) => {
   const [config, setConfig] = useState<string>();
   const [globalErrorMessage, setGlobalErrorMessage] = useState<string>();
-  const [loading, setLoading] = useState<string>();
+  const [loading, setLoading] = useState<string | undefined>(
+    "Loading Packages"
+  );
 
   useEffect(() => {
     (async () => {
@@ -85,6 +87,6 @@ const BuildApp: React.FC<BuildAppProps> = ({ configFilePath }) => {
       {loading}
     </Text>
   ) : (
-    <Text>{JSON.stringify(config)}</Text>
+    <Text>{JSON.stringify(config, null, 4)}</Text>
   );
 };

@@ -2,13 +2,11 @@
   "extends": ["@tsconfig/strictest/tsconfig", "@tsconfig/node18/tsconfig.json"],
   "compilerOptions": {
     "jsx": "react",
-    "exactOptionalPropertyTypes": false,
-    "experimentalDecorators": true,
     "rootDir": "./src",
     "outDir": "./dist",
     "module": "ES2020",
     "moduleResolution": "bundler",
-    "lib": ["esnext.decorators"],
+    "exactOptionalPropertyTypes": false,
     "composite": true
   },
   "references": [

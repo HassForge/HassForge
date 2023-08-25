@@ -11,6 +11,8 @@
   "dependencies": {
     "@hassforge/base": "workspace:workspaces/base",
     "@hassforge/packages": "workspace:workspaces/packages",
+    "@hassforge/room-heating": "workspace:^",
+    "@hassforge/switch-controlled-thermostat": "workspace:^",
     "@hassforge/types": "workspace:workspaces/types",
     "@types/react": "^18.2.21",
     "await-to-js": "^3.0.0",

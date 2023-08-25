@@ -1,8 +1,12 @@
-import { Room, GenericThermostatClimate } from "@hassforge/base";
-import { MushroomView, WithRoomHeating, WithSwitchBasedThermostat } from "@hassforge/packages";
+import {
+  Room,
+  GenericThermostatClimate,
+  HassBuilderPackage,
+} from "@hassforge/base";
+import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
 import { HAView } from "@hassforge/types";
 
-import { writeFiles } from "./src/write-files";
+import { WithRoomHeating } from "@hassforge/room-heating";
 
 const wardrobe = new Room("Wardrobe")
   .addLights({
@@ -73,8 +77,7 @@ const upstairsHallway = new Room("Upstairs Hallway")
   .addLights({
     id: "switch.shelly_shellyplus1_80646fdcdaf8",
     name: "Landing Lights",
-  })
-  .extend(WithRoomHeating);
+  });
 
 const downstairsHallway = new Room("Downstairs Hallway")
   .addLights({
@@ -110,7 +113,8 @@ const lounge = new Room("Lounge")
   .addClimates({
     name: "Corner TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_2",
-  });
+  })
+  .extend(WithRoomHeating);
 
 const musicRoom = new Room("Music Room")
   .addClimates({
@@ -124,7 +128,8 @@ const musicRoom = new Room("Music Room")
   .addSwitches({
     id: "switch.tze200_6rdj8dzm_ts0601_switch_3",
     name: "Music Room Switch",
-  });
+  })
+  .extend(WithRoomHeating);
 
 const kitchen = new Room("Kitchen")
   .addLights(
@@ -152,7 +157,8 @@ const kitchen = new Room("Kitchen")
   .addClimates({
     name: "Kitchen Veranda TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_4",
-  });
+  })
+  .extend(WithRoomHeating);
 
 const outsideBack = new Room("Back").addLights({
   name: "Patio Lights",
@@ -170,21 +176,25 @@ const outsideFront = new Room("Front").addLights(
   }
 );
 
-const tomsOffice = new Room("Toms Office").addClimates(
-  new GenericThermostatClimate({
-    name: "Toms Office Electric",
-    heater: "switch.shelly_shsw_1_e89f6d86a7a1",
-    target_sensor: "sensor.tze200_dwcarsat_ts0601_temperature",
-  })
-);
+const tomsOffice = new Room("Toms Office")
+  .addClimates(
+    new GenericThermostatClimate({
+      name: "Toms Office Electric",
+      heater: "switch.shelly_shsw_1_e89f6d86a7a1",
+      target_sensor: "sensor.tze200_dwcarsat_ts0601_temperature",
+    })
+  )
+  .extend(WithRoomHeating);
 
-const endBedroom = new Room("End Bedroom").addClimates(
-  new GenericThermostatClimate({
-    name: "End Bedroom Electric",
-    heater: "switch.0x04cf8cdf3c89dcdd",
-    target_sensor: "sensor.0xa4c138bf686fe61c_temperature",
-  })
-);
+const endBedroom = new Room("End Bedroom")
+  .addClimates(
+    new GenericThermostatClimate({
+      name: "End Bedroom Electric",
+      heater: "switch.0x04cf8cdf3c89dcdd",
+      target_sensor: "sensor.0xa4c138bf686fe61c_temperature",
+    })
+  )
+  .extend(WithRoomHeating);
 
 const spareBedroom = new Room("Talis Bedroom")
   .addLights({
@@ -194,7 +204,8 @@ const spareBedroom = new Room("Talis Bedroom")
   .addClimates({
     name: "Talis Bedroom TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_7",
-  });
+  })
+  .extend(WithRoomHeating);
 
 const boilerSwitch = {
   name: "Boiler switch",
@@ -208,30 +219,27 @@ const boilerPowerConsumptionSensor = {
 
 const heatingRooms = [
   mainBedroom,
-  ensuiteShower,
   wardrobe,
-  ensuiteToilet,
   endBedroom,
   spareBedroom,
-  upstairsHallway,
-  downstairsHallway,
   lounge,
   musicRoom,
   kitchen,
   tomsOffice,
-  outsideBack,
-  outsideFront,
 ];
 
-const boilerRoom = new Room("Boiler Room").extend(WithSwitchBasedThermostat, {
-  boilerOptions: {
-    haSwitch: boilerSwitch,
-    powerConsumptionSensor: boilerPowerConsumptionSensor,
-    powerConsumptionStandbyRange: [130, 200],
-  },
-  rooms: heatingRooms,
-  includeClimate: (_, climate) => climate.id.includes("ts0601"),
-});
+const boilerRoom = new Room("Boiler Room").extend(
+  WithSwitchControlledThermostat,
+  {
+    boilerOptions: {
+      haSwitch: boilerSwitch,
+      powerConsumptionSensor: boilerPowerConsumptionSensor,
+      powerConsumptionStandbyRange: [130, 200],
+    },
+    rooms: heatingRooms,
+    includeClimate: (_, climate) => climate.id.includes("ts0601"),
+  }
+);
 
 const heatingTab: HAView = {
   panel: false,
@@ -239,18 +247,19 @@ const heatingTab: HAView = {
   path: "heating",
   badges: [],
   cards: [
-    climateSchedulerCard(heatingRooms),
-    basicThermostatPkg.card(),
-    ...heating.map((heating) => heating.card()),
+    boilerRoom.cards.switchControlledThermostatCard(),
+    ...heatingRooms.map((heating) => heating.cards.roomHeating()),
   ],
 };
 
-const mushroomTab: HAView = {
-  panel: false,
-  title: "Test",
-  path: "dash",
-  badges: [],
-  cards: new MushroomView("").addRooms(...rooms).cards,
+export const packages = {
+  backend: new HassBuilderPackage().mergePackage(
+    ...heatingRooms.map((room) => room.toPackage())
+  ),
+};
+
+export const views = {
+  heatingTab,
 };
 
 /*
@@ -369,12 +378,6 @@ mode: single
 //     },
 //   ],
 // };
-
-writeFiles("./out", {
-  backend: pkg,
-  heating: heatingTab,
-  mushroom: mushroomTab,
-});
 
 // writeFiles("../dashboards/cards/heating/rooms/", {
 //   "0_boiler": boiler.buildFrontend(),

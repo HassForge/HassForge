@@ -1,4 +1,8 @@
-import { HAAutomation, HACustomizeDictionary, HAPackage } from "@hassforge/types";
+import {
+  HAAutomation,
+  HACustomizeDictionary,
+  HAPackage,
+} from "@hassforge/types";
 import {
   ClimateTarget,
   LightTarget,
@@ -13,7 +17,6 @@ import {
   TrendBinarySensor,
 } from "./creatables";
 
-
 export interface BackendProvider {
   readonly automations?: HAAutomation[];
   readonly climates?: ClimateTarget[];
@@ -22,13 +25,27 @@ export interface BackendProvider {
   readonly lights?: (LightTarget | SwitchTarget)[];
 }
 
+export const isBackendProvider = (x: any): x is BackendProvider => {
+  return (
+    "automations" in x ||
+    "climates" in x ||
+    "sensors" in x ||
+    "switches" in x ||
+    "lights" in x
+  );
+};
+
 function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
   return value !== null && value !== undefined;
 }
 
-export function backendProviderToHAPackage(...rooms: BackendProvider[]): HAPackage {
+export function backendProviderToHAPackage(
+  ...rooms: BackendProvider[]
+): HAPackage {
   return {
-    automation: rooms.flatMap(({automations}) => automations).filter(notEmpty),
+    automation: rooms
+      .flatMap(({ automations }) => automations)
+      .filter(notEmpty),
     binary_sensor: rooms
       .map((room) => room.sensors)
       .filter(notEmpty)
