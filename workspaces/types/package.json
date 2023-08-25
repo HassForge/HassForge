@@ -1,7 +1,8 @@
 {
   "name": "@hassforge/types",
   "packageManager": "yarn@3.3.1",
-  "main": "./dist/index.js",
+  "type": "module",
+  "main": "./src/index.ts",
   "dependencies": {
     "change-case": "^4.1.2",
     "typescript": "^5.2.2"

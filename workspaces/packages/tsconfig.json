@@ -1,13 +1,12 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": ["@tsconfig/strictest/tsconfig", "@tsconfig/node18/tsconfig.json"],
   "compilerOptions": {
+    "jsx": "react",
     "rootDir": "./src",
     "outDir": "./dist",
-    "composite": true,
-    "paths": {
-      "@hassforge/types": ["../types/src"],
-      "@hassforge/base": ["../base/src"]
-    }
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "noEmit": true
   },
   "references": [
     {

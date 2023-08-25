@@ -1,4 +1,4 @@
-import { JsonIgnore } from "../utils/json-ignore";
+import { omit } from "../utils/omit";
 import { CreatableEntity } from "./entity";
 import { HATemplateSensor } from "@hassforge/types";
 import { snakeCase } from "change-case";
@@ -14,7 +14,6 @@ export class TemplateSensor<P extends any = undefined>
   unit_of_measurement?: string | undefined;
   attributes?: { [key: string]: string } | undefined;
 
-  @JsonIgnore
   parent: P;
 
   constructor(
@@ -29,5 +28,9 @@ export class TemplateSensor<P extends any = undefined>
     super("sensor", `sensor.${snakeCase(entity.name)}`);
     this.parent = parent as any;
     Object.assign(this, fullEntity);
+  }
+
+  override toJSON() {
+    return omit(this, "parent", "id", "entityClass") as any;
   }
 }

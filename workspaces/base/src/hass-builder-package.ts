@@ -11,23 +11,29 @@ import {
   HATrendBinarySensor,
   HATrendBinarySensorMap,
 } from "@hassforge/types";
-import { JsonIgnore, toJSON } from "./utils";
+import { omit } from ".";
 
 export class HassBuilderPackage implements HAPackage {
-  @JsonIgnore
   climateMap: { [key: string]: HAClimate } = {};
-  @JsonIgnore
   templateMap: { [key: string]: HATemplateSensor } = {};
-  @JsonIgnore
   sensorMap: { [key: string]: HASensor } = {};
-  @JsonIgnore
   binarySensorMap: { [key: string]: HABinarySensor } = {};
-  @JsonIgnore
   trendSensorMap: HATrendBinarySensorMap = {};
-  @JsonIgnore
   customize: HACustomizeDictionary = {};
-  @JsonIgnore
   automationMap: { [key: string]: HAAutomation } = {};
+
+  toJSON() {
+    return omit(
+      this,
+      "climateMap",
+      "templateMap",
+      "sensorMap",
+      "binarySensorMap",
+      'trendSensorMap',
+      'customize',
+      "automationMap",
+    );
+  }
 
   public get climate() {
     return Object.values(this.climateMap);
@@ -120,7 +126,4 @@ export class HassBuilderPackage implements HAPackage {
     return this;
   }
 
-  toJSON() {
-    return toJSON.bind(this)();
-  }
 }

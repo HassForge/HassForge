@@ -1,16 +1,15 @@
-import { JsonIgnore, toJSON } from "../utils/json-ignore";
+import { omit } from "../utils/omit";
 import { EntityClass, EntityID } from "@hassforge/types";
 import { EntityTarget } from "../configuration";
 
 /**
  * Describes a backend (Package) yaml output
  */
-export class CreatableEntity<C extends EntityClass = EntityClass> implements EntityTarget<C> {
-  @JsonIgnore
+export class CreatableEntity<C extends EntityClass = EntityClass>
+  implements EntityTarget<C>
+{
   entityClass: C;
-  @JsonIgnore
   id: EntityID<C>;
-
 
   constructor(entityClass: C, id: EntityID<C>) {
     this.entityClass = entityClass;
@@ -18,6 +17,6 @@ export class CreatableEntity<C extends EntityClass = EntityClass> implements Ent
   }
 
   public toJSON() {
-    return toJSON.bind(this)();
+    return omit(this, "id", "entityClass");
   }
 }
