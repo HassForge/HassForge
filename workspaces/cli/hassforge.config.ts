@@ -1,14 +1,8 @@
-import {
-  Room,
-  GenericThermostatClimate,
-  HassBuilderPackage,
-} from "@hassforge/base";
+import { Room, GenericThermostatClimate, Dashboard } from "@hassforge/base";
 import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
-import { HAView } from "@hassforge/types";
-
 import { WithRoomHeating } from "@hassforge/room-heating";
 
-const wardrobe = new Room("Wardrobe")
+export const wardrobe = new Room("Wardrobe")
   .addLights({
     name: "Wardrobe Lights",
     id: "switch.shelly_shellypro4pm_84cca87f95dc_2",
@@ -19,7 +13,7 @@ const wardrobe = new Room("Wardrobe")
   })
   .extend(WithRoomHeating);
 
-const ensuiteShower = new Room("Ensuite Shower")
+export const ensuiteShower = new Room("Ensuite Shower")
   .addLights(
     {
       name: "Ensuite Shower Lights",
@@ -35,12 +29,12 @@ const ensuiteShower = new Room("Ensuite Shower")
     id: "switch.shelly_shellypro4pm_84cca87f95dc_4",
   });
 
-const ensuiteToilet = new Room("Ensuite Toilet").addLights({
+export const ensuiteToilet = new Room("Ensuite Toilet").addLights({
   name: "Ensuite Toilet Light",
   id: "light.shelly_shdm_2_4c752532d875",
 });
 
-const mainBedroom = new Room("Main Bedroom")
+export const mainBedroom = new Room("Main Bedroom")
   .addClimates({
     name: "Main Bedroom TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_8",
@@ -65,7 +59,7 @@ const mainBedroom = new Room("Main Bedroom")
   )
   .extend(WithRoomHeating);
 
-const upstairsHallway = new Room("Upstairs Hallway")
+export const upstairsHallway = new Room("Upstairs Hallway")
   .addSwitches({
     id: "switch.legrand_connected_outlet_switch_5",
     name: "Upstairs Hallway Socket",
@@ -79,9 +73,9 @@ const upstairsHallway = new Room("Upstairs Hallway")
     name: "Landing Lights",
   });
 
-const downstairsHallway = new Room("Downstairs Hallway")
+export const downstairsHallway = new Room("Downstairs Hallway")
   .addLights({
-    id: "switch.shelly_shellypro4pm_84cca87ef154_1",
+    id: "switch.shelly_shsw_1_4c752534d8e2",
     name: "Stairs Light",
   })
   .addLights({
@@ -93,7 +87,7 @@ const downstairsHallway = new Room("Downstairs Hallway")
     name: "Utility Light",
   });
 
-const lounge = new Room("Lounge")
+export const lounge = new Room("Lounge")
   .addLights({
     id: "light.shelly_shdm_2_4c752533ae9d",
     name: "Lounge Lights",
@@ -116,7 +110,7 @@ const lounge = new Room("Lounge")
   })
   .extend(WithRoomHeating);
 
-const musicRoom = new Room("Music Room")
+export const musicRoom = new Room("Music Room")
   .addClimates({
     name: "Music Room TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_3",
@@ -131,7 +125,7 @@ const musicRoom = new Room("Music Room")
   })
   .extend(WithRoomHeating);
 
-const kitchen = new Room("Kitchen")
+export const kitchen = new Room("Kitchen")
   .addLights(
     {
       name: "Kitchen Pendant",
@@ -160,12 +154,12 @@ const kitchen = new Room("Kitchen")
   })
   .extend(WithRoomHeating);
 
-const outsideBack = new Room("Back").addLights({
+export const outsideBack = new Room("Back").addLights({
   name: "Patio Lights",
   id: "switch.shelly_shellypro4pm_84cca87fbb6c_3",
 });
 
-const outsideFront = new Room("Front").addLights(
+export const outsideFront = new Room("Front").addLights(
   {
     name: "Front Wall Lights",
     id: "switch.shelly_shellypro4pm_84cca87ef154_3",
@@ -176,7 +170,7 @@ const outsideFront = new Room("Front").addLights(
   }
 );
 
-const tomsOffice = new Room("Toms Office")
+export const tomsOffice = new Room("Toms Office")
   .addClimates(
     new GenericThermostatClimate({
       name: "Toms Office Electric",
@@ -186,7 +180,7 @@ const tomsOffice = new Room("Toms Office")
   )
   .extend(WithRoomHeating);
 
-const endBedroom = new Room("End Bedroom")
+export const endBedroom = new Room("End Bedroom")
   .addClimates(
     new GenericThermostatClimate({
       name: "End Bedroom Electric",
@@ -196,7 +190,7 @@ const endBedroom = new Room("End Bedroom")
   )
   .extend(WithRoomHeating);
 
-const spareBedroom = new Room("Talis Bedroom")
+export const spareBedroom = new Room("Talis Bedroom")
   .addLights({
     id: "switch.shelly_shellypro4pm_84cca87f95dc_3",
     name: "Talis Bedroom Light",
@@ -217,7 +211,7 @@ const boilerPowerConsumptionSensor = {
   id: "sensor.legrand_connected_outlet_active_power_4",
 } as const;
 
-const heatingRooms = [
+const roomsWithHeating = [
   mainBedroom,
   wardrobe,
   endBedroom,
@@ -228,7 +222,7 @@ const heatingRooms = [
   tomsOffice,
 ];
 
-const boilerRoom = new Room("Boiler Room").extend(
+export const boilerRoom = new Room("Boiler Room").extend(
   WithSwitchControlledThermostat,
   {
     boilerOptions: {
@@ -236,31 +230,14 @@ const boilerRoom = new Room("Boiler Room").extend(
       powerConsumptionSensor: boilerPowerConsumptionSensor,
       powerConsumptionStandbyRange: [130, 200],
     },
-    rooms: heatingRooms,
+    rooms: roomsWithHeating,
     includeClimate: (_, climate) => climate.id.includes("ts0601"),
   }
 );
 
-const heatingTab: HAView = {
-  panel: false,
-  title: "Heating",
-  path: "heating",
-  badges: [],
-  cards: [
-    boilerRoom.cards.switchControlledThermostatCard(),
-    ...heatingRooms.map((heating) => heating.cards.roomHeating()),
-  ],
-};
-
-export const packages = {
-  backend: new HassBuilderPackage().mergePackage(
-    ...heatingRooms.map((room) => room.toPackage())
-  ),
-};
-
-export const views = {
-  heatingTab,
-};
+export const heatingDashboard = new Dashboard("Heating")
+  .addCard(boilerRoom.cards.switchControlledThermostatCard())
+  .addCards(roomsWithHeating.map((heating) => heating.cards.roomHeating()));
 
 /*
 alias: Wardrobe Motion

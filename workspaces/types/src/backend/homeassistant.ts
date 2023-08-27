@@ -1,5 +1,3 @@
-import { DeviceClass } from "./device-class";
-
 export type HACustomizeDictionary = { [key: string]: Customize };
 
 export interface Customize {
@@ -31,7 +29,7 @@ export interface Customize {
    * Sets the class of the device, changing the device state and icon that is
    * displayed on the UI (see below). It does not set the `unit_of_measurement`.
    */
-  device_class?: DeviceClass;
+  device_class?: string;
 
   /**
    * Defines the units of measurement, if any. This will also influence the

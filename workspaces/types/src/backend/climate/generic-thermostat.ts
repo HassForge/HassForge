@@ -1,4 +1,4 @@
-import { SensorID } from "../id";
+import { SensorID } from "../../id";
 
 export interface HAGenericThermostat {
   platform: "generic_thermostat";
@@ -11,5 +11,3 @@ export interface HAGenericThermostat {
   max_temp: number;
   target_temp: number;
 }
-
-export type HAClimate = HAGenericThermostat;

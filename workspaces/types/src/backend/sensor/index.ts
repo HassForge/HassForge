@@ -1,3 +1,5 @@
+export * from "./device-class";
+
 export interface HASensor {
   platform: string;
   name: string;

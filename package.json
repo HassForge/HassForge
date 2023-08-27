@@ -1,11 +1,7 @@
 {
-  "name": "hassforge",
+  "name": "@hassforge/root",
   "packageManager": "yarn@3.3.1",
   "private": true,
-  "scripts": {
-    "build": "tsc --build",
-    "start": "rm -rf ./dist && ts-node ./src/index.ts"
-  },
   "dependencies": {
     "change-case": "^4.1.2",
     "typescript": "^5.2.2",
@@ -19,7 +15,8 @@
   },
   "workspaces": {
     "packages": [
-      "./workspaces/*"
+      "./workspaces/*",
+      "./extensions/*"
     ]
   }
 }

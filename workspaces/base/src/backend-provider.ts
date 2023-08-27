@@ -8,6 +8,7 @@ import {
   LightTarget,
   SwitchTarget,
   SensorTarget,
+  BinarySensorTarget,
 } from "./configuration";
 import {
   GenericThermostatClimate,
@@ -21,6 +22,7 @@ export interface BackendProvider {
   readonly automations?: HAAutomation[];
   readonly climates?: ClimateTarget[];
   readonly sensors?: SensorTarget[];
+  readonly binarySensors?: BinarySensorTarget[];
   readonly switches?: SwitchTarget[];
   readonly lights?: (LightTarget | SwitchTarget)[];
 }
@@ -38,16 +40,40 @@ export const isBackendProvider = (x: any): x is BackendProvider => {
 function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
   return value !== null && value !== undefined;
 }
+const isEmptyArray = (arr?: any[]): boolean => {
+  return arr?.length === 0;
+};
+
+const pruneEmptyKeys = ({
+  automation,
+  binary_sensor,
+  climate,
+  homeassistant,
+  sensor,
+  template,
+}: HAPackage): HAPackage => {
+  return {
+    automation: isEmptyArray(automation) ? undefined : automation,
+    binary_sensor: isEmptyArray(binary_sensor) ? undefined : binary_sensor,
+    climate: isEmptyArray(climate) ? undefined : climate,
+    sensor: isEmptyArray(sensor) ? undefined : sensor,
+    template: isEmptyArray(template) ? undefined : template,
+    homeassistant:
+      Object.keys(homeassistant?.customize ?? {}).length === 0
+        ? undefined
+        : homeassistant,
+  };
+};
 
 export function backendProviderToHAPackage(
   ...rooms: BackendProvider[]
 ): HAPackage {
-  return {
+  return pruneEmptyKeys({
     automation: rooms
       .flatMap(({ automations }) => automations)
       .filter(notEmpty),
     binary_sensor: rooms
-      .map((room) => room.sensors)
+      .map((room) => room.binarySensors)
       .filter(notEmpty)
       .map((sensors) =>
         sensors.filter(
@@ -120,5 +146,5 @@ export function backendProviderToHAPackage(
           {}
         ),
     },
-  };
+  });
 }

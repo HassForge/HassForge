@@ -1,92 +1,100 @@
-import { command, string, optional, union, positional } from "cmd-ts";
-import { stat } from "fs/promises";
-import { cosmiconfig } from "cosmiconfig";
-import { TypeScriptLoader } from "cosmiconfig-typescript-loader";
-import { render, Text } from "ink";
-import React, { useEffect, useState } from "react";
-import { to } from "await-to-js";
-import Spinner from "ink-spinner";
+import { boolean, command, flag, option, string } from "cmd-ts";
 import "@hassforge/base";
-import "@hassforge/packages";
+import "@hassforge/entities";
 import "@hassforge/types";
-
-const explorer = cosmiconfig("hassforge", {
-  loaders: {
-    ".ts": TypeScriptLoader(),
-  },
-});
+import { loadConfig } from "../config";
+import { File } from "cmd-ts/dist/cjs/batteries/fs";
+import path from "path";
+import { mkdir } from "fs/promises";
+import { writeToYAML } from "../utils/write-to-yaml";
+import { mergeHAPackages } from "../utils/merge-package";
 
 export const build = command({
   name: "build",
-  description: "Build your home assistant yaml from a config file",
+  description: "Build your home assistant YAML from your hassforge config file",
   version: "0.0.1",
   args: {
-    configFile: positional({
-      type: optional(string),
-      displayName: "Config file",
+    configFilePath: option({
+      type: File,
+      defaultValue: () => "hassforge.config.ts",
+      description: "Config file path",
+      long: "config",
+      short: "c",
+      env: "HASSFORGE_CONFIG",
+    }),
+    buildDir: option({
+      type: string,
+      defaultValue: () => "./build",
+      description:
+        "Build directory, both frontend and backend yaml files will be built to this location. This can be set safely to the root of your home assistant installation",
+      long: "build-directory",
+      short: "o",
+      env: "HASSFORGE_BUILD_DIR",
+    }),
+    packagesName: option({
+      type: string,
+      defaultValue: () => "hassforge-packages",
+      description:
+        "Backend yaml files directory name, this is where all of your sensors, climates, etc yaml files will go. When used with --split, this will be appended with .yml",
+      long: "packages-name",
+      short: "pkg",
+      env: "HASSFORGE_PACKAGE_BUILD_NAME",
+    }),
+    dashboardDirName: option({
+      type: string,
+      defaultValue: () => "hassforge-dashboards",
+      description:
+        "Frontend yaml files directory name, this is where all of your dashboard cards yaml files will go",
+      long: "dashboard-directory-name",
+      short: "dash",
+      env: "HASSFORGE_DASHBOARD_BUILD_DIR_NAME",
+    }),
+    splitPackages: flag({
+      long: "split-packages",
+      short: "psplit",
+      description:
+        "Enabling this flag will break each of your backend packages into a separate file",
+      type: boolean,
+      env: "HASSFORGE_SPLIT_PACKAGES",
     }),
   },
-  handler: async (args) => {
-    const configFilePath = args.configFile ?? "hassforge.config.ts";
-    render(<BuildApp configFilePath={configFilePath} />);
+  handler: async ({
+    configFilePath,
+    buildDir,
+    dashboardDirName,
+    packagesName,
+    splitPackages,
+  }) => {
+    const config = await loadConfig(configFilePath);
+    if (!config) {
+      throw new Error(`Config at ${configFilePath} is empty`);
+    }
+    const dashboardDir = path.join(buildDir, dashboardDirName);
+
+    const writePromises = Object.entries(config.dashboards).map(
+      ([key, dashboard]) =>
+        writeToYAML(path.join(dashboardDir, `${key}.yml`), dashboard)
+    );
+    await Promise.all(writePromises);
+
+    // Create required directories
+    await mkdir(dashboardDir, { recursive: true });
+
+    // Write the files
+    if (splitPackages) {
+      const packagesDir = path.join(buildDir, packagesName);
+      await mkdir(packagesDir, { recursive: true });
+      const writePromises = Object.entries(config.rooms).map(([key, room]) =>
+        writeToYAML(path.join(packagesDir, `${key}.yml`), room.toPackage())
+      );
+      await Promise.all(writePromises);
+    } else {
+      await mkdir(buildDir, { recursive: true });
+      const packagesFile = path.join(buildDir, `${packagesName}.yml`);
+      const mergedPackages = mergeHAPackages(
+        Object.values(config.rooms).map((value) => value.toPackage())
+      );
+      await writeToYAML(packagesFile, mergedPackages);
+    }
   },
 });
-
-interface BuildAppProps {
-  configFilePath: string;
-}
-
-const BuildApp: React.FC<BuildAppProps> = ({ configFilePath }) => {
-  const [config, setConfig] = useState<string>();
-  const [globalErrorMessage, setGlobalErrorMessage] = useState<string>();
-  const [loading, setLoading] = useState<string | undefined>(
-    "Loading Packages"
-  );
-
-  useEffect(() => {
-    (async () => {
-      setLoading("Reading file");
-      setGlobalErrorMessage(undefined);
-      setConfig(undefined);
-      try {
-        const [error, fileStats] = await to(stat(configFilePath));
-        if (error) {
-          if ((error as any).code === "ENOENT") {
-            setGlobalErrorMessage(`Config file '${configFilePath}' not found.`);
-          } else {
-            setGlobalErrorMessage(
-              `Error getting file stats for '${configFilePath}', ${error.message}`
-            );
-          }
-          return;
-        }
-        if (!fileStats.isFile()) {
-          setGlobalErrorMessage(`'${configFilePath}' is not a file`);
-          return;
-        }
-        setLoading("Loading configuration");
-        const result = await explorer.load(configFilePath);
-        if (!result?.config) {
-          setGlobalErrorMessage(`${configFilePath} is empty`);
-          return;
-        }
-        setConfig(result.config);
-      } finally {
-        setLoading(undefined);
-      }
-    })();
-  }, [configFilePath]);
-
-  return globalErrorMessage ? (
-    <Text color="red">{globalErrorMessage}</Text>
-  ) : loading ? (
-    <Text>
-      <Text color="green">
-        <Spinner type="dots" />
-      </Text>{" "}
-      {loading}
-    </Text>
-  ) : (
-    <Text>{JSON.stringify(config, null, 4)}</Text>
-  );
-};

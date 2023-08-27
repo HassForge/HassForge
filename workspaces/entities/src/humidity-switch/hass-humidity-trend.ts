@@ -35,7 +35,7 @@ export class HassHumidityTrendSwitch implements HAPackage {
     this.humidityTrendSensor = new HumidityTrendSensor({
       changePercent,
       name: sensorName,
-      sampleCount, 
+      sampleCount,
       target: sensorTarget,
       timeSeconds,
     });

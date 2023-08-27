@@ -1,5 +1,5 @@
 {
-  "name": "@hassforge/packages",
+  "name": "@hassforge/entities",
   "packageManager": "yarn@3.3.1",
   "type": "module",
   "main": "src/index.ts",

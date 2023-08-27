@@ -1,3 +1,5 @@
+import { HABinarySensorDeviceClass } from "./device-class";
+
 /**
  * Represents a Home Assistant Bayesian binary sensor.
  */
@@ -32,7 +34,7 @@ export interface HABayesianBinarySensor {
   /**
    * Sets the class of the device, changing the device state and icon that is displayed on the frontend.
    */
-  device_class?: string;
+  device_class?: HABinarySensorDeviceClass;
 
   /**
    * The observations which should influence the probability that the given event is occurring.

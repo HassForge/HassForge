@@ -1,0 +1,50 @@
+{
+  "folders": [
+    {
+      "name": "homeassistant",
+      "path": "../"
+    },
+    {
+      "name": "@hassforge/root",
+      "path": "."
+    },
+    {
+      "name": "@hassforge/base",
+      "path": "workspaces/base"
+    },
+    {
+      "name": "@hassforge/types",
+      "path": "workspaces/types"
+    },
+    {
+      "name": "@hassforge/entities",
+      "path": "workspaces/entities"
+    },
+    {
+      "name": "@hassforge/cli",
+      "path": "workspaces/cli"
+    },
+    {
+      "name": "@hassforge/room-heating",
+      "path": "extensions/room-heating"
+    },
+    {
+      "name": "@hassforge/switch-controlled-thermostat",
+      "path": "extensions/switch-controlled-thermostat"
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "./hassbuilder/.yarn/sdks/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "files.associations": {
+      "*.yaml": "home-assistant"
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/bower_components": true,
+      "**/*.code-search": true,
+      "**/.yarn": true,
+      "**/dist": true
+    }
+  }
+}

@@ -4,15 +4,14 @@ import {
   LightTarget,
   SwitchTarget,
   SensorTarget,
+  BinarySensorTarget,
 } from "./configuration";
 import {
   backendProviderToHAPackage,
   BackendProvider,
 } from "./backend-provider";
-import {
-  CardGenerator,
-  FrontendProvider,
-} from "./frontend-provider";
+import { CardGenerator, FrontendProvider } from "./frontend-provider";
+
 type PublicInterface<T> = Pick<T, keyof T>;
 
 export type RoomExtension = BackendProvider & FrontendProvider;
@@ -23,6 +22,7 @@ export class Room implements RoomExtension {
   automations: HAAutomation[] = [];
   climates: ClimateTarget[] = [];
   sensors: SensorTarget[] = [];
+  binarySensors: BinarySensorTarget[] = [];
 
   switches: SwitchTarget[] = [];
   lights: (LightTarget | SwitchTarget)[] = [];
@@ -44,6 +44,11 @@ export class Room implements RoomExtension {
 
   addSensors(...sensor: SensorTarget[]) {
     this.sensors.push(...sensor);
+    return this;
+  }
+
+  addBinarySensors(...sensor: BinarySensorTarget[]) {
+    this.binarySensors.push(...sensor);
     return this;
   }
 
@@ -83,7 +88,8 @@ export class Room implements RoomExtension {
         (this as any)[key] = value;
       }
     }
-    return Object.assign(this, rest) as this & PublicInterface<T>;
+    Object.assign(this, rest);
+    return this as this & PublicInterface<T>;
   }
 
   toPackage(): HAPackage {

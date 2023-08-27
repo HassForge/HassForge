@@ -1,5 +1,5 @@
 import { CreatableEntity } from "./entity";
-import { SensorTarget } from "../configuration";
+import { BinarySensorTarget } from "../configuration";
 import {
   HATrendBinarySensor,
   HATrendBinarySensorMap,
@@ -8,14 +8,14 @@ import {
 import { snakeCase } from "change-case";
 
 export class TrendBinarySensor
-  extends CreatableEntity<"sensor">
-  implements HATrendBinarySensor, SensorTarget
+  extends CreatableEntity<"binary_sensor">
+  implements HATrendBinarySensor, BinarySensorTarget
 {
   platform = "trend" as const;
   sensors: HATrendBinarySensorMap = {};
 
   constructor(entity: HATrendBinarySensorMapSensor) {
-    super("sensor", `sensor.${snakeCase(entity.friendly_name)}`);
+    super("binary_sensor", `binary_sensor.${snakeCase(entity.friendly_name)}`);
     this.sensors[snakeCase(entity.friendly_name)] = entity;
   }
 }

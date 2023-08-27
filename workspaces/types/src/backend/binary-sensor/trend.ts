@@ -1,7 +1,8 @@
+import { HABinarySensorDeviceClass } from "./device-class";
 export interface HATrendBinarySensorMapSensor {
   entity_id: string;
   attribute?: string;
-  device_class?: string;
+  device_class?: HABinarySensorDeviceClass;
   friendly_name: string;
   invert?: boolean;
   max_samples?: number;
