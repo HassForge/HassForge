@@ -1,4 +1,4 @@
-import { HAAutomation, HAPackage } from "@hassforge/types";
+import { HAAutomation, HAPackage, VerticalStackCard } from "@hassforge/types";
 import {
   ClimateTarget,
   LightTarget,
@@ -9,14 +9,29 @@ import {
 import {
   backendProviderToHAPackage,
   BackendProvider,
+  isBackendProvider,
 } from "./backend-provider";
-import { CardGenerator, FrontendProvider } from "./frontend-provider";
+import { FrontendProvider, isFrontendProvider } from "./frontend-provider";
 
 type PublicInterface<T> = Pick<T, keyof T>;
 
-export type RoomExtension = BackendProvider & FrontendProvider;
+export type Provider = BackendProvider & FrontendProvider;
 
-export class Room implements RoomExtension {
+export type RoomExtension<T extends string> = { id: T } & Provider;
+
+export type InstancedRoomExtension<
+  T extends RoomExtension<string> = RoomExtension<string>
+> = PublicInterface<T>;
+
+export type MergedRoomExtension<T extends RoomExtension<string>> = {
+  extensions: { [key in T["id"]]: InstancedRoomExtension<T> };
+};
+
+function notEmpty<TValue>(value: TValue | null | undefined): value is TValue {
+  return value !== null && value !== undefined;
+}
+
+export class Room implements BackendProvider, FrontendProvider {
   name: string;
 
   automations: HAAutomation[] = [];
@@ -26,7 +41,7 @@ export class Room implements RoomExtension {
 
   switches: SwitchTarget[] = [];
   lights: (LightTarget | SwitchTarget)[] = [];
-  cards: { [key: string]: CardGenerator } = {};
+  extensions: { [key: string]: InstancedRoomExtension } = {};
 
   constructor(name: string) {
     this.name = name;
@@ -62,37 +77,36 @@ export class Room implements RoomExtension {
     return this;
   }
 
-  extend<A extends any[], T extends RoomExtension>(
+  extend<A extends any[], T extends RoomExtension<string>>(
     mixin: new (room: Room, ...args: A) => T,
     ...args: A
-  ): this & T {
-    let { automations, climates, lights, sensors, switches, cards, ...rest } =
-      new mixin(this, ...args);
-    this.addAutomations(...(automations ?? []));
-    this.addClimates(...(climates ?? []));
-    this.addLights(...(lights ?? []));
-    this.addSensors(...(sensors ?? []));
-    this.addSwitches(...(switches ?? []));
-    if (cards) {
-      for (const key in cards) {
-        this.cards[key] = cards[key]!.bind(this);
-      }
-    }
-    Object.assign(this.cards, cards);
+  ) {
+    const extensionInstance = new mixin(this, ...args);
+    this.extensions[extensionInstance.id] =
+      extensionInstance as InstancedRoomExtension;
 
-    for (const key in rest) {
-      const value = (rest as any)[key];
-      if (typeof value === "function") {
-        (this as any)[key] = value.bind(this);
-      } else {
-        (this as any)[key] = value;
-      }
-    }
-    Object.assign(this, rest);
-    return this as this & PublicInterface<T>;
+    return this as this & MergedRoomExtension<T>;
   }
 
   toPackage(): HAPackage {
-    return backendProviderToHAPackage(this);
+    return backendProviderToHAPackage(
+      this,
+      ...Object.values(this.extensions).filter(isBackendProvider)
+    );
   }
+
+  card = (): VerticalStackCard => {
+    const cards = Object.values(this.extensions)
+      .filter(isFrontendProvider)
+      .map((extension) => extension.card ?? extension.cards)
+      .filter(notEmpty)
+      .flat()
+      .map((cardGenerator) => cardGenerator())
+      .flat();
+
+    return {
+      type: "vertical-stack",
+      cards: cards,
+    };
+  };
 }

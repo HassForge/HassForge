@@ -44,8 +44,9 @@ export const mainBedroom = new Room("Main Bedroom")
     id: "switch.shelly_shellypro4pm_84cca87f95dc_1",
   })
   .addSwitches({
-    name: "Main Bedroom Fan",
+    name: "Main Bedroom Socket",
     id: "switch.legrand_connected_outlet_switch_3",
+    device_class: "outlet",
   })
   .addSensors({
     id: "sensor.tz3000_fllyghyj_ts0201_temperature",
@@ -63,6 +64,7 @@ export const upstairsHallway = new Room("Upstairs Hallway")
   .addSwitches({
     id: "switch.legrand_connected_outlet_switch_5",
     name: "Upstairs Hallway Socket",
+    device_class: "outlet",
   })
   .addLights({
     id: "switch.shelly_shellypro4pm_84cca87ef154_1",
@@ -94,7 +96,8 @@ export const lounge = new Room("Lounge")
   })
   .addSwitches({
     id: "switch.legrand_connected_outlet_switch",
-    name: "Lounge Switch",
+    name: "Lounge Socket",
+    device_class: "outlet",
   })
   .addClimates({
     name: "Near Kitchen TRV",
@@ -121,7 +124,8 @@ export const musicRoom = new Room("Music Room")
   })
   .addSwitches({
     id: "switch.tze200_6rdj8dzm_ts0601_switch_3",
-    name: "Music Room Switch",
+    name: "Music Room Socket",
+    device_class: "outlet",
   })
   .extend(WithRoomHeating);
 
@@ -222,9 +226,9 @@ const roomsWithHeating = [
   tomsOffice,
 ];
 
-export const boilerRoom = new Room("Boiler Room").extend(
-  WithSwitchControlledThermostat,
-  {
+export const boilerRoom = new Room("Boiler Room")
+  .extend(WithRoomHeating)
+  .extend(WithSwitchControlledThermostat, {
     boilerOptions: {
       haSwitch: boilerSwitch,
       powerConsumptionSensor: boilerPowerConsumptionSensor,
@@ -232,12 +236,13 @@ export const boilerRoom = new Room("Boiler Room").extend(
     },
     rooms: roomsWithHeating,
     includeClimate: (_, climate) => climate.id.includes("ts0601"),
-  }
-);
+  });
 
 export const heatingDashboard = new Dashboard("Heating")
-  .addCard(boilerRoom.cards.switchControlledThermostatCard())
-  .addCards(roomsWithHeating.map((heating) => heating.cards.roomHeating()));
+  .addCard(boilerRoom.extensions.switchControlledThermostat.card())
+  .addCards(
+    roomsWithHeating.map((heating) => heating.extensions.roomHeating.card())
+  );
 
 /*
 alias: Wardrobe Motion

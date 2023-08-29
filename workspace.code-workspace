@@ -31,6 +31,10 @@
     {
       "name": "@hassforge/switch-controlled-thermostat",
       "path": "extensions/switch-controlled-thermostat"
+    },
+    {
+      "name": "@hassforge/mush-room",
+      "path": "extensions/mush-room"
     }
   ],
   "settings": {

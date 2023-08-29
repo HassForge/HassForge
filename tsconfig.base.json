@@ -1,13 +1,4 @@
 {
-  "ts-node": {
-    "files": true,
-    "require": ["tsconfig-paths/register"],
-    "experimentalResolverFeatures": true,
-    "compilerOptions": {
-      "module": "CommonJS",
-      "types": ["node"]
-    }
-  },
   "compilerOptions": {
     "allowJs": true,
     "alwaysStrict": true,

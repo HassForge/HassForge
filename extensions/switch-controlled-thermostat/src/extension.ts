@@ -15,7 +15,11 @@ export interface SwitchControlledThermostatOptions {
   includeClimate?: (room: Room, climate: ClimateTarget) => boolean;
 }
 
-export class WithSwitchControlledThermostat implements RoomExtension {
+export class WithSwitchControlledThermostat
+  implements RoomExtension<"switchControlledThermostat">
+{
+  readonly id = "switchControlledThermostat";
+
   boilerOptions: BoilerBurningTemplateSensorOptions;
   isBurningSensor: BoilerBurningTemplateSensor;
   burningTimeSensor: BoilerBurningTimeSensor;
@@ -61,13 +65,17 @@ export class WithSwitchControlledThermostat implements RoomExtension {
     return [this.boilerShutoffAutomation, this.boilerTurnOnAutomation];
   }
 
-  cards = {
+  components = {
     boilerBurningGraph: () => boilerBurningGraph(this.isBurningSensor),
     boilerSwitchStatsRow: () => boilerSwitchStatsRow(this),
-    switchControlledThermostatCard: (title: string = "Thermostat") => ({
-      title,
-      type: "custom:vertical-stack-in-card",
-      cards: [this.cards.boilerBurningGraph, this.cards.boilerSwitchStatsRow()],
-    }),
   };
+
+  card = (title: string = "Thermostat") => ({
+    title,
+    type: "custom:vertical-stack-in-card",
+    cards: [
+      this.components.boilerBurningGraph(),
+      this.components.boilerSwitchStatsRow(),
+    ],
+  });
 }

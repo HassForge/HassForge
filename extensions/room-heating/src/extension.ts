@@ -1,4 +1,11 @@
-import { Room, RoomExtension } from "@hassforge/base";
+import {
+  BinarySensorTarget,
+  ClimateTarget,
+  LightTarget,
+  Room,
+  RoomExtension,
+  SwitchTarget,
+} from "@hassforge/base";
 import { DesiredTemperatureTemplateSensor } from "./entities/desired-temperature.template";
 import { AverageTemperatureTemplateSensor } from "./entities/average-temperature.template";
 import {
@@ -7,8 +14,9 @@ import {
   climateSwitchRows,
 } from "./cards";
 import { sentenceCase } from "change-case";
+import { HAAutomation } from "@hassforge/types";
 
-export class WithRoomHeating implements RoomExtension {
+export class WithRoomHeating implements RoomExtension<"roomHeating"> {
   desiredTemperatureSensors: DesiredTemperatureTemplateSensor[];
   averageTemperatureSensor: AverageTemperatureTemplateSensor;
 
@@ -22,32 +30,38 @@ export class WithRoomHeating implements RoomExtension {
     );
   }
 
+  readonly id = "roomHeating";
+
+  automations?: HAAutomation[] | undefined;
+  climates?: ClimateTarget[] | undefined;
+  binarySensors?: BinarySensorTarget[] | undefined;
+  switches?: SwitchTarget[] | undefined;
+  lights?: (SwitchTarget | LightTarget)[] | undefined;
+
   get sensors() {
     return [...this.desiredTemperatureSensors, this.averageTemperatureSensor];
   }
 
-  cards = {
+  components = {
     averageTemperatureGraph: () =>
       averageTemperatureGraph(
         this.averageTemperatureSensor,
         this.desiredTemperatureSensors
       ),
-
     climateSwitchRows: () => climateSwitchRows(this.room.climates),
-
     climateHeatingGraphRow: () =>
       climateHeatingGraphRow(this.desiredTemperatureSensors),
-
-    roomHeating: () => ({
-      type: "custom:vertical-stack-in-card",
-      title: sentenceCase(this.room.name),
-      cards: [
-        ...(this.desiredTemperatureSensors.length > 1
-          ? [this.cards.averageTemperatureGraph()]
-          : []),
-        this.cards.climateHeatingGraphRow(),
-        ...this.cards.climateSwitchRows(),
-      ],
-    }),
   };
+
+  card = () => ({
+    type: "custom:vertical-stack-in-card",
+    title: sentenceCase(this.room.name),
+    cards: [
+      ...(this.desiredTemperatureSensors.length > 1
+        ? [this.components.averageTemperatureGraph()]
+        : []),
+      this.components.climateHeatingGraphRow(),
+      ...this.components.climateSwitchRows(),
+    ],
+  });
 }
