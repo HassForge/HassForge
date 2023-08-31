@@ -228,6 +228,7 @@ const roomsWithHeating = [
 
 export const boilerRoom = new Room("Boiler Room")
   .extend(WithRoomHeating)
+  
   .extend(WithSwitchControlledThermostat, {
     boilerOptions: {
       haSwitch: boilerSwitch,
