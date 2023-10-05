@@ -1,0 +1,20 @@
+
+```tsx live twoslash
+import { Room, GenericThermostatClimate, Dashboard } from "@hassforge/base";
+import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
+import { WithRoomHeating } from "@hassforge/room-heating";
+
+
+// ---cut---
+
+export const wardrobe = new Room("Wardrobe")
+  .addLights({
+    name: "Wardrobe Lights",
+    id: "switch.shelly_shellypro4pm_84cca87f95dc_2",
+  })
+  .addClimates({
+    name: "Wardrobe TRV",
+    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_9",
+  })
+  .extend(WithRoomHeating);
+```

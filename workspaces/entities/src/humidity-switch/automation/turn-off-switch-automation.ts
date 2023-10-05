@@ -2,7 +2,6 @@ import {
   Action,
   Automation,
   BinarySensorTarget,
-  SensorTarget,
   SwitchTarget,
   Trigger,
 } from "@hassforge/base";
