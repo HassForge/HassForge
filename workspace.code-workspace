@@ -35,6 +35,14 @@
     {
       "name": "@hassforge/mush-room",
       "path": "extensions/mush-room"
+    },
+    {
+      "name": "@hassforge/neuro",
+      "path": "extensions/neuro"
+    },
+    {
+      "name": "SSH FS - pi",
+      "uri": "ssh://pi/"
     }
   ],
   "settings": {

@@ -1,0 +1,21 @@
+{
+  "extends": ["@tsconfig/strictest/tsconfig"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "exactOptionalPropertyTypes": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"]
+    }
+  },
+  "include": ["./src/**/*", "typings"],
+  "exclude": ["./node_modules"],
+  "references": []
+}
