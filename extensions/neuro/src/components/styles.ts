@@ -1,8 +1,11 @@
 export const backgroundColors = ["gray"] as const;
 export type BackgroundColor = (typeof backgroundColors)[number];
 
-export const foregroundColors = ["none", "yellow", "red"] as const;
+export const foregroundColors = ["none", "yellow", "red", "orange"] as const;
 export type ForegroundColor = (typeof foregroundColors)[number];
+
+export const sizes = ["sm", "md", "lg", "xl"] as const
+export type Size = (typeof sizes)[number]
 
 export const isBackgroundColor = (color?: string): color is BackgroundColor => {
   return !!color && backgroundColors.includes(color as BackgroundColor);

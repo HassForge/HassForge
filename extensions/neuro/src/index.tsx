@@ -1,5 +1,6 @@
-import { HassRoundButton } from "./cards";
+import { HassNeuroButton } from "./cards";
 import { createWebComponent } from "./create-preact-web-component";
+import "./main.css";
 
 declare global {
   interface Window {
@@ -7,7 +8,7 @@ declare global {
   }
 }
 
-[HassRoundButton].forEach(({ component, ...config }) => {
+[HassNeuroButton].forEach(({ component, ...config }) => {
   const webComponent = createWebComponent(
     component,
     config.type,

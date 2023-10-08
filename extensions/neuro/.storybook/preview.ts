@@ -1,5 +1,9 @@
 import type { Preview } from "@storybook/preact";
 
+import { withThemeByClassName } from "@storybook/addon-themes";
+
+import "../src/main.css";
+
 const preview: Preview = {
   parameters: {
     actions: { argTypesRegex: "^on[A-Z].*" },
@@ -10,6 +14,15 @@ const preview: Preview = {
       },
     },
   },
+  decorators: [
+    withThemeByClassName({
+      themes: {
+        light: "",
+        dark: "dark",
+      },
+      defaultTheme: "light",
+    }),
+  ],
 };
 
 export default preview;

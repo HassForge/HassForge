@@ -1,6 +1,7 @@
 import type { StorybookConfig } from "@storybook/preact-vite";
 
 import { join, dirname } from "path";
+import { mergeConfig } from "vite";
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -22,6 +23,16 @@ const config: StorybookConfig = {
   },
   docs: {
     autodocs: "tag",
+  },
+  async viteFinal(config) {
+    // Merge custom configuration into the default config
+    return mergeConfig(config, {
+      server: {
+        hmr: {
+          port: 443
+        }
+      }
+    });
   },
 };
 export default config;
