@@ -7,11 +7,24 @@ import Color from "colorjs.io";
 import { useMemo } from "preact/hooks";
 import { NeuroDot } from "./components/NeuroDot/NeuroDot";
 import { cct } from "../../styles/cct";
+import { useColorRange } from "../../styles/use-color-range";
 
 export const colors = {
   red: {
-    from: "#ef4444",
+    from: "#7f1d1d",
     to: "#dc2626",
+  },
+  yellow: {
+    from: "#713f12",
+    to: "#facc15"
+  },
+  green: {
+    from: "#14532d",
+    to: "#22c55e"
+  },
+  orange: {
+    from: "#7c2d12",
+    to: "#ea580c"
   },
   test: {
     from: "rebeccapurple",
@@ -28,31 +41,6 @@ export interface NeuroRotaryProps extends RotaryValueOptions {
   tickCount?: number;
 }
 
-const useColorRange = ({
-  from,
-  to,
-}: {
-  from: string | Color;
-  to: string | Color;
-}) => {
-  const range = useMemo(
-    () =>
-      new Color(from).range(to, {
-        space: "lch", // interpolation space
-        outputSpace: "srgb",
-      }),
-    [from, to]
-  );
-
-  return {
-    getLow: (percentage: number) => range(percentage).to("lch").toString(),
-    getHigh: (percentage: number) => {
-      const color = range(percentage).to("lch");
-      color.lch["l"] += 10;
-      return color.toString();
-    },
-  };
-};
 
 export const NeuroRotary = ({
   color,
@@ -72,7 +60,7 @@ export const NeuroRotary = ({
       : typeof color === "number"
       ? (() => {
           const lchColor = cct(color).to("lch");
-          lchColor.lch["l"] = 10;
+          lchColor.lch["l"] = 2;
           return {
             from: lchColor,
             to: cct(color).to("lch"),
