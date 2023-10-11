@@ -1,1 +1,1 @@
-export * from "./NeuroButton";
+export * from "./HassNeuroButton";

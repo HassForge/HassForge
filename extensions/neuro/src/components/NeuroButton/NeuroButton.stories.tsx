@@ -163,24 +163,6 @@ export const Primary: Story = {
           background="gray"
           color={color}
         />
-        <NeuroButton
-          round={round}
-          isOn={isOn}
-          onClick={onClick}
-          size={size}
-          icon={({ className }) => (
-            <LightIcon
-              className={className}
-              fill="currentColor"
-              width="24px"
-              height="24px"
-            />
-          )}
-          background="gray"
-          color={color}
-        >
-          With text
-        </NeuroButton>
       </div>
     );
   },

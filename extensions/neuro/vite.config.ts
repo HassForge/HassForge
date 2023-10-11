@@ -17,7 +17,6 @@ export default defineConfig({
     cssInjectedByJsPlugin({ styleId: "hassforge-neuro" }),
   ],
   build: {
-    cssCodeSplit: false,
 
     rollupOptions: {
       output: {

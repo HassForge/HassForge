@@ -1,9 +1,8 @@
 // Button.stories.ts|tsx
 
 import type { Meta, StoryObj } from "@storybook/preact";
-import { NeuroRotary } from "./NeuroRotary";
+import { NeuroRotary, colors } from "./NeuroRotary";
 import { useState } from "preact/hooks";
-import { foregroundColors, sizes } from "../../styles/styles";
 
 const meta: Meta<typeof NeuroRotary> = {
   component: NeuroRotary,
@@ -22,20 +21,49 @@ export const Primary: Story = {
   args: {
     color: "red",
     textured: false,
+    sticky: false,
+    tickCount: 20,
+    degrees: 270,
+    tickGradient: true,
   },
   argTypes: {
     color: {
-      options: foregroundColors,
+      options: [...Object.keys(colors), 3000, 4000, 5000, 6000, 12000],
       control: { type: "select" },
     },
   },
-  render: ({ color, textured }: any) => {
+  parameters: {
+    backgrounds: {
+      default: "gray",
+      values: [
+        {
+          name: "gray",
+          value: "rgb(31 41 55)",
+        },
+        {
+          name: "facebook",
+          value: "#3b5998",
+        },
+      ],
+    },
+  },
+
+  render: ({ color, textured, sticky, tickCount, degrees, tickGradient }: any) => {
     const [isOn, setIsOn] = useState(false);
     const onClick = () => setIsOn((isOn) => !isOn);
-    const [value, setValue] = useState(0)
+    const [value, setValue] = useState(0);
     return (
-      <div className="flex overflow-visible flex-wrap">
-        <NeuroRotary value={value} onChange={setValue} textured={textured} />
+      <div className="flex overflow-visible flex-wrap flex-1 justify-center bg-gray-800">
+        <NeuroRotary
+          value={value}
+          onChange={setValue}
+          textured={textured}
+          sticky={sticky}
+          tickCount={tickCount}
+          degrees={degrees}
+          color={color}
+          tickGradient={tickGradient}
+        />
       </div>
     );
   },
