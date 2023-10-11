@@ -28,7 +28,7 @@ export const colors = {
   },
   test: {
     from: "rebeccapurple",
-    to: "lch(85% 100 85)",
+    to: "oklch(85% 0.18 85)",
   },
 };
 
@@ -59,11 +59,11 @@ export const NeuroRotary = ({
       ? colors[color]
       : typeof color === "number"
       ? (() => {
-          const lchColor = cct(color).to("lch");
-          lchColor.lch["l"] = 2;
+          const lchColor = cct(color).to("oklch");
+          lchColor.oklch["l"] = 0.2;
           return {
             from: lchColor,
-            to: cct(color).to("lch"),
+            to: cct(color).to("oklch"),
           };
         })()
       : color

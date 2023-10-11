@@ -11,17 +11,17 @@ export const useColorRange = ({
   const range = useMemo(
     () =>
       new Color(from).range(to, {
-        space: "lch", // interpolation space
+        space: "oklch", // interpolation space
         outputSpace: "srgb",
       }),
     [from, to]
   );
 
   return {
-    getLow: (percentage: number) => range(percentage).to("lch").toString(),
+    getLow: (percentage: number) => range(percentage).to("oklch").toString(),
     getHigh: (percentage: number) => {
-      const color = range(percentage).to("lch");
-      color.lch["l"] += 10;
+      const color = range(percentage).to("oklch");
+      color.oklch["l"] += 0.1;
       return color.toString();
     },
   };
