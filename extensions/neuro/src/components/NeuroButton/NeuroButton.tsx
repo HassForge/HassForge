@@ -13,16 +13,6 @@ import { ColorMap } from "../../styles/color-map";
 import { textColors } from "../../styles/text";
 import { glowColors } from "../../styles/glow";
 
-
-// const bgColors: ColorMap<BackgroundColor> = {
-//   gray: {
-//     on: "hover:nm-concave-gray-800-xl nm-concave-gray-800-xl text-gray-200",
-//     off: "hover:nm-flat-gray-800-lg nm-flat-gray-800 text-gray-400",
-//     pressingOff: "hover:nm-concave-gray-800 nm-concave-gray-800 text-gray-600",
-//     pressingOn: "hover:nm-convex-gray-800 nm-convex-gray-800 text-gray-200",
-//   },
-// };
-
 const bgColors: ColorMap<BackgroundColor> = {
   gray: {
     on: "neuro-concave neuro-shadow neuro-shadow-lg hover:neuro-shadow-lg text-gray-200",

@@ -1,16 +1,16 @@
 // Button.stories.ts|tsx
 
 import type { Meta, StoryObj } from "@storybook/preact";
-import { NeuroRotary } from "./NeuroRotary";
+import { NeuroSlider } from "./NeuroSlider";
 import { useState } from "preact/hooks";
 import { colors } from "../../styles/color-map";
 
-const meta: Meta<typeof NeuroRotary> = {
-  component: NeuroRotary,
+const meta: Meta<typeof NeuroSlider> = {
+  component: NeuroSlider,
 };
 
 export default meta;
-type Story = StoryObj<typeof NeuroRotary>;
+type Story = StoryObj<typeof NeuroSlider>;
 
 /*
  *👇 Render functions are a framework specific feature to allow you control on how the component renders.
@@ -21,6 +21,7 @@ type Story = StoryObj<typeof NeuroRotary>;
 export const Primary: Story = {
   args: {
     color: "red",
+    vertical: false,
     textured: false,
     sticky: false,
     tickCount: 20,
@@ -52,36 +53,18 @@ export const Primary: Story = {
     },
   },
 
-  render: ({
-    color,
-    textured,
-    sticky,
-    tickCount,
-    degrees,
-    tickGradient,
-    min,
-    max,
-    text,
-  }: any) => {
+  render: ({ min, max, vertical, color }: any) => {
     const [isOn, setIsOn] = useState(false);
     const onClick = () => setIsOn((isOn) => !isOn);
     const [value, setValue] = useState(min);
     return (
       <div className="flex overflow-visible flex-wrap flex-1 justify-center bg-gray-800">
-        <NeuroRotary
+        <NeuroSlider
           value={value}
-          onChange={setValue}
-          textured={textured}
-          sticky={sticky}
-          tickCount={tickCount}
-          degrees={degrees}
           color={color}
-          tickGradient={tickGradient}
-          min={min}
-          max={max}
-        >
-          {text}
-        </NeuroRotary>
+          onChange={setValue}
+          vertical={vertical}
+        ></NeuroSlider>
       </div>
     );
   },

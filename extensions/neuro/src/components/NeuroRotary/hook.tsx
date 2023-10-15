@@ -60,22 +60,24 @@ export const useRotaryValue = ({
   }, [degrees, min, max, value]);
 
   const ticks = useMemo(() => {
-    const incr = degrees / tickCount;
-    const valueIncrement = max / tickCount;
+    const incr = degrees / (tickCount - 1);
     const ticks: { degrees: number; value: number; percentage: number }[] = [];
-    let i = 0;
-    for (let deg = startAngle; deg <= endAngle; deg += incr) {
+    for (let i = 0; i < tickCount; i++) {
+      const deg = startAngle + i * incr;
+      const percentage = i / (tickCount - 1);
+      const value = min + percentage * (max - min);
+
       ticks.push({
         degrees: deg,
-        value: i * valueIncrement + min,
-        percentage: i / tickCount,
+        value,
+        percentage,
       });
-      i++;
     }
     return ticks;
   }, [degrees, tickCount, startAngle, endAngle, min, max]);
+
   const onMouseDown = useCallback(
-    (e: MouseEvent) => {
+    (e: MouseEvent | TouchEvent) => {
       e.preventDefault();
       const knob = (e.target as HTMLElement)?.getBoundingClientRect();
       const pts = {
@@ -83,12 +85,20 @@ export const useRotaryValue = ({
         y: knob.top + knob.height / 2,
       };
 
-      const moveHandler = (e: MouseEvent) => {
+      const moveHandler = (e: MouseEvent | TouchEvent) => {
+        let clientX, clientY;
+        if (e instanceof TouchEvent) {
+          clientX = e.touches[0]?.clientX ?? 0;
+          clientY = e.touches[0]?.clientY ?? 0;
+        } else {
+          clientX = (e as MouseEvent).clientX;
+          clientY = (e as MouseEvent).clientY;
+        }
         let currentDegrees = getDegrees(
           startAngle,
           endAngle,
-          e.clientX,
-          e.clientY,
+          clientX,
+          clientY,
           pts
         );
         if (currentDegrees === startAngle) currentDegrees--;
@@ -103,14 +113,22 @@ export const useRotaryValue = ({
           currentDegrees = closestTick.degrees;
         }
 
-        let newValue = Math.floor(
-          convertRange(startAngle, endAngle, min, max, currentDegrees)
+        let newValue = Math.min(
+          Math.max(
+            convertRange(startAngle, endAngle, min, max, currentDegrees),
+            min
+          ),
+          max
         );
         onChange?.(newValue);
       };
       document.addEventListener("mousemove", moveHandler);
+      document.addEventListener("touchmove", moveHandler);
       document.addEventListener("mouseup", () =>
         document.removeEventListener("mousemove", moveHandler)
+      );
+      document.addEventListener("touchend", () =>
+        document.removeEventListener("touchmove", moveHandler)
       );
     },
     [ticks]
@@ -125,7 +143,7 @@ export const useRotaryValue = ({
     min,
     max,
     ticks,
-    percentage: value / max,
+    percentage: (value - min) / (max - min),
     transform: `rotate(${currentDegrees}deg)`,
   };
 };
