@@ -35,6 +35,9 @@ export const NeuroRotary = ({
     typeof color === "string" ? colors[color] : color
   );
 
+  const colorPercentageHigh = getHigh(percentage);
+  const colorPercentageLow = getHigh(percentage);
+
   return (
     <>
       <div className="mt-16">
@@ -62,12 +65,14 @@ export const NeuroRotary = ({
                   <NeuroDot
                     active={rotaryOptions.value >= value}
                     style={{ transform: `rotate(-${degrees}deg)` }}
-                    colorHigh={getHigh(
-                      tickGradient ? tickPercentage : percentage
-                    )}
-                    colorLow={getLow(
-                      tickGradient ? tickPercentage : percentage
-                    )}
+                    colorHigh={(tickGradient
+                      ? getHigh(tickPercentage)
+                      : colorPercentageHigh
+                    ).toString()}
+                    colorLow={(tickGradient
+                      ? getLow(tickPercentage)
+                      : colorPercentageLow
+                    ).toString()}
                   />
                 </div>
               );
@@ -90,8 +95,8 @@ export const NeuroRotary = ({
                 <NeuroDot
                   active
                   style={{ transform: `rotate(-${currentDegrees - 90}deg)` }}
-                  colorHigh={getHigh(percentage)}
-                  colorLow={getLow(percentage)}
+                  colorHigh={colorPercentageHigh.display()}
+                  colorLow={colorPercentageLow.display()}
                 />
               </div>
               {textured ? (
@@ -136,12 +141,10 @@ export const NeuroRotary = ({
                               value={Math.floor(rotaryOptions.value).toString()}
                               segmentOffClasses="bg-gray-800/20"
                               segmentOnStyle={{
-                                "--convex-start": getHigh(percentage),
-                                "--convex-end": getLow(percentage),
+                                "--convex-start": colorPercentageHigh.display(),
+                                "--convex-end": colorPercentageLow.display(),
                                 boxShadow: display.glow
-                                  ? `0 0 #0000, 0 0 #0000, 0 0 10px ${getHigh(
-                                      percentage
-                                    )}`
+                                  ? `0 0 #0000, 0 0 #0000, 0 0 10px ${colorPercentageHigh}`
                                   : undefined,
                               }}
                               segmentOnClasses={"neuro-convex neuro-shadow-xs"}

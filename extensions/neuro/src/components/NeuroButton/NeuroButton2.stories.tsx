@@ -5,16 +5,17 @@ import FlashIcon from "@mdi/svg/svg/flash.svg";
 import FireIcon from "@mdi/svg/svg/fire.svg";
 import LightIcon from "@mdi/svg/svg/lightbulb.svg";
 
-import { NeuroButton } from "./NeuroButton";
+import { NeuroButton2 } from "./NeuroButton2";
 import { useState } from "preact/hooks";
 import { foregroundColors, sizes } from "../../styles/styles";
+import { colors } from "../../styles/color-map";
 
-const meta: Meta<typeof NeuroButton> = {
-  component: NeuroButton,
+const meta: Meta<typeof NeuroButton2> = {
+  component: NeuroButton2,
 };
 
 export default meta;
-type Story = StoryObj<typeof NeuroButton>;
+type Story = StoryObj<typeof NeuroButton2>;
 
 /*
  *👇 Render functions are a framework specific feature to allow you control on how the component renders.
@@ -30,7 +31,7 @@ export const Primary: Story = {
   },
   argTypes: {
     color: {
-      options: foregroundColors,
+      options: [...Object.keys(colors), 3000, 4000, 5000, 6000, 12000],
       control: { type: "select" },
     },
     size: {
@@ -58,7 +59,7 @@ export const Primary: Story = {
     const onClick = () => setIsOn((isOn) => !isOn);
     return (
       <div className="flex overflow-visible flex-wrap">
-        <NeuroButton
+        <NeuroButton2
           icon={({ className }) => (
             <FireIcon
               className={className}
@@ -71,11 +72,10 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
           animate={{ type: "glow" }}
         />
-        <NeuroButton
+        <NeuroButton2
           icon={({ className }) => (
             <FireIcon
               className={className}
@@ -88,12 +88,11 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
           animate={{ type: "glow" }}
           hideBorder
         />
-        <NeuroButton
+        <NeuroButton2
           icon={({ className }) => (
             <FireIcon
               className={className}
@@ -106,12 +105,11 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
           animate={{ type: "glow", speed: 0.5 }}
           hideBorder
         />
-        <NeuroButton
+        <NeuroButton2
           icon={({ className }) => (
             <FireIcon
               className={className}
@@ -124,10 +122,9 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
         />
-        <NeuroButton
+        <NeuroButton2
           icon={({ className }) => (
             <FireIcon
               className={className}
@@ -140,11 +137,10 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
           animate={{ type: "pulse" }}
         />
-        <NeuroButton
+        <NeuroButton2
           round={round}
           isOn={isOn}
           onClick={onClick}
@@ -157,12 +153,11 @@ export const Primary: Story = {
             />
           )}
           size={size}
-          background="gray"
           color={color}
           animate={{ type: "pulse" }}
           hideBorder
         />
-        <NeuroButton
+        <NeuroButton2
           round={round}
           isOn={isOn}
           onClick={onClick}
@@ -175,7 +170,6 @@ export const Primary: Story = {
               height="24px"
             />
           )}
-          background="gray"
           color={color}
         />
       </div>

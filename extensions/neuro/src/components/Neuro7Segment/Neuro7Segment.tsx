@@ -88,17 +88,7 @@ const characterMap = {
   _: [false, false, false, true, false, false, false],
 };
 
-export type SeventSegmentCharacter =
-  | "1"
-  | "2"
-  | "3"
-  | "4"
-  | "5"
-  | "6"
-  | "7"
-  | "8"
-  | "9"
-  | "-";
+export type SeventSegmentCharacter = keyof typeof characterMap;
 
 export const Neuro7Segment = ({
   value,
