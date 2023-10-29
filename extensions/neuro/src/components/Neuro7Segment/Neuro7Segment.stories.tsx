@@ -18,6 +18,11 @@ type Story = StoryObj<typeof Neuro7Segment>;
  */
 
 export const Primary: Story = {
+  args: {
+    string: "This is a test",
+    width: 4
+  },
+  
   parameters: {
     backgrounds: {
       default: "gray",
@@ -34,26 +39,29 @@ export const Primary: Story = {
     },
   },
 
-  render: () => {
+  render: ({width, string}: any) => {
     return (
       <div className="flex overflow-visible flex-col flex-wrap flex-1 justify-center bg-gray-800">
         <div>
-          <Neuro7Segment value={"123456789"} segmentOffClasses="bg-gray-950" />
+          <Neuro7Segment width={width} value={string} segmentOffClasses="bg-gray-950" />
         </div>
         <div>
-          <Neuro7Segment
+          <Neuro7Segment width={width} value={"123456789"} segmentOffClasses="bg-gray-950" />
+        </div>
+        <div>
+          <Neuro7Segment width={width}
             value={"abcdefghijklmnopqrstuvwyxz"}
             segmentOffClasses="bg-gray-950"
           />
         </div>
         <div>
-          <Neuro7Segment
+          <Neuro7Segment width={width}
             value={"abcdefghijklmnopqrstuvwyxz".toUpperCase()}
             segmentOffClasses="bg-gray-950"
           />
         </div>
         <div>
-          <Neuro7Segment
+          <Neuro7Segment width={width}
             value={"-='\"_".toUpperCase()}
             segmentOffClasses="bg-gray-950"
           />

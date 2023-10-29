@@ -2,12 +2,11 @@
 import { subcommands, run } from "cmd-ts";
 import { inspect } from "./commands/inspect";
 import { build } from "./commands/build";
-import { buildSFTP } from "./commands/build-sftp";
 
 const cmdParent = subcommands({
   name: "hassforge",
   description: "HassForge, code-first HomeAssistant eco-system",
-  cmds: { build, inspect, "build-sftp": buildSFTP },
+  cmds: { build, inspect },
 });
 
 run(cmdParent, process.argv.slice(2));

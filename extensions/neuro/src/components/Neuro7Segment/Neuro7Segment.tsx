@@ -76,7 +76,7 @@ const characterMap = {
   Q: [true, true, true, true, false, true, true],
   R: [false, false, false, false, true, false, true],
   S: [true, false, true, true, false, true, true],
-  T: [false, false, true, true, true, true, true],
+  T: [false, false, false, true, true, true, true],
   U: [false, true, true, true, true, true, false],
   V: [false, true, true, true, true, true, false], // V cannot be displayed, using U instead
   Y: [false, true, true, true, false, true, true],

@@ -1,6 +1,7 @@
 import { Room, GenericThermostatClimate, Dashboard } from "@hassforge/base";
 import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
 import { WithRoomHeating } from "@hassforge/room-heating";
+import { climateSchedulerCard } from "@hassforge/entities/src/climate-scheduler/cards";
 
 export const wardrobe = new Room("Wardrobe")
   .addLights({
@@ -37,7 +38,7 @@ export const ensuiteToilet = new Room("Ensuite Toilet").addLights({
 export const mainBedroom = new Room("Main Bedroom")
   .addClimates({
     name: "Main Bedroom TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_8",
+    id: "climate.tze200_6rdj8dzm_ts0601_thermostat",
   })
   .addSwitches({
     name: "Main Bedroom Lights",
@@ -99,17 +100,17 @@ export const lounge = new Room("Lounge")
     name: "Lounge Socket",
     device_class: "outlet",
   })
-  .addClimates({
-    name: "Near Kitchen TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_5",
-  })
+  // .addClimates({
+  //   name: "Near Kitchen TRV",
+  //   id: "climate.tze200_6rdj8dzm_ts0601_thermostat_2",
+  // })
   .addClimates({
     name: "Near Windows TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat",
+    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_2",
   })
   .addClimates({
     name: "Corner TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_2",
+    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_5",
   })
   .extend(WithRoomHeating);
 
@@ -240,6 +241,7 @@ export const boilerRoom = new Room("Boiler Room")
   });
 
 export const heatingDashboard = new Dashboard("Heating")
+  .addCard(climateSchedulerCard(roomsWithHeating))
   .addCard(boilerRoom.extensions.switchControlledThermostat.card())
   .addCards(
     roomsWithHeating.map((heating) => heating.extensions.roomHeating.card())

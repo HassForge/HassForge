@@ -30,7 +30,7 @@ export const buildArgs = {
     type: string,
     defaultValue: () => "hassforge-packages",
     description:
-      "Backend yaml files directory name, this is where all of your sensors, climates, etc yaml files will go. When used with --split, this will be appended with .yml",
+      "Backend yaml files directory name, this is where all of your sensors, climates, etc yaml files will go. When used with --split, this will be appended with .yaml",
     long: "packages-name",
     short: "pkg",
     env: "HASSFORGE_PACKAGE_BUILD_NAME",

@@ -8,6 +8,7 @@ import LightIcon from "@mdi/svg/svg/lightbulb.svg";
 import { NeuroButton } from "./NeuroButton";
 import { useState } from "preact/hooks";
 import { foregroundColors, sizes } from "../../styles/styles";
+import { colors } from "../../styles/color-map";
 
 const meta: Meta<typeof NeuroButton> = {
   component: NeuroButton,
@@ -30,7 +31,7 @@ export const Primary: Story = {
   },
   argTypes: {
     color: {
-      options: foregroundColors,
+      options: [...Object.keys(colors), 3000, 4000, 5000, 6000, 12000],
       control: { type: "select" },
     },
     size: {
@@ -71,7 +72,6 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
           animate={{ type: "glow" }}
         />
@@ -88,7 +88,6 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
           animate={{ type: "glow" }}
           hideBorder
@@ -106,7 +105,6 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
           animate={{ type: "glow", speed: 0.5 }}
           hideBorder
@@ -124,7 +122,6 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
         />
         <NeuroButton
@@ -140,7 +137,6 @@ export const Primary: Story = {
           round={round}
           isOn={isOn}
           onClick={onClick}
-          background="gray"
           color={color}
           animate={{ type: "pulse" }}
         />
@@ -157,7 +153,6 @@ export const Primary: Story = {
             />
           )}
           size={size}
-          background="gray"
           color={color}
           animate={{ type: "pulse" }}
           hideBorder
@@ -175,7 +170,6 @@ export const Primary: Story = {
               height="24px"
             />
           )}
-          background="gray"
           color={color}
         />
       </div>
