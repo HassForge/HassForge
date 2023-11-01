@@ -17,19 +17,23 @@ export type HATrigger =
   | DeviceTrigger
   | CalendarTrigger;
 
-export type EventTrigger = {
+export interface HATriggerCommon {
+  id?: string;
+}
+
+export type EventTrigger = HATriggerCommon & {
   platform: "event";
   event_type: string;
   event_data?: Record<string, any>;
   context?: Record<string, any[]>;
 };
 
-export type HomeAssistantTrigger = {
+export type HomeAssistantTrigger = HATriggerCommon & {
   platform: "homeassistant";
   event: "start" | "shutdown";
 };
 
-export type MQTTTrigger = {
+export type MQTTTrigger = HATriggerCommon & {
   platform: "mqtt";
   topic: string;
   payload?: string;
@@ -37,7 +41,7 @@ export type MQTTTrigger = {
   encoding?: string;
 };
 
-export type NumericStateTrigger = {
+export type NumericStateTrigger = HATriggerCommon & {
   platform: "numeric_state";
   entity_id: string;
   attribute?: string;
@@ -45,7 +49,7 @@ export type NumericStateTrigger = {
   below?: number;
 };
 
-export type StateTrigger = {
+export type StateTrigger = HATriggerCommon & {
   platform: "state";
   entity_id: string;
   to?: string;
@@ -53,54 +57,54 @@ export type StateTrigger = {
   for?: string | number;
 };
 
-export type SunTrigger = {
+export type SunTrigger = HATriggerCommon & {
   platform: "sun";
   event: "sunrise" | "sunset";
   offset?: string | number;
 };
 
-export type TagTrigger = {
+export type TagTrigger = HATriggerCommon & {
   platform: "tag";
   tag_id: string;
 };
 
-export type TemplateTrigger = {
+export type TemplateTrigger = HATriggerCommon & {
   platform: "template";
   value_template: string;
 };
 
-export type TimeTrigger = {
+export type TimeTrigger = HATriggerCommon & {
   platform: "time";
   at: string;
 };
 
-export type TimePatternTrigger = {
+export type TimePatternTrigger = HATriggerCommon & {
   platform: "time_pattern";
   hours?: string;
   minutes?: string;
   seconds?: string;
 };
 
-export type WebhookTrigger = {
+export type WebhookTrigger = HATriggerCommon & {
   platform: "webhook";
   webhook_id: string;
 };
 
-export type ZoneTrigger = {
+export type ZoneTrigger = HATriggerCommon & {
   platform: "zone";
   entity_id: string;
   zone: string;
   event: "enter" | "leave";
 };
 
-export type GeolocationTrigger = {
+export type GeolocationTrigger = HATriggerCommon & {
   platform: "geo_location";
   source: string;
   zone: string;
   event: "enter" | "leave";
 };
 
-export type DeviceTrigger = {
+export type DeviceTrigger = HATriggerCommon & {
   platform: "device";
   device_id: string;
   domain: string;
@@ -108,7 +112,7 @@ export type DeviceTrigger = {
   subtype?: string;
 };
 
-export type CalendarTrigger = {
+export type CalendarTrigger = HATriggerCommon & {
   platform: "calendar";
   event: "start" | "end";
   entity_id: EntityID;

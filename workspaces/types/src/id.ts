@@ -34,6 +34,7 @@ export type RemoteID = EntityID<"remote">;
 export type HumidiferID = EntityID<"humidifer">;
 export type CalendarID = EntityID<"calendar">;
 export type SensorID = EntityID<"sensor">;
+export type BinarySensorID = EntityID<"binary_sensor">;
 export type ClimateID = EntityID<"climate">;
 export type LightID = EntityID<"light">;
 export type SwitchID = EntityID<"switch">;

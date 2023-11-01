@@ -36,8 +36,13 @@ export type ConditionAction = {
   [key: string]: any;
 };
 
+export type Delay =
+  | string
+  | number
+  | { seconds?: number; minutes?: number; hours?: number; days?: number };
+
 export type DelayAction = {
-  delay: string | number;
+  delay: Delay;
 };
 
 export type DeviceAction = {

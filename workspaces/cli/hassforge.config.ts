@@ -11,6 +11,7 @@ import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-the
 import { WithRoomHeating } from "@hassforge/room-heating";
 import { climateSchedulerCard } from "@hassforge/entities/src/climate-scheduler/cards";
 import { MushroomDashboard } from "@hassforge/mush-room";
+import { MotionActivatedAutomation } from "@hassforge/entities";
 
 export const wardrobe = new Room("Wardrobe")
   .addLights({
@@ -27,31 +28,10 @@ export const wardrobe = new Room("Wardrobe")
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_9",
   })
   .addAutomations(
-    new Automation({
+    new MotionActivatedAutomation({
       alias: "Wardrobe Motion Activated Lights",
-      mode: "single",
-      trigger: [
-        Trigger.state("binary_sensor.ewelink_66666_iaszone", {
-          id: "detected",
-          to: "on",
-        }),
-        Trigger.state("binary_sensor.ewelink_66666_iaszone", {
-          id: "clear",
-          to: "off",
-        }),
-      ],
-      action: [
-        Action.choose([
-          {
-            conditions: Condition.trigger("detected"),
-            sequence: [Action.turnOn("switch.wardrobe_lights")],
-          },
-          {
-            conditions: Condition.trigger("clear"),
-            sequence: [Action.turnOff("switch.wardrobe_lights")],
-          },
-        ]),
-      ],
+      motionSensors: ["binary_sensor.ewelink_66666_iaszone"],
+      switchEntities: ["switch.wardrobe_lights"],
     })
   )
   .extend(WithRoomHeating);

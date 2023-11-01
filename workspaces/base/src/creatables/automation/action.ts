@@ -28,6 +28,7 @@ import {
   SceneID,
   ScriptID,
   WaterHeaterID,
+  Delay,
 } from "@hassforge/types";
 
 export namespace Action {
@@ -38,69 +39,52 @@ export namespace Action {
     return { service, ...options };
   }
 
-  export function turnOn(
-    entityId:
-      | AutomationID
-      | CameraID
-      | ClimateID
-      | FanID
-      | HumidiferID
-      | InputBooleanID
-      | LightID
-      | MediaPlayerID
-      | RemoteID
-      | SceneID
-      | ScriptID
-      | SirenID
-      | SwitchID
-      | VacuumID
-      | WaterHeaterID
-  ): CallServiceAction {
+  export type Switchable =
+    | AutomationID
+    | CameraID
+    | ClimateID
+    | FanID
+    | HumidiferID
+    | InputBooleanID
+    | LightID
+    | MediaPlayerID
+    | RemoteID
+    | SceneID
+    | ScriptID
+    | SirenID
+    | SwitchID
+    | VacuumID
+    | WaterHeaterID;
+
+  export function turnOn(entityId: Switchable): CallServiceAction {
     const entityClass = getEntityClass(entityId);
     return Action.callService(`${entityClass}.turn_on`, {
       target: { entity_id: entityId },
     });
   }
 
-  export function turnOff(
-    entityId:
-      | AutomationID
-      | CameraID
-      | ClimateID
-      | FanID
-      | HumidiferID
-      | InputBooleanID
-      | LightID
-      | MediaPlayerID
-      | RemoteID
-      | SceneID
-      | ScriptID
-      | SirenID
-      | SwitchID
-      | VacuumID
-      | WaterHeaterID
-  ): CallServiceAction {
+  export function turnOff(entityId: Switchable): CallServiceAction {
     const entityClass = getEntityClass(entityId);
     return Action.callService(`${entityClass}.turn_off`, {
       target: { entity_id: entityId },
     });
   }
 
-  export function toggle(
-    entityId:
-      | AutomationID
-      | CoverID
-      | FanID
-      | HumidiferID
-      | InputBooleanID
-      | MediaPlayerID
-      | RemoteID
-      | VacuumID
-      | SwitchID
-      | LightID
-      | FanID
-      | SirenID
-  ): CallServiceAction {
+  export type Toggleable =
+    | AutomationID
+    | CoverID
+    | FanID
+    | HumidiferID
+    | InputBooleanID
+    | MediaPlayerID
+    | RemoteID
+    | VacuumID
+    | SwitchID
+    | LightID
+    | FanID
+    | SirenID;
+
+  export function toggle(entityId: Toggleable): CallServiceAction {
     const entityClass = getEntityClass(entityId);
     return Action.callService(`${entityClass}.toggle`, {
       target: { entity_id: entityId },
@@ -121,7 +105,7 @@ export namespace Action {
     return { condition, ...options };
   }
 
-  export function delay(delay: string | number): DelayAction {
+  export function delay(delay: Delay): DelayAction {
     return { delay };
   }
 

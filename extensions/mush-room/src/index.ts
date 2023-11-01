@@ -1,4 +1,4 @@
-import { LightTarget, Room, SwitchTarget } from "@hassforge/base";
+import { Dashboard, LightTarget, Room, SwitchTarget } from "@hassforge/base";
 import {
   HABadge,
   HACard,
@@ -21,7 +21,7 @@ function toLightCard(light: LightTarget | SwitchTarget): MushroomLightCard {
     name: light.name,
     show_brightness_control: (light as LightTarget).dimmable,
     show_color_control: (light as LightTarget).rgb,
-    icon: light.icon ?? 'mdi:lightbulb'
+    icon: light.icon ?? "mdi:lightbulb",
   };
 }
 
@@ -65,43 +65,13 @@ function roomToMushroom(room: Room): VerticalStackCard {
   };
 }
 
-export class MushroomView implements HAView {
-  title: string;
-  panel?: boolean | undefined;
-  visible?: boolean | { user: string }[] | undefined;
-  theme?: string | undefined;
-  subview?: boolean | undefined;
-  back_path?: string | undefined;
-  icon?: string | undefined;
-  badges?:
-    | (
-        | `calendar.${string}`
-        | `sensor.${string}`
-        | `switch.${string}`
-        | `light.${string}`
-        | `climate.${string}`
-        | `binary_sensor.${string}`
-        | HABadge
-      )[]
-    | undefined;
-  path?: string | undefined;
-
+export class MushroomDashboard extends Dashboard {
   // Rooms
 
-  rooms: Room[] = [];
-
-  constructor(title: string) {
-    this.title = title;
-  }
-
   addRooms(...rooms: Room[]) {
-    this.rooms.push(...rooms);
+    this.cards.push(
+      ...rooms.map(roomToMushroom).filter((stack) => stack.cards.length > 1)
+    );
     return this;
-  }
-
-  get cards(): HACard[] {
-    return this.rooms
-      .map(roomToMushroom)
-      .filter((stack) => stack.cards.length > 1);
   }
 }
