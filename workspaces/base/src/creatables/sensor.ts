@@ -12,8 +12,8 @@ export class Sensor
   entity_id!: string;
   state!: string;
   type!: string;
-  start!: string;
-  end!: string;
+  start?: string;
+  end?: string;
 
   constructor(entity: HASensor) {
     super("sensor", `sensor.${snakeCase(entity.name)}`);

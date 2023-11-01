@@ -6,6 +6,12 @@ export interface HASensor {
   entity_id: string;
   state: string;
   type: string;
-  start: string;
-  end: string;
+  start?: string;
+  end?: string;
+  duration?: {
+    minutes?: number
+    seconds?: number
+    hours?: number
+    days?: number
+  }
 }
