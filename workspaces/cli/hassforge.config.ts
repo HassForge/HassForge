@@ -240,7 +240,7 @@ export const boilerRoom = new Room("Boiler Room")
     includeClimate: (_, climate) => climate.id.includes("ts0601"),
   });
 
-export const heatingDashboard = new Dashboard("Heating")
+export const _2_heatingDashboard = new Dashboard("Heating")
   .addCard(climateSchedulerCard(roomsWithHeating))
   .addCard(boilerRoom.extensions.switchControlledThermostat.card())
   .addCards(
