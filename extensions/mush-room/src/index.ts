@@ -1,11 +1,5 @@
 import { Dashboard, LightTarget, Room, SwitchTarget } from "@hassforge/base";
-import {
-  HABadge,
-  HACard,
-  HAView,
-  HorizontalStackCard,
-  VerticalStackCard,
-} from "@hassforge/types";
+import { HorizontalStackCard, VerticalStackCard } from "@hassforge/types";
 import { MushroomEntityCard } from "./cards/mushroom-entity-card";
 import { MushroomLightCard } from "./cards/mushroom-light-card";
 import { MushroomTitleCard } from "./cards/mushroom-title-card";
