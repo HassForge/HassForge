@@ -8,9 +8,10 @@ export class BoilerBurningTimeSensor extends Sensor {
       entity_id: id,
       state: "on",
       type: "time",
-      start:
-        "{{ now().replace(day=now().day-1, month=now().month, hour=now().hour, minute=now().minute, second=now().second, microsecond=0) }}",
       end: "{{ now() }}",
+      duration: {
+        hours: 24,
+      },
     });
   }
 }
