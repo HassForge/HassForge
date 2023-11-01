@@ -1,18 +1,59 @@
-import { Room, GenericThermostatClimate, Dashboard } from "@hassforge/base";
+import {
+  Room,
+  GenericThermostatClimate,
+  Dashboard,
+  Automation,
+  Trigger,
+  Action,
+  Condition,
+} from "@hassforge/base";
 import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
 import { WithRoomHeating } from "@hassforge/room-heating";
 import { climateSchedulerCard } from "@hassforge/entities/src/climate-scheduler/cards";
-import { MushroomView } from "@hassforge/mush-room";
+import { MushroomDashboard } from "@hassforge/mush-room";
 
 export const wardrobe = new Room("Wardrobe")
   .addLights({
     name: "Wardrobe Lights",
     id: "switch.wardrobe_lights",
   })
+  .addBinarySensors({
+    name: "Wardrobe Motion",
+    id: "binary_sensor.ewelink_66666_iaszone",
+    device_class: "motion",
+  })
   .addClimates({
     name: "Wardrobe TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_9",
   })
+  .addAutomations(
+    new Automation({
+      alias: "Wardrobe Motion Activated Lights",
+      mode: "single",
+      trigger: [
+        Trigger.state("binary_sensor.ewelink_66666_iaszone", {
+          id: "detected",
+          to: "on",
+        }),
+        Trigger.state("binary_sensor.ewelink_66666_iaszone", {
+          id: "clear",
+          to: "off",
+        }),
+      ],
+      action: [
+        Action.choose([
+          {
+            conditions: Condition.trigger("detected"),
+            sequence: [Action.turnOn("switch.wardrobe_lights")],
+          },
+          {
+            conditions: Condition.trigger("clear"),
+            sequence: [Action.turnOff("switch.wardrobe_lights")],
+          },
+        ]),
+      ],
+    })
+  )
   .extend(WithRoomHeating);
 
 export const ensuiteShower = new Room("Ensuite Shower")
@@ -242,23 +283,21 @@ export const boilerRoom = new Room("Boiler Room").extend(
   }
 );
 
-export const _1_home = new Dashboard("Home").addCard(
-  ...new MushroomView("").addRooms(
-    lounge,
-    kitchen,
-    mainBedroom,
-    wardrobe,
-    ensuiteShower,
-    ensuiteToilet,
-    upstairsHallway,
-    downstairsHallway,
-    outsideBack,
-    outsideFront,
-    tomsOffice,
-    endBedroom,
-    spareBedroom,
-    boilerRoom
-  ).cards
+export const _1_home = new MushroomDashboard("Home").addRooms(
+  lounge,
+  kitchen,
+  mainBedroom,
+  wardrobe,
+  ensuiteShower,
+  ensuiteToilet,
+  upstairsHallway,
+  downstairsHallway,
+  outsideBack,
+  outsideFront,
+  tomsOffice,
+  endBedroom,
+  spareBedroom,
+  boilerRoom
 );
 
 export const _2_heatingDashboard = new Dashboard("Heating")
