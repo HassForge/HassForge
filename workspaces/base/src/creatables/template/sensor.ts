@@ -1,8 +1,8 @@
-import { omit } from "../utils/omit";
-import { CreatableEntity } from "./entity";
+import { omit } from "../../utils/omit";
+import { CreatableEntity } from "../entity";
 import { HATemplateSensor } from "@hassforge/types";
 import { snakeCase } from "change-case";
-import { SensorTarget } from "../configuration";
+import { SensorTarget } from "../../configuration";
 
 export class TemplateSensor<P extends any = undefined>
   extends CreatableEntity<"sensor">

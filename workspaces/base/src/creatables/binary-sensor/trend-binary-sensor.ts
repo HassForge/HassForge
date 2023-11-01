@@ -1,5 +1,5 @@
-import { CreatableEntity } from "./entity";
-import { BinarySensorTarget } from "../configuration";
+import { CreatableEntity } from "../entity";
+import { BinarySensorTarget } from "../../configuration";
 import {
   HATrendBinarySensor,
   HATrendBinarySensorMap,

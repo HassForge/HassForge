@@ -12,8 +12,8 @@ const isDigit = (character: string): boolean => {
 export const statesNotationTransform = (sensorId: EntityID): StatesNotation => {
   const sensorType = sensorId.split(".")[0] as EntityClass;
   const sensorName = sensorId.split(".")[1];
-  const firstLetter = sensorName[0];
-  return isDigit(firstLetter)
+  const firstLetter = sensorName![0];
+  return isDigit(firstLetter!)
     ? `states.${sensorType}['${sensorName}']`
     : `states.${sensorType}.${sensorName}`;
 };

@@ -1,11 +1,6 @@
-import { CreatableEntity } from "./entity";
+import { CreatableEntity } from "../entity";
 import { HAGenericThermostat } from "@hassforge/types";
-import {
-  ClimateTarget,
-  DEFAULT_HEAT_MODE_ATTRIBUTE,
-  DEFAULT_SETPOINT_ATTRIBUTE,
-  DEFAULT_TEMPERATURE_ATTRIBUTE,
-} from "../configuration";
+import { ClimateTarget } from "../../configuration";
 import { snakeCase } from "change-case";
 
 export type GenericThermostatInput = PartialBy<

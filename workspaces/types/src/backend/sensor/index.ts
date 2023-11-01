@@ -1,17 +1,8 @@
-export * from "./device-class";
+import { HASensorGroup } from "./group";
+import { HAHistoryStatsSensor } from "./history-stats";
 
-export interface HASensor {
-  platform: string;
-  name: string;
-  entity_id: string;
-  state: string;
-  type: string;
-  start?: string;
-  end?: string;
-  duration?: {
-    minutes?: number
-    seconds?: number
-    hours?: number
-    days?: number
-  }
-}
+export * from "./device-class";
+export * from "./history-stats";
+export * from "./group";
+
+export type HASensor = HASensorGroup | HAHistoryStatsSensor;

@@ -19,6 +19,9 @@ function toLightCard(light: LightTarget | SwitchTarget): MushroomLightCard {
     type: "custom:mushroom-light-card",
     entity: light.id,
     name: light.name,
+    show_brightness_control: (light as LightTarget).dimmable,
+    show_color_control: (light as LightTarget).rgb,
+    icon: light.icon ?? 'mdi:lightbulb'
   };
 }
 
@@ -97,6 +100,8 @@ export class MushroomView implements HAView {
   }
 
   get cards(): HACard[] {
-    return this.rooms.map(roomToMushroom);
+    return this.rooms
+      .map(roomToMushroom)
+      .filter((stack) => stack.cards.length > 1);
   }
 }

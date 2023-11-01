@@ -2,11 +2,12 @@ import { Room, GenericThermostatClimate, Dashboard } from "@hassforge/base";
 import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
 import { WithRoomHeating } from "@hassforge/room-heating";
 import { climateSchedulerCard } from "@hassforge/entities/src/climate-scheduler/cards";
+import { MushroomView } from "@hassforge/mush-room";
 
 export const wardrobe = new Room("Wardrobe")
   .addLights({
     name: "Wardrobe Lights",
-    id: "switch.shelly_shellypro4pm_84cca87f95dc_2",
+    id: "switch.wardrobe_lights",
   })
   .addClimates({
     name: "Wardrobe TRV",
@@ -18,21 +19,24 @@ export const ensuiteShower = new Room("Ensuite Shower")
   .addLights(
     {
       name: "Ensuite Shower Lights",
-      id: "light.shelly_shdm_2_c45bbe5725d0",
+      id: "light.ensuite_shower_light",
     },
     {
       name: "Ensuite Shower Mirror",
-      id: "switch.shelly_shellypro4pm_84cca87ef154_2",
+      id: "switch.bathroom_mirror",
+      icon: "mdi:mirror-rectangle",
     }
   )
   .addSwitches({
     name: "Ensuite VMC",
-    id: "switch.shelly_shellypro4pm_84cca87f95dc_4",
+    id: "switch.vmc",
+    icon: "mdi:fan",
   });
 
 export const ensuiteToilet = new Room("Ensuite Toilet").addLights({
   name: "Ensuite Toilet Light",
-  id: "light.shelly_shdm_2_4c752532d875",
+  id: "light.shellydimmer2_4c752532d875",
+  dimmable: true,
 });
 
 export const mainBedroom = new Room("Main Bedroom")
@@ -42,7 +46,7 @@ export const mainBedroom = new Room("Main Bedroom")
   })
   .addSwitches({
     name: "Main Bedroom Lights",
-    id: "switch.shelly_shellypro4pm_84cca87f95dc_1",
+    id: "switch.master_bedroom",
   })
   .addSwitches({
     name: "Main Bedroom Socket",
@@ -68,32 +72,33 @@ export const upstairsHallway = new Room("Upstairs Hallway")
     device_class: "outlet",
   })
   .addLights({
-    id: "switch.shelly_shellypro4pm_84cca87ef154_1",
+    id: "switch.bedroom_hallway",
     name: "Upstairs Hallway Lights",
   })
   .addLights({
-    id: "switch.shelly_shellyplus1_80646fdcdaf8",
+    id: "switch.shelly1_4c752534d8e2",
     name: "Landing Lights",
   });
 
 export const downstairsHallway = new Room("Downstairs Hallway")
   .addLights({
-    id: "switch.shelly_shsw_1_4c752534d8e2",
+    id: "light.sonoff_01minizb_light",
     name: "Stairs Light",
   })
   .addLights({
-    id: "switch.shelly_shellyplus1_80646fc82a04",
+    id: "switch.shellyplus1_80646fc82a04_switch_0",
     name: "Dining Room Light",
   })
   .addLights({
-    id: "switch.shelly_shellyplus1_80646fc7e7c8",
+    id: "switch.shellyplus1_80646fc7e7c8_switch_0",
     name: "Utility Light",
   });
 
 export const lounge = new Room("Lounge")
   .addLights({
-    id: "light.shelly_shdm_2_4c752533ae9d",
+    id: "light.shellydimmer2_4c752533ae9d",
     name: "Lounge Lights",
+    dimmable: true,
   })
   .addSwitches({
     id: "switch.legrand_connected_outlet_switch",
@@ -112,15 +117,13 @@ export const lounge = new Room("Lounge")
     name: "Corner TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_5",
   })
-  .extend(WithRoomHeating);
-
-export const musicRoom = new Room("Music Room")
   .addClimates({
     name: "Music Room TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_3",
   })
   .addLights({
-    id: "light.shelly_shdm_2_c45bbe56d5c2",
+    id: "light.shellydimmer2_c45bbe56d5c2",
+    dimmable: true,
     name: "Music Room Light",
   })
   .addSwitches({
@@ -134,19 +137,19 @@ export const kitchen = new Room("Kitchen")
   .addLights(
     {
       name: "Kitchen Pendant",
-      id: "switch.shelly_shellypro4pm_84cca87fbb6c_1",
+      id: "switch.kitchen_pendant",
     },
     {
       name: "Kitchen Spots",
-      id: "switch.shelly_shellypro4pm_84cca87fbb6c_2",
+      id: "switch.kitchen_spots",
     },
     {
       name: "Kitchen Under Counter",
-      id: "switch.shelly_shellypro4pm_84cca87fa300_2",
+      id: "switch.under_counter_leds",
     },
     {
       name: "Kitchen Over Counter",
-      id: "switch.shelly_shellypro4pm_84cca87fa300_1",
+      id: "switch.over_counter_leds",
     }
   )
   .addClimates({
@@ -161,17 +164,17 @@ export const kitchen = new Room("Kitchen")
 
 export const outsideBack = new Room("Back").addLights({
   name: "Patio Lights",
-  id: "switch.shelly_shellypro4pm_84cca87fbb6c_3",
+  id: "switch.bifold_lights",
 });
 
 export const outsideFront = new Room("Front").addLights(
   {
     name: "Front Wall Lights",
-    id: "switch.shelly_shellypro4pm_84cca87ef154_3",
+    id: "switch.front_lights",
   },
   {
     name: "Front Floodlight",
-    id: "switch.shelly_shellypro4pm_84cca87ef154_4",
+    id: "switch.floodlight",
   }
 );
 
@@ -179,7 +182,7 @@ export const tomsOffice = new Room("Toms Office")
   .addClimates(
     new GenericThermostatClimate({
       name: "Toms Office Electric",
-      heater: "switch.shelly_shsw_1_e89f6d86a7a1",
+      heater: "switch.heated",
       target_sensor: "sensor.tze200_dwcarsat_ts0601_temperature",
     })
   )
@@ -197,7 +200,7 @@ export const endBedroom = new Room("End Bedroom")
 
 export const spareBedroom = new Room("Talis Bedroom")
   .addLights({
-    id: "switch.shelly_shellypro4pm_84cca87f95dc_3",
+    id: "switch.spare_bed_lights",
     name: "Talis Bedroom Light",
   })
   .addClimates({
@@ -222,15 +225,13 @@ const roomsWithHeating = [
   endBedroom,
   spareBedroom,
   lounge,
-  musicRoom,
   kitchen,
   tomsOffice,
 ];
 
-export const boilerRoom = new Room("Boiler Room")
-  .extend(WithRoomHeating)
-  
-  .extend(WithSwitchControlledThermostat, {
+export const boilerRoom = new Room("Boiler Room").extend(
+  WithSwitchControlledThermostat,
+  {
     boilerOptions: {
       haSwitch: boilerSwitch,
       powerConsumptionSensor: boilerPowerConsumptionSensor,
@@ -238,7 +239,27 @@ export const boilerRoom = new Room("Boiler Room")
     },
     rooms: roomsWithHeating,
     includeClimate: (_, climate) => climate.id.includes("ts0601"),
-  });
+  }
+);
+
+export const _1_home = new Dashboard("Home").addCard(
+  ...new MushroomView("").addRooms(
+    lounge,
+    kitchen,
+    mainBedroom,
+    wardrobe,
+    ensuiteShower,
+    ensuiteToilet,
+    upstairsHallway,
+    downstairsHallway,
+    outsideBack,
+    outsideFront,
+    tomsOffice,
+    endBedroom,
+    spareBedroom,
+    boilerRoom
+  ).cards
+);
 
 export const _2_heatingDashboard = new Dashboard("Heating")
   .addCard(climateSchedulerCard(roomsWithHeating))

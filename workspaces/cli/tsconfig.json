@@ -16,5 +16,6 @@
     {
       "path": "../base"
     }
-  ]
+  ],
+  "exclude": ["./hassforge.config.ts", "dist"]
 }

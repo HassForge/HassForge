@@ -14,9 +14,9 @@ interface InspectAppProps {
 }
 
 const InspectApp: React.FC<InspectAppProps> = ({ configFilePath }) => {
-  const [highlightedRoomKey, setHighlightedRoomKey] =
+  const [_, setHighlightedRoomKey] =
     useState<keyof typeof rooms>();
-  const [highlightedDashboardKeys, setHighlightedDashboardKey] =
+  const [__, setHighlightedDashboardKey] =
     useState<keyof typeof dashboards>();
   const {
     data: { rooms, dashboards },

@@ -20,8 +20,14 @@ export class RadiatorHeatNeededTemplateSensor extends TemplateSensor<ClimateTarg
       {
         name: `${sentenceCase(name)} Heat Needed`,
         state: `
-        {{ state_attr('${id}', '${temperatureAttribute}') < state_attr('${id}', '${setpointAttribute}') 
-        and state_attr('${id}', '${heatModeAttribute}') != "off" }}`,
+        {% if state_attr('${id}', '${heatModeAttribute}') != "off" %}
+          {{ state_attr('${id}', '${temperatureAttribute}') < state_attr('${id}', '${setpointAttribute}') }}
+        {% else %}
+          False
+        {% endif %}`,
+        attributes: {
+          temperature_difference: `{{ state_attr('${id}', '${temperatureAttribute}') - state_attr('${id}', '${setpointAttribute}') | float }}`,
+        },
       },
       climate
     );

@@ -5,6 +5,7 @@ export * from "./climate";
 export * from './cover';
 export * from './media-player';
 export * from "./sensor";
+export * from "./light";
 export * from "./switch";
 export * from "./template";
 

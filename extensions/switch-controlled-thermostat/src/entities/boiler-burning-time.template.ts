@@ -1,9 +1,8 @@
-import { Sensor, SensorTarget } from "@hassforge/base";
+import { SensorTarget, HistoryStatsSensor } from "@hassforge/base";
 
-export class BoilerBurningTimeSensor extends Sensor {
+export class BoilerBurningTimeSensor extends HistoryStatsSensor {
   constructor({ id }: SensorTarget) {
     super({
-      platform: "history_stats",
       name: "Boiler burning today",
       entity_id: id,
       state: "on",

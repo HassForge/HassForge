@@ -2,10 +2,12 @@ import { HAAutomation } from "./automation";
 import { HABinarySensor } from "./binary-sensor";
 import { HAClimate } from "./climate";
 import { HAHomeassistant } from "./homeassistant";
+import { HALight } from "./light";
 import { HASensor } from "./sensor";
 import { HATemplate } from "./template";
 
 export interface HAPackage {
+  light?: HALight[];
   climate?: HAClimate[];
   template?: HATemplate[];
   sensor?: HASensor[];

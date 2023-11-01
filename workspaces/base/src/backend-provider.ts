@@ -1,7 +1,12 @@
 import {
   HAAutomation,
+  HABinarySensor,
+  HAClimate,
   HACustomizeDictionary,
+  HALight,
   HAPackage,
+  HASensor,
+  HATemplate,
 } from "@hassforge/types";
 import {
   ClimateTarget,
@@ -11,11 +16,12 @@ import {
   BinarySensorTarget,
 } from "./configuration";
 import {
-  GenericThermostatClimate,
-  TemplateSensor,
-  Sensor,
   CreatableEntity,
-  TrendBinarySensor,
+  isCreatableLight,
+  isCreatableBinarySensor,
+  isCreatableClimate,
+  isCreatableTemplate,
+  isCreatableSensor,
 } from "./creatables";
 
 export interface BackendProvider {
@@ -72,43 +78,33 @@ export function backendProviderToHAPackage(
     automation: rooms
       .flatMap(({ automations }) => automations)
       .filter(notEmpty),
+    light: rooms
+      .map((room) => room.lights)
+      .filter(notEmpty)
+      .flat()
+      .filter(isCreatableLight) as unknown as HALight[],
     binary_sensor: rooms
       .map((room) => room.binarySensors)
       .filter(notEmpty)
-      .map((sensors) =>
-        sensors.filter(
-          (sensor): sensor is TrendBinarySensor =>
-            sensor instanceof TrendBinarySensor
-        )
-      )
-      .flat(),
+      .flat()
+      .filter(isCreatableBinarySensor) as unknown as HABinarySensor[],
     climate: rooms
       .map((room) => room.climates)
       .filter(notEmpty)
-      .flatMap((climates) =>
-        climates.filter(
-          (climate): climate is GenericThermostatClimate =>
-            climate instanceof GenericThermostatClimate
-        )
-      ),
+      .flat()
+      .filter(isCreatableClimate) as unknown as HAClimate[],
     template: rooms
       .map((room) => room.sensors)
       .filter(notEmpty)
-      .map((sensors) =>
-        sensors.filter(
-          (sensor): sensor is TemplateSensor => sensor instanceof TemplateSensor
-        )
-      )
+      .map((sensors) => sensors.filter(isCreatableTemplate))
       .filter((sensors) => sensors.length > 0)
-      .map((sensors) => ({ sensor: sensors })),
+      .map((sensors) => ({ sensor: sensors })) as unknown as HATemplate[],
     sensor: rooms
       .map((room) => room.sensors)
       .filter(notEmpty)
-      .map((sensors) =>
-        sensors.filter((sensor): sensor is Sensor => sensor instanceof Sensor)
-      )
+      .map((sensors) => sensors.filter(isCreatableSensor))
       .filter((sensors) => sensors.length > 0)
-      .flat(),
+      .flat() as unknown as HASensor[],
     homeassistant: {
       customize: rooms
         .map((room) =>
