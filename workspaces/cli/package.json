@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@hassforge/base": "workspace:^",
-    "@hassforge/entities": "workspace:^",
+    "@hassforge/mush-room": "workspace:^",
+    "@hassforge/recipes": "workspace:^",
     "@hassforge/room-heating": "workspace:^",
     "@hassforge/switch-controlled-thermostat": "workspace:^",
     "@hassforge/types": "workspace:^",
-    "@hassforge/mush-room": "workspace:^",
     "@inkjs/ui": "^1.0.0",
     "await-to-js": "^3.0.0",
     "change-case": "^4.1.2",

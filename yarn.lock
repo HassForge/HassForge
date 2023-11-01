@@ -3391,7 +3391,8 @@ __metadata:
   resolution: "@hassforge/cli@workspace:workspaces/cli"
   dependencies:
     "@hassforge/base": "workspace:^"
-    "@hassforge/entities": "workspace:^"
+    "@hassforge/mush-room": "workspace:^"
+    "@hassforge/recipes": "workspace:^"
     "@hassforge/room-heating": "workspace:^"
     "@hassforge/switch-controlled-thermostat": "workspace:^"
     "@hassforge/types": "workspace:^"
@@ -3439,20 +3440,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hassforge/entities@workspace:^, @hassforge/entities@workspace:workspaces/entities":
-  version: 0.0.0-use.local
-  resolution: "@hassforge/entities@workspace:workspaces/entities"
-  dependencies:
-    "@hassforge/base": "workspace:workspaces/base"
-    "@hassforge/types": "workspace:workspaces/types"
-    "@types/node": ^18.17.11
-    change-case: ^4.1.2
-    date-fns: ^2.30.0
-    typescript: ^5.2.2
-  languageName: unknown
-  linkType: soft
-
-"@hassforge/mush-room@workspace:extensions/mush-room":
+"@hassforge/mush-room@workspace:^, @hassforge/mush-room@workspace:extensions/mush-room":
   version: 0.0.0-use.local
   resolution: "@hassforge/mush-room@workspace:extensions/mush-room"
   dependencies:
@@ -3504,6 +3492,19 @@ __metadata:
     vite-plugin-css-injected-by-js: ^3.3.0
     vite-plugin-svgr: ^4.1.0
     zustand: ^4.4.3
+  languageName: unknown
+  linkType: soft
+
+"@hassforge/recipes@workspace:^, @hassforge/recipes@workspace:workspaces/entities":
+  version: 0.0.0-use.local
+  resolution: "@hassforge/recipes@workspace:workspaces/entities"
+  dependencies:
+    "@hassforge/base": "workspace:workspaces/base"
+    "@hassforge/types": "workspace:workspaces/types"
+    "@types/node": ^18.17.11
+    change-case: ^4.1.2
+    date-fns: ^2.30.0
+    typescript: ^5.2.2
   languageName: unknown
   linkType: soft
 

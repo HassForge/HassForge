@@ -17,8 +17,8 @@
       "path": "workspaces/types"
     },
     {
-      "name": "@hassforge/entities",
-      "path": "workspaces/entities"
+      "name": "@hassforge/recipes",
+      "path": "workspaces/recipes"
     },
     {
       "name": "@hassforge/cli",

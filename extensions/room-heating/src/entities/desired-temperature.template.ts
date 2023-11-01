@@ -8,7 +8,7 @@ import {
 
 /**
  * Example:
- *
+ * ```
  *   - sensor:
  *     - name: "Desired Main Bedroom Temperature"
  *       unique_id: "desired_main_bedroom_temperature"
@@ -21,6 +21,7 @@ import {
  *         {% else %}
  *          {{ ((rad) / 1) | round(1, default=0) }}
  *         {% endif %}
+ * ```
  */
 export class DesiredTemperatureTemplateSensor extends TemplateSensor<ClimateTarget> {
   constructor(target: ClimateTarget, nameOverride?: string) {

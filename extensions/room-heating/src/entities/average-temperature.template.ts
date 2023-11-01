@@ -5,8 +5,6 @@ import {
   DEFAULT_TEMPERATURE_ATTRIBUTE,
 } from "@hassforge/base";
 
-const floatParseStr = (id: string) => `| float if is_number(${id}) else "N/A"`;
-
 const getTemperatureJinjaString = (
   id: TemplateSensor["id"] | ClimateTarget["id"],
   temperatureAttribute: string = DEFAULT_TEMPERATURE_ATTRIBUTE
@@ -19,6 +17,7 @@ const getTemperatureJinjaString = (
  *
  * Example:
  *
+ * ```
  * - sensor:
  *    - name: "Average Lounge Temperature"
  *       unique_id: "current_lounge_temperature"
@@ -29,8 +28,8 @@ const getTemperatureJinjaString = (
  *         {% set toms_corner = state_attr('climate.0xa4c138bb1f4f3ae4', 'local_temperature') | float %}
  *         {{ ((near_kitchen + near_windows + toms_corner) / 3) | round(1, default=0) }}
  *
+ * ```
  */
-
 export class AverageTemperatureTemplateSensor extends TemplateSensor<
   ClimateTarget[]
 > {
@@ -52,9 +51,9 @@ export class AverageTemperatureTemplateSensor extends TemplateSensor<
     {% if ${temperatureSets
       .map((set) => `is_number(${set.id})`)
       .join(" and ")} %}
-      {{ ((${temperatureSets.map((set) => `(${set.id} | float)`).join(" + ")}) / ${
-          temperatureSets.length
-        }) | round(1, default=0) }}
+      {{ ((${temperatureSets
+        .map((set) => `(${set.id} | float)`)
+        .join(" + ")}) / ${temperatureSets.length}) | round(1, default=0) }}
     {% else %}
       Unknown
     {% endif %}

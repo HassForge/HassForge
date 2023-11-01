@@ -3,7 +3,7 @@ import { Box, render, Text } from "ink";
 import React, { useState } from "react";
 import Spinner from "ink-spinner";
 import "@hassforge/base";
-import "@hassforge/entities";
+import "@hassforge/recipes";
 import "@hassforge/types";
 import { Tabs, Tab } from "ink-tab";
 import SelectInput from "ink-select-input";

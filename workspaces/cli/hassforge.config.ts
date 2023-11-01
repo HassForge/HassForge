@@ -9,9 +9,9 @@ import {
 } from "@hassforge/base";
 import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
 import { WithRoomHeating } from "@hassforge/room-heating";
-import { climateSchedulerCard } from "@hassforge/entities/src/climate-scheduler/cards";
+import { climateSchedulerCard } from "@hassforge/recipes";
 import { MushroomDashboard } from "@hassforge/mush-room";
-import { MotionActivatedAutomation } from "@hassforge/entities";
+import { MotionActivatedAutomation } from "@hassforge/recipes";
 
 export const wardrobe = new Room("Wardrobe")
   .addLights({
