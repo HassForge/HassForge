@@ -3445,6 +3445,7 @@ __metadata:
   resolution: "@hassforge/mush-room@workspace:extensions/mush-room"
   dependencies:
     "@hassforge/base": "workspace:workspaces/base"
+    "@hassforge/room-heating": "workspace:^"
     "@hassforge/types": "workspace:workspaces/types"
     "@types/node": ^18.17.11
     change-case: ^4.1.2
@@ -3495,9 +3496,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hassforge/recipes@workspace:^, @hassforge/recipes@workspace:workspaces/entities":
+"@hassforge/recipes@workspace:^, @hassforge/recipes@workspace:workspaces/recipes":
   version: 0.0.0-use.local
-  resolution: "@hassforge/recipes@workspace:workspaces/entities"
+  resolution: "@hassforge/recipes@workspace:workspaces/recipes"
   dependencies:
     "@hassforge/base": "workspace:workspaces/base"
     "@hassforge/types": "workspace:workspaces/types"

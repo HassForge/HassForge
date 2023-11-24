@@ -3,6 +3,8 @@ import { HorizontalStackCard, VerticalStackCard } from "@hassforge/types";
 import { MushroomEntityCard } from "./cards/mushroom-entity-card";
 import { MushroomLightCard } from "./cards/mushroom-light-card";
 import { MushroomTitleCard } from "./cards/mushroom-title-card";
+import { WithRoomHeating } from "@hassforge/room-heating";
+import { MushroomChip } from "./cards/mushroom-chips-card";
 
 function isDefined<T>(val: T | undefined | null): val is T {
   return val !== undefined && val !== null;
@@ -33,6 +35,24 @@ function roomToMushroom(room: Room): VerticalStackCard {
     title: room.name,
   };
 
+  const chips: MushroomChip[] = [];
+
+  if (room.hasExtension(WithRoomHeating) && room.climates.length > 0) {
+    chips.push({
+      type: "entity",
+      entity: room.extensions.roomHeating.averageTemperatureSensor.id,
+      icon: "mdi:thermometer",
+    });
+  }
+
+  const chipCard =
+    chips.length > 0
+      ? {
+          type: "custom:mushroom-chips-card",
+          chips,
+        }
+      : undefined;
+
   const lights: HorizontalStackCard | undefined =
     room.lights.length > 0
       ? {
@@ -55,7 +75,7 @@ function roomToMushroom(room: Room): VerticalStackCard {
 
   return {
     type: "vertical-stack",
-    cards: [title, lights, switches].filter(isDefined),
+    cards: [title, chipCard, lights, switches].filter(isDefined),
   };
 }
 

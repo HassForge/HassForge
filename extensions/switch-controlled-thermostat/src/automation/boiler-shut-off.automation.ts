@@ -18,11 +18,12 @@ export class BoilerShutOffAutomation extends Automation {
     super({
       alias,
       id: snakeCase(alias),
-      trigger: [Trigger.state(radiatorHeatNeededSensor.id)],
+      trigger: [
+        Trigger.state(radiatorHeatNeededSensor.id),
+        Trigger.timePattern({ minutes: "/15" }),
+      ],
       condition: [
-        Condition.template(
-          `{{ states('${radiatorHeatNeededSensor.id}') | float == 0 }}`
-        ),
+        Condition.template(`{{ states('${radiatorHeatNeededSensor.id}') | float == 0 }}`),
         Condition.template(`{% set changed = as_timestamp(${statesNotationTransform(
           boilerSwitch.id
         )}.last_changed) %}
@@ -31,11 +32,7 @@ export class BoilerShutOffAutomation extends Automation {
           {% set minutes = (time / 60) | int %}
           {{ minutes > 5 }}`),
       ],
-      action: [
-        Action.callService("switch.turn_off", {
-          target: { entity_id: boilerSwitch.id },
-        }),
-      ],
+      action: [Action.turnOff(boilerSwitch.id)],
     });
   }
 }

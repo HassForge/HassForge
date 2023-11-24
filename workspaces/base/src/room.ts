@@ -17,11 +17,17 @@ type PublicInterface<T> = Pick<T, keyof T>;
 
 export type Provider = BackendProvider & FrontendProvider;
 
-export type RoomExtension<T extends string> = { id: T } & Provider;
+export type RoomExtension<
+  T extends string = string,
+  P extends Provider = Provider
+> = {
+  new (room: Room, ...args: any): P;
+  id: T;
+};
 
 export type InstancedRoomExtension<
   T extends RoomExtension<string> = RoomExtension<string>
-> = PublicInterface<T>;
+> = PublicInterface<InstanceType<T>>;
 
 export type MergedRoomExtension<T extends RoomExtension<string>> = {
   extensions: { [key in T["id"]]: InstancedRoomExtension<T> };
@@ -77,13 +83,9 @@ export class Room implements BackendProvider, FrontendProvider {
     return this;
   }
 
-  extend<A extends any[], T extends RoomExtension<string>>(
-    mixin: new (room: Room, ...args: A) => T,
-    ...args: A
-  ) {
-    const extensionInstance = new mixin(this, ...args);
-    this.extensions[extensionInstance.id] =
-      extensionInstance as InstancedRoomExtension;
+  extend<A extends any[], T extends RoomExtension>(extension: T, ...args: A) {
+    const extensionInstance = new extension(this, ...args);
+    this.extensions[extension.id] = extensionInstance as InstancedRoomExtension;
 
     return this as this & MergedRoomExtension<T>;
   }
@@ -109,4 +111,12 @@ export class Room implements BackendProvider, FrontendProvider {
       cards: cards,
     };
   };
+
+  hasExtension<T extends RoomExtension<string>>(
+    extension: T
+  ): this is Room & MergedRoomExtension<T> {
+    return !!(this as unknown as Room & MergedRoomExtension<T>).extensions[
+      extension.id
+    ];
+  }
 }

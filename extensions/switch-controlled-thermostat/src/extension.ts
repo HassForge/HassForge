@@ -1,4 +1,4 @@
-import { ClimateTarget, Room, RoomExtension } from "@hassforge/base";
+import { ClimateTarget, Provider, Room } from "@hassforge/base";
 import {
   BoilerBurningTemplateSensor,
   BoilerBurningTemplateSensorOptions,
@@ -15,10 +15,8 @@ export interface SwitchControlledThermostatOptions {
   includeClimate?: (room: Room, climate: ClimateTarget) => boolean;
 }
 
-export class WithSwitchControlledThermostat
-  implements RoomExtension<"switchControlledThermostat">
-{
-  readonly id = "switchControlledThermostat";
+export class WithSwitchControlledThermostat implements Provider {
+  static readonly id = "switchControlledThermostat";
 
   boilerOptions: BoilerBurningTemplateSensorOptions;
   isBurningSensor: BoilerBurningTemplateSensor;

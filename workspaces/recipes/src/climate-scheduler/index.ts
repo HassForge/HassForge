@@ -1,1 +1,1 @@
-export * as ClimateSchedulerCards from "./cards";
+export * from "./cards";

@@ -8,14 +8,6 @@ export interface Config {
   rooms: { [key: string]: Room } | Room[];
 }
 
-const validateRoom = (room: unknown): room is Room => {
-  // Instanceof is returning false, assuming it's to do with maybe
-  // the packages are being reloaded instead of used directly through cosmiconfig
-  return (
-    typeof room === "object" && (room as Room).constructor.name === Room.name
-  );
-};
-
 export const parseRooms = (config: unknown) => {
   if (!config) {
     throw new Error("Config to parse is empty");
@@ -25,21 +17,12 @@ export const parseRooms = (config: unknown) => {
       cause: config,
     });
 
-  return Object.entries(config)
-    .filter(([_, value]) => validateRoom(value))
-    .reduce<{ [key: string]: Room }>(
-      (acc, [key, room]) => ({
-        ...acc,
-        [key]: room,
-      }),
-      {}
-    );
-};
-
-const validateDashboard = (dashboard: unknown): dashboard is Dashboard => {
-  return (
-    typeof dashboard === "object" &&
-    (dashboard as Dashboard).constructor.name === Dashboard.name
+  return Object.entries(config).reduce<{ [key: string]: Room }>(
+    (acc, [key, room]) => ({
+      ...acc,
+      [key]: room,
+    }),
+    {}
   );
 };
 
@@ -52,15 +35,13 @@ export const parseDashboards = (config: unknown) => {
       cause: config,
     });
 
-  return Object.entries(config)
-    .filter(([_, value]) => validateDashboard(value))
-    .reduce<{ [key: string]: Dashboard }>(
-      (acc, [key, room]) => ({
-        ...acc,
-        [key]: room,
-      }),
-      {}
-    );
+  return Object.entries(config).reduce<{ [key: string]: Dashboard }>(
+    (acc, [key, room]) => ({
+      ...acc,
+      [key]: room,
+    }),
+    {}
+  );
 };
 
 export const loadConfig = async (configFilePath: string) => {
@@ -73,7 +54,10 @@ export const loadConfig = async (configFilePath: string) => {
   if (!result?.config) {
     return undefined;
   }
-  const rooms = parseRooms(result.config);
-  const dashboards = parseDashboards(result.config);
+  if (!result.config.default) {
+    throw new Error("Could not get config from file.");
+  }
+  const rooms = parseRooms(result.config.default.rooms);
+  const dashboards = parseDashboards(result.config.default.dashboards);
   return { rooms, dashboards };
 };

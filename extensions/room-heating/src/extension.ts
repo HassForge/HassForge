@@ -2,8 +2,8 @@ import {
   BinarySensorTarget,
   ClimateTarget,
   LightTarget,
+  Provider,
   Room,
-  RoomExtension,
   SwitchTarget,
 } from "@hassforge/base";
 import { DesiredTemperatureTemplateSensor } from "./entities/desired-temperature.template";
@@ -16,7 +16,9 @@ import {
 import { sentenceCase } from "change-case";
 import { HAAutomation } from "@hassforge/types";
 
-export class WithRoomHeating implements RoomExtension<"roomHeating"> {
+export class WithRoomHeating implements Provider {
+  static readonly id = "roomHeating";
+
   desiredTemperatureSensors: DesiredTemperatureTemplateSensor[];
   averageTemperatureSensor: AverageTemperatureTemplateSensor;
 
@@ -29,8 +31,6 @@ export class WithRoomHeating implements RoomExtension<"roomHeating"> {
       room.climates
     );
   }
-
-  readonly id = "roomHeating";
 
   automations?: HAAutomation[] | undefined;
   climates?: ClimateTarget[] | undefined;

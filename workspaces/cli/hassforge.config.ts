@@ -2,18 +2,17 @@ import {
   Room,
   GenericThermostatClimate,
   Dashboard,
-  Automation,
-  Trigger,
-  Action,
-  Condition,
+  defineConfig,
 } from "@hassforge/base";
 import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
 import { WithRoomHeating } from "@hassforge/room-heating";
-import { climateSchedulerCard } from "@hassforge/recipes";
+import {
+  MotionActivatedAutomation,
+  climateSchedulerCard,
+} from "@hassforge/recipes";
 import { MushroomDashboard } from "@hassforge/mush-room";
-import { MotionActivatedAutomation } from "@hassforge/recipes";
 
-export const wardrobe = new Room("Wardrobe")
+const wardrobe = new Room("Wardrobe")
   .addLights({
     name: "Wardrobe Lights",
     id: "switch.wardrobe_lights",
@@ -32,15 +31,19 @@ export const wardrobe = new Room("Wardrobe")
       alias: "Wardrobe Motion Activated Lights",
       motionSensors: ["binary_sensor.ewelink_66666_iaszone"],
       switchEntities: ["switch.wardrobe_lights"],
+      delayOff: {
+        minutes: 15,
+      },
     })
   )
   .extend(WithRoomHeating);
 
-export const ensuiteShower = new Room("Ensuite Shower")
+const ensuiteShower = new Room("Ensuite Shower")
   .addLights(
     {
       name: "Ensuite Shower Lights",
       id: "light.ensuite_shower_light",
+      dimmable: true,
     },
     {
       name: "Ensuite Shower Mirror",
@@ -54,18 +57,18 @@ export const ensuiteShower = new Room("Ensuite Shower")
     icon: "mdi:fan",
   });
 
-export const ensuiteToilet = new Room("Ensuite Toilet").addLights({
+const ensuiteToilet = new Room("Ensuite Toilet").addLights({
   name: "Ensuite Toilet Light",
   id: "light.shellydimmer2_4c752532d875",
   dimmable: true,
 });
 
-export const mainBedroom = new Room("Main Bedroom")
+const mainBedroom = new Room("Main Bedroom")
   .addClimates({
     name: "Main Bedroom TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat",
   })
-  .addSwitches({
+  .addLights({
     name: "Main Bedroom Lights",
     id: "switch.master_bedroom",
   })
@@ -86,7 +89,7 @@ export const mainBedroom = new Room("Main Bedroom")
   )
   .extend(WithRoomHeating);
 
-export const upstairsHallway = new Room("Upstairs Hallway")
+const upstairsHallway = new Room("Upstairs Hallway")
   .addSwitches({
     id: "switch.legrand_connected_outlet_switch_5",
     name: "Upstairs Hallway Socket",
@@ -101,7 +104,7 @@ export const upstairsHallway = new Room("Upstairs Hallway")
     name: "Landing Lights",
   });
 
-export const downstairsHallway = new Room("Downstairs Hallway")
+const downstairsHallway = new Room("Downstairs Hallway")
   .addLights({
     id: "light.sonoff_01minizb_light",
     name: "Stairs Light",
@@ -115,7 +118,7 @@ export const downstairsHallway = new Room("Downstairs Hallway")
     name: "Utility Light",
   });
 
-export const lounge = new Room("Lounge")
+const lounge = new Room("Lounge")
   .addLights({
     id: "light.shellydimmer2_4c752533ae9d",
     name: "Lounge Lights",
@@ -154,7 +157,7 @@ export const lounge = new Room("Lounge")
   })
   .extend(WithRoomHeating);
 
-export const kitchen = new Room("Kitchen")
+const kitchen = new Room("Kitchen")
   .addLights(
     {
       name: "Kitchen Pendant",
@@ -183,12 +186,12 @@ export const kitchen = new Room("Kitchen")
   })
   .extend(WithRoomHeating);
 
-export const outsideBack = new Room("Back").addLights({
+const outsideBack = new Room("Back").addLights({
   name: "Patio Lights",
   id: "switch.bifold_lights",
 });
 
-export const outsideFront = new Room("Front").addLights(
+const outsideFront = new Room("Front").addLights(
   {
     name: "Front Wall Lights",
     id: "switch.front_lights",
@@ -199,7 +202,11 @@ export const outsideFront = new Room("Front").addLights(
   }
 );
 
-export const tomsOffice = new Room("Toms Office")
+const tomsOffice = new Room("Toms Office")
+  .addSensors({
+    id: "sensor.toms_office_temperature",
+    name: "Toms Office NSPanel Temperature"
+  })
   .addClimates(
     new GenericThermostatClimate({
       name: "Toms Office Electric",
@@ -207,19 +214,23 @@ export const tomsOffice = new Room("Toms Office")
       target_sensor: "sensor.tze200_dwcarsat_ts0601_temperature",
     })
   )
+  .addLights({
+    name: "Toms Office Lights",
+    id: "switch.toms_office_relay_1",
+  })
   .extend(WithRoomHeating);
 
-export const endBedroom = new Room("End Bedroom")
+const endBedroom = new Room("End Bedroom")
   .addClimates(
     new GenericThermostatClimate({
       name: "End Bedroom Electric",
-      heater: "switch.0x04cf8cdf3c89dcdd",
-      target_sensor: "sensor.0xa4c138bf686fe61c_temperature",
+      heater: "switch.end_bedroom_plug_switch_2",
+      target_sensor: "sensor.end_bedroom_temperature_temperature_2",
     })
   )
   .extend(WithRoomHeating);
 
-export const spareBedroom = new Room("Talis Bedroom")
+const spareBedroom = new Room("Talis Bedroom")
   .addLights({
     id: "switch.spare_bed_lights",
     name: "Talis Bedroom Light",
@@ -250,7 +261,7 @@ const roomsWithHeating = [
   tomsOffice,
 ];
 
-export const boilerRoom = new Room("Boiler Room").extend(
+const boilerRoom = new Room("Boiler Room").extend(
   WithSwitchControlledThermostat,
   {
     boilerOptions: {
@@ -263,7 +274,7 @@ export const boilerRoom = new Room("Boiler Room").extend(
   }
 );
 
-export const _1_home = new MushroomDashboard("Home").addRooms(
+const _1_home = new MushroomDashboard("Home").addRooms(
   lounge,
   kitchen,
   mainBedroom,
@@ -280,138 +291,32 @@ export const _1_home = new MushroomDashboard("Home").addRooms(
   boilerRoom
 );
 
-export const _2_heatingDashboard = new Dashboard("Heating")
+const _2_heatingDashboard = new Dashboard("Heating")
   .addCard(climateSchedulerCard(roomsWithHeating))
   .addCard(boilerRoom.extensions.switchControlledThermostat.card())
   .addCards(
     roomsWithHeating.map((heating) => heating.extensions.roomHeating.card())
   );
 
-/*
-alias: Wardrobe Motion
-description: ""
-trigger:
-  - platform: state
-    entity_id:
-      - binary_sensor.ewelink_66666_iaszone
-    to: "on"
-    id: wardrobe_Detected
-  - platform: state
-    entity_id:
-      - binary_sensor.ewelink_66666_iaszone
-    to: "off"
-    id: wardrobe_Clear
-  - platform: state
-    entity_id:
-      - binary_sensor.ensuite_motion
-    to: "off"
-    id: ensuite_Clear
-  - platform: state
-    entity_id:
-      - binary_sensor.ensuite_motion
-    to: "on"
-    id: ensuite_Detected
-condition: []
-action:
-  - choose:
-      - conditions:
-          - condition: trigger
-            id:
-              - wardrobe_Detected
-        sequence:
-          - service: switch.turn_on
-            data: {}
-            target:
-              entity_id: switch.shelly_shellypro4pm_84cca87f95dc_2
-      - conditions:
-          - condition: trigger
-            id:
-              - wardrobe_Clear
-        sequence:
-          - service: switch.turn_off
-            data: {}
-            target:
-              entity_id: switch.shelly_shellypro4pm_84cca87f95dc_2
-mode: single
-
-*/
-
-// const wardrobeAutomation: HAAutomation = {
-//   alias: "Wardrobe Motion",
-//   trigger: [
-//     {
-//       platform: "state",
-//       entity_id: ["binary_sensor.ewelink_66666_iaszone"],
-//       to: "on",
-//       id: "wardrobe_Detected",
-//     },
-//     {
-//       platform: "state",
-//       entity_id: ["binary_sensor.ewelink_66666_iaszone"],
-//       to: "off",
-//       id: "wardrobe_Clear",
-//     },
-//     {
-//       platform: "state",
-//       entity_id: ["binary_sensor.ensuite_motion"],
-//       to: "on",
-//       id: "ensuite_Detected",
-//     },
-//     {
-//       platform: "state",
-//       entity_id: ["binary_sensor.ensuite_motion"],
-//       to: "off",
-//       id: "ensuite_Clear",
-//     },
-//   ],
-//   action: [
-//     {
-//       choose: [
-//         {
-//           conditions: [
-//             {
-//               condition: "trigger",
-//               id: ["wardrobe_Detected"],
-//             },
-//           ],
-//           sequence: [
-//             {
-//               service: "switch.turn_on",
-//               target: {
-//                 entity_id: "switch.shelly_shellypro4pm_84cca87f95dc_2",
-//               },
-//             },
-//           ],
-//         },
-//         {
-//           conditions: [
-//             {
-//               condition: "trigger",
-//               id: ["wardrobe_Clear"],
-//             },
-//           ],
-//           sequence: [
-//             {
-//               service: "switch.turn_off",
-//               target: {
-//                 entity_id: "switch.shelly_shellypro4pm_84cca87f95dc_2",
-//               },
-//             },
-//           ],
-//         },
-//       ],
-//     },
-//   ],
-// };
-
-// writeFiles("../dashboards/cards/heating/rooms/", {
-//   "0_boiler": boiler.buildFrontend(),
-//   ...rooms.reduce<{ [fileName: string]: Card }>(
-//     (prev, roomBuilder, i) => ({
-//       ...prev,
-//       [`${snakeCase(`${i + 1}_${roomBuilder.name}`)}`]:
-//         roomBuilder.buildFrontend(),
-//     }),
-//     {}
-//   ),
-// });
+export default defineConfig({
+  rooms: {
+    wardrobe,
+    ensuiteShower,
+    ensuiteToilet,
+    mainBedroom,
+    upstairsHallway,
+    downstairsHallway,
+    lounge,
+    kitchen,
+    outsideBack,
+    outsideFront,
+    tomsOffice,
+    endBedroom,
+    spareBedroom,
+    boilerRoom,
+  },
+  dashboards: {
+    _1_home,
+    _2_heatingDashboard,
+  },
+});

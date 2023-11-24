@@ -46,6 +46,7 @@ export class AverageTemperatureTemplateSensor extends TemplateSensor<
     super(
       {
         name: `Average ${name} temperature`,
+        unit_of_measurement: '°C',
         state: `
     ${temperatureSets.map((set) => set.jinjaString).join("\n    ")} 
     {% if ${temperatureSets
