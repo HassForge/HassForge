@@ -4,3 +4,5 @@ export * from "./sensor-target";
 export * from "./switch-target";
 export * from "./light-target";
 export * from "./binary-sensor-target";
+export * from "./media-player-target";
+export * from "./camera-target";

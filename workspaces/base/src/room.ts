@@ -5,6 +5,8 @@ import {
   SwitchTarget,
   SensorTarget,
   BinarySensorTarget,
+  MediaPlayerTarget,
+  CameraTarget,
 } from "./configuration";
 import {
   backendProviderToHAPackage,
@@ -43,6 +45,8 @@ export class Room implements BackendProvider, FrontendProvider {
   automations: HAAutomation[] = [];
   climates: ClimateTarget[] = [];
   sensors: SensorTarget[] = [];
+  cameras: CameraTarget[] = [];
+  mediaPlayers: MediaPlayerTarget[] = [];
   binarySensors: BinarySensorTarget[] = [];
 
   switches: SwitchTarget[] = [];
@@ -55,6 +59,11 @@ export class Room implements BackendProvider, FrontendProvider {
 
   addAutomations(...automations: HAAutomation[]) {
     this.automations.push(...automations);
+    return this;
+  }
+
+  addCameras(...cameras: CameraTarget[]) {
+    this.cameras.push(...cameras);
     return this;
   }
 
@@ -80,6 +89,11 @@ export class Room implements BackendProvider, FrontendProvider {
 
   addLights(...haLight: (LightTarget | SwitchTarget)[]) {
     this.lights.push(...haLight);
+    return this;
+  }
+
+  addMediaPlayers(...haMediaPlayer: MediaPlayerTarget[]) {
+    this.mediaPlayers.push(...haMediaPlayer);
     return this;
   }
 

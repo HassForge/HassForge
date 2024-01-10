@@ -14,6 +14,8 @@ import {
   SwitchTarget,
   SensorTarget,
   BinarySensorTarget,
+  MediaPlayerTarget,
+  CameraTarget,
 } from "./configuration";
 import {
   CreatableEntity,
@@ -27,6 +29,8 @@ import {
 export interface BackendProvider {
   readonly automations?: HAAutomation[];
   readonly climates?: ClimateTarget[];
+  readonly cameras?: CameraTarget[];
+  readonly mediaPlayers?: MediaPlayerTarget[];
   readonly sensors?: SensorTarget[];
   readonly binarySensors?: BinarySensorTarget[];
   readonly switches?: SwitchTarget[];
@@ -108,7 +112,14 @@ export function backendProviderToHAPackage(
     homeassistant: {
       customize: rooms
         .map((room) =>
-          [room.climates, room.sensors, room.switches, room.lights]
+          [
+            room.climates,
+            room.sensors,
+            room.switches,
+            room.lights,
+            room.cameras,
+            room.mediaPlayers,
+          ]
             .filter(notEmpty)
             .flat()
         )

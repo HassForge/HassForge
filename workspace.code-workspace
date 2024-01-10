@@ -2,7 +2,7 @@
   "folders": [
     {
       "name": "homeassistant",
-      "path": "../"
+      "path": ".."
     },
     {
       "name": "@hassforge/root",
@@ -21,12 +21,12 @@
       "path": "workspaces/recipes"
     },
     {
-      "name": "@hassforge/cli",
-      "path": "workspaces/cli"
-    },
-    {
       "name": "@hassforge/room-heating",
       "path": "extensions/room-heating"
+    },
+    {
+      "name": "@hassforge/cli",
+      "path": "workspaces/cli"
     },
     {
       "name": "@hassforge/switch-controlled-thermostat",

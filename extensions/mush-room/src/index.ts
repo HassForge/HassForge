@@ -1,10 +1,17 @@
-import { Dashboard, LightTarget, Room, SwitchTarget } from "@hassforge/base";
+import {
+  Dashboard,
+  LightTarget,
+  MediaPlayerTarget,
+  Room,
+  SwitchTarget,
+} from "@hassforge/base";
 import { HorizontalStackCard, VerticalStackCard } from "@hassforge/types";
 import { MushroomEntityCard } from "./cards/mushroom-entity-card";
 import { MushroomLightCard } from "./cards/mushroom-light-card";
 import { MushroomTitleCard } from "./cards/mushroom-title-card";
 import { WithRoomHeating } from "@hassforge/room-heating";
 import { MushroomChip } from "./cards/mushroom-chips-card";
+import { MushroomMediaPlayerCard } from "./cards/mushroom-media-player-card";
 
 function isDefined<T>(val: T | undefined | null): val is T {
   return val !== undefined && val !== null;
@@ -29,6 +36,14 @@ function toEntityCard(entity: SwitchTarget): MushroomEntityCard {
   };
 }
 
+function toMediaPlayerCard(entity: MediaPlayerTarget): MushroomMediaPlayerCard {
+  return {
+    type: "custom:mushroom-media-player-card",
+    entity: entity.id,
+    name: entity.name,
+  };
+}
+
 function roomToMushroom(room: Room): VerticalStackCard {
   const title: MushroomTitleCard = {
     type: "custom:mushroom-title-card",
@@ -42,6 +57,16 @@ function roomToMushroom(room: Room): VerticalStackCard {
       type: "entity",
       entity: room.extensions.roomHeating.averageTemperatureSensor.id,
       icon: "mdi:thermometer",
+    });
+  }
+
+  if (room.cameras.length > 0) {
+    room.cameras.forEach((camera) => {
+      chips.push({
+        type: "entity",
+        entity: camera.id,
+        icon: "mdi:camera",
+      });
     });
   }
 
@@ -73,9 +98,11 @@ function roomToMushroom(room: Room): VerticalStackCard {
         }
       : undefined;
 
+  const mediaPlayers = room.mediaPlayers.map(toMediaPlayerCard);
+
   return {
     type: "vertical-stack",
-    cards: [title, chipCard, lights, switches].filter(isDefined),
+    cards: [title, chipCard, lights, switches, ...mediaPlayers].filter(isDefined),
   };
 }
 

@@ -66,7 +66,7 @@ const ensuiteToilet = new Room("Ensuite Toilet").addLights({
 const mainBedroom = new Room("Main Bedroom")
   .addClimates({
     name: "Main Bedroom TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat",
+    id: "climate.sonoff_trvzb_thermostat",
   })
   .addLights({
     name: "Main Bedroom Lights",
@@ -87,6 +87,10 @@ const mainBedroom = new Room("Main Bedroom")
       target_sensor: "sensor.tz3000_fllyghyj_ts0201_temperature",
     })
   )
+  .addCameras({
+    name: "Main Bedroom Camera",
+    id: "camera.go2rtc_spare_cam",
+  })
   .extend(WithRoomHeating);
 
 const upstairsHallway = new Room("Upstairs Hallway")
@@ -117,6 +121,16 @@ const downstairsHallway = new Room("Downstairs Hallway")
     id: "switch.shellyplus1_80646fc7e7c8_switch_0",
     name: "Utility Light",
   });
+
+const downstairsBathroom = new Room("Downstairs Bathroom")
+  .addClimates(
+    new GenericThermostatClimate({
+      name: "Downstairs Bathroom Towel Radiator",
+      heater: "switch.downstairs_bathroom_towel_radiator_switch",
+      target_sensor: "sensor.downstairs_bathroom_temperature_temperature",
+    })
+  )
+  .extend(WithRoomHeating);
 
 const lounge = new Room("Lounge")
   .addLights({
@@ -155,6 +169,10 @@ const lounge = new Room("Lounge")
     name: "Music Room Socket",
     device_class: "outlet",
   })
+  .addMediaPlayers({
+    id: "media_player.lg_webos_tv_oled65cx6la",
+    name: "Lounge TV",
+  })
   .extend(WithRoomHeating);
 
 const kitchen = new Room("Kitchen")
@@ -191,21 +209,26 @@ const outsideBack = new Room("Back").addLights({
   id: "switch.bifold_lights",
 });
 
-const outsideFront = new Room("Front").addLights(
-  {
-    name: "Front Wall Lights",
-    id: "switch.front_lights",
-  },
-  {
-    name: "Front Floodlight",
-    id: "switch.floodlight",
-  }
-);
+const outsideFront = new Room("Front")
+  .addLights(
+    {
+      name: "Front Wall Lights",
+      id: "switch.front_lights",
+    },
+    {
+      name: "Front Floodlight",
+      id: "switch.floodlight",
+    }
+  )
+  .addCameras({
+    name: "Front Garden Camera",
+    id: "camera.go2rtc_front_garden",
+  });
 
 const tomsOffice = new Room("Toms Office")
   .addSensors({
     id: "sensor.toms_office_temperature",
-    name: "Toms Office NSPanel Temperature"
+    name: "Toms Office NSPanel Temperature",
   })
   .addClimates(
     new GenericThermostatClimate({
@@ -239,6 +262,10 @@ const spareBedroom = new Room("Talis Bedroom")
     name: "Talis Bedroom TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_thermostat_7",
   })
+  .addCameras({
+    name: "Talis Bedroom Camera",
+    id: "camera.go2rtc_tali_room",
+  })
   .extend(WithRoomHeating);
 
 const boilerSwitch = {
@@ -256,6 +283,7 @@ const roomsWithHeating = [
   wardrobe,
   endBedroom,
   spareBedroom,
+  downstairsBathroom,
   lounge,
   kitchen,
   tomsOffice,
@@ -270,7 +298,8 @@ const boilerRoom = new Room("Boiler Room").extend(
       powerConsumptionStandbyRange: [130, 200],
     },
     rooms: roomsWithHeating,
-    includeClimate: (_, climate) => climate.id.includes("ts0601"),
+    includeClimate: (_, climate) =>
+      climate.id.includes("ts0601") || climate.id.includes("sonoff_trvzb"),
   }
 );
 
@@ -283,6 +312,7 @@ const _1_home = new MushroomDashboard("Home").addRooms(
   ensuiteToilet,
   upstairsHallway,
   downstairsHallway,
+  downstairsBathroom,
   outsideBack,
   outsideFront,
   tomsOffice,
@@ -306,6 +336,7 @@ export default defineConfig({
     mainBedroom,
     upstairsHallway,
     downstairsHallway,
+    downstairsBathroom,
     lounge,
     kitchen,
     outsideBack,
