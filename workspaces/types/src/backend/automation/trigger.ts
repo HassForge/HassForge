@@ -1,6 +1,6 @@
 import { EntityID } from "../../id";
 
-export type HATrigger =
+type KnownTriggers =
   | EventTrigger
   | HomeAssistantTrigger
   | MQTTTrigger
@@ -16,6 +16,14 @@ export type HATrigger =
   | GeolocationTrigger
   | DeviceTrigger
   | CalendarTrigger;
+
+type ExcludeKnownTriggerKeys<T> = T extends KnownTriggers ? never : T;
+
+export type CustomTrigger = {
+  platform: string;
+} & Record<ExcludeKnownTriggerKeys<string>, any>;
+
+export type HATrigger = KnownTriggers | CustomTrigger;
 
 export interface HATriggerCommon {
   id?: string;

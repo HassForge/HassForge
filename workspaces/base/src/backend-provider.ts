@@ -25,8 +25,9 @@ import {
   isCreatableTemplate,
   isCreatableSensor,
 } from "./creatables";
+import merge from "ts-deepmerge";
 
-export interface BackendProvider {
+export interface BackendProvider<T extends Record<string, any> = never> {
   readonly automations?: HAAutomation[];
   readonly climates?: ClimateTarget[];
   readonly cameras?: CameraTarget[];
@@ -35,6 +36,7 @@ export interface BackendProvider {
   readonly binarySensors?: BinarySensorTarget[];
   readonly switches?: SwitchTarget[];
   readonly lights?: (LightTarget | SwitchTarget)[];
+  readonly integrations?: T;
 }
 
 export const isBackendProvider = (x: any): x is BackendProvider => {
@@ -61,6 +63,8 @@ const pruneEmptyKeys = ({
   homeassistant,
   sensor,
   template,
+  light,
+  ...rest
 }: HAPackage): HAPackage => {
   return {
     automation: isEmptyArray(automation) ? undefined : automation,
@@ -68,17 +72,22 @@ const pruneEmptyKeys = ({
     climate: isEmptyArray(climate) ? undefined : climate,
     sensor: isEmptyArray(sensor) ? undefined : sensor,
     template: isEmptyArray(template) ? undefined : template,
+    light: isEmptyArray(light) ? undefined : light,
     homeassistant:
       Object.keys(homeassistant?.customize ?? {}).length === 0
         ? undefined
         : homeassistant,
+    ...rest,
   };
 };
 
 export function backendProviderToHAPackage(
-  ...rooms: BackendProvider[]
+  ...rooms: BackendProvider<any>[]
 ): HAPackage {
   return pruneEmptyKeys({
+    ...merge(
+      ...rooms.flatMap(({ integrations }) => integrations).filter(notEmpty)
+    ),
     automation: rooms
       .flatMap(({ automations }) => automations)
       .filter(notEmpty),

@@ -1,7 +1,7 @@
 import path from "path";
 import { loadConfig } from "./config";
 import { toYAML } from "./utils/to-yaml";
-import { snakeCase } from 'change-case'
+import { snakeCase } from "change-case";
 
 export interface BuildConfigOptions {
   configFilePath: string;
@@ -36,9 +36,8 @@ export const buildConfig = async ({
   }>(
     (acc, [key, room]) => ({
       ...acc,
-      [path.join(path.join(buildDir, packagesName), `${snakeCase(key)}.yaml`)]: toYAML(
-        room.toPackage()
-      ),
+      [path.join(path.join(buildDir, packagesName), `${snakeCase(key)}.yaml`)]:
+        toYAML(room.toPackage()),
     }),
     {}
   );

@@ -3382,6 +3382,7 @@ __metadata:
     "@hassforge/types": "workspace:workspaces/types"
     "@types/node": ^18.17.11
     change-case: ^4.1.2
+    ts-deepmerge: ^6.2.0
     typescript: ^5.2.2
   languageName: unknown
   linkType: soft
@@ -3396,6 +3397,7 @@ __metadata:
     "@hassforge/room-heating": "workspace:^"
     "@hassforge/switch-controlled-thermostat": "workspace:^"
     "@hassforge/types": "workspace:^"
+    "@hassforge/webostv": "workspace:^"
     "@inkjs/ui": ^1.0.0
     "@types/node": ^18.17.11
     "@types/react": ^18.2.31
@@ -3555,6 +3557,33 @@ __metadata:
   dependencies:
     "@types/node": ^18.17.11
     change-case: ^4.1.2
+    typescript: ^5.2.2
+  languageName: unknown
+  linkType: soft
+
+"@hassforge/wake-on-lan@workspace:*, @hassforge/wake-on-lan@workspace:extensions/wake-on-lan":
+  version: 0.0.0-use.local
+  resolution: "@hassforge/wake-on-lan@workspace:extensions/wake-on-lan"
+  dependencies:
+    "@hassforge/base": "workspace:workspaces/base"
+    "@hassforge/types": "workspace:workspaces/types"
+    "@types/node": ^18.17.11
+    change-case: ^4.1.2
+    date-fns: ^2.30.0
+    typescript: ^5.2.2
+  languageName: unknown
+  linkType: soft
+
+"@hassforge/webostv@workspace:^, @hassforge/webostv@workspace:extensions/webostv":
+  version: 0.0.0-use.local
+  resolution: "@hassforge/webostv@workspace:extensions/webostv"
+  dependencies:
+    "@hassforge/base": "workspace:workspaces/base"
+    "@hassforge/types": "workspace:workspaces/types"
+    "@hassforge/wake-on-lan": "workspace:*"
+    "@types/node": ^18.17.11
+    change-case: ^4.1.2
+    date-fns: ^2.30.0
     typescript: ^5.2.2
   languageName: unknown
   linkType: soft
@@ -17145,6 +17174,13 @@ __metadata:
   version: 2.2.0
   resolution: "ts-dedent@npm:2.2.0"
   checksum: 93ed8f7878b6d5ed3c08d99b740010eede6bccfe64bce61c5a4da06a2c17d6ddbb80a8c49c2d15251de7594a4f93ffa21dd10e7be75ef66a4dc9951b4a94e2af
+  languageName: node
+  linkType: hard
+
+"ts-deepmerge@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "ts-deepmerge@npm:6.2.0"
+  checksum: 88014409051cf614c5cd26c60eb2605a59b0b98896609b0483503083a2727362409b1db9b7e4bf4446733396881f32cd504ef8141dd448e38304dcdf1f9d39d0
   languageName: node
   linkType: hard
 

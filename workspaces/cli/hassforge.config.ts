@@ -11,6 +11,7 @@ import {
   climateSchedulerCard,
 } from "@hassforge/recipes";
 import { MushroomDashboard } from "@hassforge/mush-room";
+import { WithWebOSTV } from "@hassforge/webostv";
 
 const wardrobe = new Room("Wardrobe")
   .addLights({
@@ -91,6 +92,10 @@ const mainBedroom = new Room("Main Bedroom")
     name: "Main Bedroom Camera",
     id: "camera.go2rtc_spare_cam",
   })
+  .addMediaPlayers({
+    name: "Main Bedroom TV",
+    id: "media_player.samsung_7_series_49",
+  })
   .extend(WithRoomHeating);
 
 const upstairsHallway = new Room("Upstairs Hallway")
@@ -169,11 +174,14 @@ const lounge = new Room("Lounge")
     name: "Music Room Socket",
     device_class: "outlet",
   })
-  .addMediaPlayers({
-    id: "media_player.lg_webos_tv_oled65cx6la",
-    name: "Lounge TV",
-  })
-  .extend(WithRoomHeating);
+  .extend(WithRoomHeating)
+  .extend(WithWebOSTV, {
+    macAddress: "58:FD:B1:EC:0B:B4",
+    mediaPlayerTarget: {
+      id: "media_player.lg_webos_tv_oled65cx6la",
+      name: "Lounge TV",
+    },
+  });
 
 const kitchen = new Room("Kitchen")
   .addLights(
@@ -225,7 +233,7 @@ const outsideFront = new Room("Front")
     id: "camera.go2rtc_front_garden",
   });
 
-const tomsOffice = new Room("Toms Office")
+  const tomsOffice = new Room("Toms Office")
   .addSensors({
     id: "sensor.toms_office_temperature",
     name: "Toms Office NSPanel Temperature",
