@@ -19,7 +19,7 @@ export class MotionActivatedAutomation extends Automation {
   }: MotionActivatedAutomationOptions) {
     super({
       alias,
-      mode: "single",
+      mode: "restart",
       trigger: motionSensors.flatMap((sensorId) => [
         Trigger.state(sensorId, {
           id: "detected",
