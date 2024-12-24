@@ -5,3 +5,5 @@ export * from "./template";
 export * from "./light";
 export * from "./automation";
 export * from "./binary-sensor";
+export * from "./media-player";
+export * from "./inputs";

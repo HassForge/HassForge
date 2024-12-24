@@ -7,7 +7,6 @@ import {
   Condition,
   Action,
 } from "@hassforge/base";
-import { snakeCase } from "change-case";
 
 export class BoilerShutOffAutomation extends Automation {
   constructor(
@@ -17,13 +16,14 @@ export class BoilerShutOffAutomation extends Automation {
     const alias = "Turn off boiler when all rads satisfied";
     super({
       alias,
-      id: snakeCase(alias),
       trigger: [
         Trigger.state(radiatorHeatNeededSensor.id),
         Trigger.timePattern({ minutes: "/15" }),
       ],
       condition: [
-        Condition.template(`{{ states('${radiatorHeatNeededSensor.id}') | float == 0 }}`),
+        Condition.template(
+          `{{ states('${radiatorHeatNeededSensor.id}') | float == 0 }}`
+        ),
         Condition.template(`{% set changed = as_timestamp(${statesNotationTransform(
           boilerSwitch.id
         )}.last_changed) %}

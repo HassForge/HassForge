@@ -5,7 +5,6 @@ import {
   SwitchTarget,
   Trigger,
 } from "@hassforge/base";
-import { snakeCase } from "change-case";
 
 export class TurnOnSwitchBinarySensorAutomation extends Automation {
   constructor(
@@ -16,7 +15,6 @@ export class TurnOnSwitchBinarySensorAutomation extends Automation {
   ) {
     super({
       alias: name,
-      id: snakeCase(name),
       description,
       trigger: [Trigger.state(sensorTarget.id, { to: "on" })],
 

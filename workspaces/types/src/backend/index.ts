@@ -8,6 +8,8 @@ export * from "./sensor";
 export * from "./light";
 export * from "./switch";
 export * from "./template";
+export * from "./input-datetime";
+export * from "./input-boolean";
 
 export * from "./package";
 export * from "./homeassistant";

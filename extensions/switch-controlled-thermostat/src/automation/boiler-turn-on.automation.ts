@@ -7,7 +7,6 @@ import {
   Trigger,
   statesNotationTransform,
 } from "@hassforge/base";
-import { snakeCase } from "change-case";
 
 export class BoilerTurnOnAutomation extends Automation {
   constructor(
@@ -17,7 +16,6 @@ export class BoilerTurnOnAutomation extends Automation {
     const alias = "Turn on boiler when heat needed";
     super({
       alias,
-      id: snakeCase(alias),
       trigger: [
         Trigger.state(radiatorHeatNeededSensor.id),
         Trigger.timePattern({ minutes: "/15" }),

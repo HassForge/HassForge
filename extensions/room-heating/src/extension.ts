@@ -28,7 +28,12 @@ export class WithRoomHeating implements Provider {
     );
     this.averageTemperatureSensor = new AverageTemperatureTemplateSensor(
       room.name,
-      room.climates
+      [
+        ...room.climates,
+        ...room.sensors.filter(
+          (sensor) => sensor.device_class === "temperature"
+        ),
+      ]
     );
   }
 
@@ -50,7 +55,12 @@ export class WithRoomHeating implements Provider {
       ),
     climateSwitchRows: () => climateSwitchRows(this.room.climates),
     climateHeatingGraphRow: () =>
-      climateHeatingGraphRow(this.desiredTemperatureSensors),
+      climateHeatingGraphRow([
+        ...this.desiredTemperatureSensors.map(sensor => sensor.parent),
+        ...this.room.sensors.filter(
+          (sensor) => sensor.device_class === "temperature"
+        ),
+      ]),
   };
 
   card = () => ({

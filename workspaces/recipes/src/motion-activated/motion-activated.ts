@@ -1,5 +1,5 @@
 import { Action, Automation, Condition, Trigger } from "@hassforge/base";
-import { BinarySensorID, Delay } from "@hassforge/types";
+import { BinarySensorID, Delay, HACondition } from "@hassforge/types";
 
 export interface MotionActivatedAutomationOptions {
   alias: string;
@@ -7,6 +7,7 @@ export interface MotionActivatedAutomationOptions {
   delayOn?: Delay;
   delayOff?: Delay;
   switchEntities: Action.Switchable[];
+  onConditions?: HACondition[];
 }
 
 export class MotionActivatedAutomation extends Automation {
@@ -16,6 +17,7 @@ export class MotionActivatedAutomation extends Automation {
     switchEntities,
     delayOn,
     delayOff,
+    onConditions,
   }: MotionActivatedAutomationOptions) {
     super({
       alias,
@@ -33,7 +35,9 @@ export class MotionActivatedAutomation extends Automation {
       action: [
         Action.choose([
           {
-            conditions: Condition.trigger("detected"),
+            conditions: onConditions
+              ? Condition.and(...onConditions, Condition.trigger("detected"))
+              : Condition.trigger("detected"),
             sequence: [
               ...(delayOn ? [Action.delay(delayOn)] : []),
               ...switchEntities.flatMap((switchEntityId) =>

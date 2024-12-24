@@ -32,6 +32,12 @@ import {
 } from "@hassforge/types";
 
 export namespace Action {
+  export function parallel(...actions: HAAction[]) {
+    return {
+      parallel: actions,
+    };
+  }
+
   export function callService(
     service: string,
     options?: Omit<CallServiceAction, "service">
@@ -72,6 +78,7 @@ export namespace Action {
 
   export type Toggleable =
     | AutomationID
+    | ClimateID
     | CoverID
     | FanID
     | HumidiferID

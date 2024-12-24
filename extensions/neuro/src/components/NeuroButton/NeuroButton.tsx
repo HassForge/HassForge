@@ -28,7 +28,7 @@ interface IconProps {
 }
 
 export interface NeuroButtonProps {
-  color: keyof typeof colors | string[] | number;
+  color: keyof typeof colors | string | string[] | number;
   icon: (props: IconProps) => VNode;
   animate?: { type: "pulse" } | { type: "glow"; speed?: number };
   isOn?: boolean;
@@ -60,7 +60,9 @@ export const NeuroButton = ({
     : "off";
 
   const { getHigh, getLow } = useColorRange(
-    typeof color === "string" ? colors[color] : color
+    typeof color === "string"
+      ? colors[color as keyof typeof colors] ?? color
+      : color
   );
 
   const colorTopHigh = getHigh(1);

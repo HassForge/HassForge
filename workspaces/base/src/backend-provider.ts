@@ -3,6 +3,8 @@ import {
   HABinarySensor,
   HAClimate,
   HACustomizeDictionary,
+  HAInputBooleanDictionary,
+  HAInputDateTimeDictionary,
   HALight,
   HAPackage,
   HASensor,
@@ -16,6 +18,7 @@ import {
   BinarySensorTarget,
   MediaPlayerTarget,
   CameraTarget,
+  InputBooleanTarget,
 } from "./configuration";
 import {
   CreatableEntity,
@@ -24,8 +27,11 @@ import {
   isCreatableClimate,
   isCreatableTemplate,
   isCreatableSensor,
+  isCreatableInputDateTime,
+  isCreatableInputBoolean,
 } from "./creatables";
 import merge from "ts-deepmerge";
+import { InputDateTimeTarget } from "./configuration/input-datetime-target";
 
 export interface BackendProvider<T extends Record<string, any> = never> {
   readonly automations?: HAAutomation[];
@@ -37,6 +43,8 @@ export interface BackendProvider<T extends Record<string, any> = never> {
   readonly switches?: SwitchTarget[];
   readonly lights?: (LightTarget | SwitchTarget)[];
   readonly integrations?: T;
+  readonly inputDateTimes?: InputDateTimeTarget[];
+  readonly inputBooleans?: InputBooleanTarget[];
 }
 
 export const isBackendProvider = (x: any): x is BackendProvider => {
@@ -56,6 +64,10 @@ const isEmptyArray = (arr?: any[]): boolean => {
   return arr?.length === 0;
 };
 
+const isEmptyObject = (obj?: object): boolean => {
+  return Object.keys(obj ?? {}).length === 0;
+};
+
 const pruneEmptyKeys = ({
   automation,
   binary_sensor,
@@ -64,6 +76,8 @@ const pruneEmptyKeys = ({
   sensor,
   template,
   light,
+  input_boolean,
+  input_datetime,
   ...rest
 }: HAPackage): HAPackage => {
   return {
@@ -73,6 +87,8 @@ const pruneEmptyKeys = ({
     sensor: isEmptyArray(sensor) ? undefined : sensor,
     template: isEmptyArray(template) ? undefined : template,
     light: isEmptyArray(light) ? undefined : light,
+    input_boolean: isEmptyObject(input_boolean) ? undefined : input_boolean,
+    input_datetime: isEmptyObject(input_datetime) ? undefined : input_datetime,
     homeassistant:
       Object.keys(homeassistant?.customize ?? {}).length === 0
         ? undefined
@@ -118,6 +134,34 @@ export function backendProviderToHAPackage(
       .map((sensors) => sensors.filter(isCreatableSensor))
       .filter((sensors) => sensors.length > 0)
       .flat() as unknown as HASensor[],
+    input_datetime: rooms
+      .map((room) => room.inputDateTimes)
+      .filter(notEmpty)
+      .filter((inputDateTimes) => inputDateTimes.length > 0)
+      .flat()
+      .filter(isCreatableInputDateTime)
+      .reduce<HAInputDateTimeDictionary>(
+        (acc, curr) =>
+          ({
+            [curr.id.replace("input_datetime.", "")]: curr,
+            ...acc,
+          } as unknown as HAInputDateTimeDictionary),
+        {}
+      ),
+    input_boolean: rooms
+      .map((room) => room.inputBooleans)
+      .filter(notEmpty)
+      .filter((inputBooleans) => inputBooleans.filter(isCreatableInputBoolean))
+      .filter((inputBooleans) => inputBooleans.length > 0)
+      .flat()
+      .reduce<HAInputBooleanDictionary>(
+        (acc, { id, ...curr }) =>
+          ({
+            [id.replace("input_boolean.", "")]: curr,
+            ...acc,
+          } as unknown as HAInputBooleanDictionary),
+        {}
+      ),
     homeassistant: {
       customize: rooms
         .map((room) =>

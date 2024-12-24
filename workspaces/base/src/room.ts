@@ -7,6 +7,7 @@ import {
   BinarySensorTarget,
   MediaPlayerTarget,
   CameraTarget,
+  InputBooleanTarget,
 } from "./configuration";
 import {
   backendProviderToHAPackage,
@@ -14,6 +15,7 @@ import {
 } from "./backend-provider";
 import { FrontendProvider, isFrontendProvider } from "./frontend-provider";
 import merge from "ts-deepmerge";
+import { InputDateTimeTarget } from "./configuration/input-datetime-target";
 
 type PublicInterface<T> = Pick<T, keyof T>;
 
@@ -145,6 +147,28 @@ export class Room implements BackendProvider<any>, FrontendProvider {
     ];
   }
 
+  _inputDateTimes: InputDateTimeTarget[] = [];
+  get inputDateTimes() {
+    return [
+      ...this._inputDateTimes,
+      ...Object.values(this.extensions)
+        .map((extension) => extension.inputDateTimes)
+        .flat()
+        .filter(notEmpty),
+    ];
+  }
+
+  _inputBooleans: InputBooleanTarget[] = [];
+  get inputBooleans() {
+    return [
+      ...this._inputBooleans,
+      ...Object.values(this.extensions)
+        .map((extension) => extension.inputBooleans)
+        .flat()
+        .filter(notEmpty),
+    ];
+  }
+
   get integrations() {
     console.log(
       Object.values(this.extensions)
@@ -152,7 +176,8 @@ export class Room implements BackendProvider<any>, FrontendProvider {
         .flat()
         .filter(notEmpty)
     );
-    return merge({},
+    return merge(
+      {},
       ...Object.values(this.extensions)
         .map(({ integrations }) => integrations)
         .flat()
@@ -186,6 +211,15 @@ export class Room implements BackendProvider<any>, FrontendProvider {
     return this;
   }
 
+  addTemperatureSensors(...sensor: SensorTarget[]) {
+    this._sensors.push(
+      ...sensor.map(
+        (sensor): SensorTarget => ({ ...sensor, device_class: "temperature" })
+      )
+    );
+    return this;
+  }
+
   addBinarySensors(...sensor: BinarySensorTarget[]) {
     this._binarySensors.push(...sensor);
     return this;
@@ -203,6 +237,16 @@ export class Room implements BackendProvider<any>, FrontendProvider {
 
   addMediaPlayers(...haMediaPlayer: MediaPlayerTarget[]) {
     this._mediaPlayers.push(...haMediaPlayer);
+    return this;
+  }
+
+  addInputDateTime(...inputDateTime: InputDateTimeTarget[]) {
+    this._inputDateTimes.push(...inputDateTime);
+    return this;
+  }
+
+  addInputBoolean(...inputBoolean: InputBooleanTarget[]) {
+    this._inputBooleans.push(...inputBoolean);
     return this;
   }
 

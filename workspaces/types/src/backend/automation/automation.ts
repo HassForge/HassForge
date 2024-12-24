@@ -4,6 +4,7 @@ import { HATrigger } from "./trigger";
 
 export interface HAAutomation {
   alias: string;
+  trigger_variables?: Record<string, string | number | boolean>;
   id?: string;
   description?: string;
   trigger: HATrigger[];

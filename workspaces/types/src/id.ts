@@ -17,7 +17,8 @@ export type EntityClass =
   | "remote"
   | "vacuum"
   | "siren"
-  | "input_boolean";
+  | "input_boolean"
+  | "input_datetime";
 
 export type EntityID<C extends EntityClass = EntityClass> = `${C}.${string}`;
 

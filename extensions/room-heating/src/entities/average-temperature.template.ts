@@ -3,11 +3,13 @@ import {
   TemplateSensor,
   ClimateTarget,
   DEFAULT_TEMPERATURE_ATTRIBUTE,
+  SensorTarget,
+  isClimateTarget,
 } from "@hassforge/base";
 
 const getTemperatureJinjaString = (
   id: TemplateSensor["id"] | ClimateTarget["id"],
-  temperatureAttribute: string = DEFAULT_TEMPERATURE_ATTRIBUTE
+  temperatureAttribute?: string
 ) =>
   temperatureAttribute
     ? `state_attr('${id}', '${temperatureAttribute}')`
@@ -31,22 +33,24 @@ const getTemperatureJinjaString = (
  * ```
  */
 export class AverageTemperatureTemplateSensor extends TemplateSensor<
-  ClimateTarget[]
+  (SensorTarget | ClimateTarget)[]
 > {
-  constructor(name: string, climates: ClimateTarget[]) {
+  constructor(name: string, climates: (SensorTarget | ClimateTarget)[]) {
     const temperatureSets = climates.map((climate) => ({
       id: snakeCase(climate.name),
       jinjaString: `{% set ${snakeCase(
         climate.name
       )} = ${getTemperatureJinjaString(
         climate.id,
-        climate.temperatureAttribute
+        isClimateTarget(climate)
+          ? climate.temperatureAttribute ?? DEFAULT_TEMPERATURE_ATTRIBUTE
+          : undefined
       )} %}`,
     }));
     super(
       {
         name: `Average ${name} temperature`,
-        unit_of_measurement: '°C',
+        unit_of_measurement: "°C",
         state: `
     ${temperatureSets.map((set) => set.jinjaString).join("\n    ")} 
     {% if ${temperatureSets

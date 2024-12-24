@@ -11,7 +11,12 @@ export type HAAction =
   | SceneAction
   | ScriptAction
   | WaitAction
-  | WaitTemplateAction;
+  | WaitTemplateAction
+  | ParallelAction;
+
+export type ParallelAction = {
+  parallel: HAAction[];
+};
 
 export type CallServiceAction = {
   service: string;

@@ -44,7 +44,10 @@ function toMediaPlayerCard(entity: MediaPlayerTarget): MushroomMediaPlayerCard {
   };
 }
 
-function roomToMushroom(room: Room): VerticalStackCard {
+export function roomToMushroom(
+  room: Room,
+  extras?: { chips?: MushroomChip[] }
+) {
   const title: MushroomTitleCard = {
     type: "custom:mushroom-title-card",
     title: room.name,
@@ -69,6 +72,8 @@ function roomToMushroom(room: Room): VerticalStackCard {
       });
     });
   }
+
+  chips.push(...(extras?.chips ?? []));
 
   const chipCard =
     chips.length > 0
@@ -102,8 +107,10 @@ function roomToMushroom(room: Room): VerticalStackCard {
 
   return {
     type: "vertical-stack",
-    cards: [title, chipCard, lights, switches, ...mediaPlayers].filter(isDefined),
-  };
+    cards: [title, chipCard, lights, switches, ...mediaPlayers].filter(
+      isDefined
+    ),
+  } as const satisfies VerticalStackCard;
 }
 
 export class MushroomDashboard extends Dashboard {
@@ -111,7 +118,9 @@ export class MushroomDashboard extends Dashboard {
 
   addRooms(...rooms: Room[]) {
     this.cards.push(
-      ...rooms.map(roomToMushroom).filter((stack) => stack.cards.length > 1)
+      ...rooms
+        .map((room) => roomToMushroom(room))
+        .filter((stack) => stack.cards.length > 1)
     );
     return this;
   }

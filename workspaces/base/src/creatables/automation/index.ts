@@ -4,10 +4,15 @@ import {
   HAAutomation,
   HATrigger,
 } from "@hassforge/types";
+import { snakeCase } from "change-case";
+import { CreatableEntity } from "../entity";
+import { omit } from "../../utils/omit";
 
-export class Automation implements HAAutomation {
+export class Automation
+  extends CreatableEntity<"automation">
+  implements HAAutomation
+{
   alias!: string;
-  id?: string;
   description?: string;
   initial_state?: boolean;
   trigger: HATrigger[] = [];
@@ -15,7 +20,13 @@ export class Automation implements HAAutomation {
   action: HAAction[] = [];
 
   constructor(automation: HAAutomation) {
+    super("automation", `automation.${snakeCase(automation.alias)}`);
     Object.assign(this, automation);
+  }
+
+  
+  public override toJSON() {
+    return omit(this, "entityClass") as any;
   }
 }
 
