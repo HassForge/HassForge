@@ -493,9 +493,7 @@ const dailyElectricityCost =
       super({
         name: "Daily Heat Pump Electricity Price",
         unit_of_measurement: "€",
-        state: `
-        {{ states('${heatPumpDailyKwhSensorId}') | float * states('${electricityCost.id}') | float }}
-      `,
+        state: `{{ states('${heatPumpDailyKwhSensorId}') | float * states('${electricityCost.id}') | float }}`,
       });
     }
   })();
