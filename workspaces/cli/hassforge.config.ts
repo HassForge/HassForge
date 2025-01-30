@@ -494,7 +494,7 @@ const dailyElectricityCost =
       super({
         name: "Daily Heat Pump Electricity Price",
         unit_of_measurement: "€",
-        state: `{{ states('${heatPumpDailyKwhSensorId}') | float * states('${electricityCost.id}') | float }}`,
+        state: `{{ states('${heatPumpDailyKwhSensorId}') | float * states('${electricityCost.id}') | float | round(2) }}`,
       });
     }
   })();
@@ -641,11 +641,11 @@ const _2_heatingDashboard = new Dashboard("Heating")
         entities: [
           {
             entity: heatPumpDailyKwhSensorId,
-            name: "Daily KWh",
+            name: "KWh Today",
           },
           {
             entity: dailyElectricityCost.id,
-            name: "Daily Price",
+            name: "Cost Today",
           },
           {
             entity: "sensor.altherma_climatecontrol_outdoor_temperature",
