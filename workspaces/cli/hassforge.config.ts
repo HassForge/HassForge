@@ -652,10 +652,6 @@ const _2_heatingDashboard = new Dashboard("Heating")
             entity: "sensor.altherma_climatecontrol_outdoor_temperature",
             name: "Outdoor Temp",
           },
-          {
-            entity: boilerRoom.sensors[0].id,
-            name: "Daily Cost",
-          },
         ],
         icon: "mdi:fire",
         name: "Heat Pump",
