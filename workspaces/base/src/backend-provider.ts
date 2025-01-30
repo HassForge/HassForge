@@ -5,6 +5,7 @@ import {
   HACustomizeDictionary,
   HAInputBooleanDictionary,
   HAInputDateTimeDictionary,
+  HAInputNumberDictionary,
   HAInputTextDictionary,
   HALight,
   HAPackage,
@@ -33,6 +34,7 @@ import {
   isCreatableInputDateTime,
   isCreatableInputBoolean,
   isCreatableInputText,
+  isCreatableInputNumber,
 } from "./creatables";
 import merge from "ts-deepmerge";
 import { InputDateTimeTarget } from "./configuration/input-datetime-target";
@@ -182,6 +184,20 @@ export function backendProviderToHAPackage(
             [id.replace("input_text.", "")]: curr,
             ...acc,
           } as unknown as HAInputTextDictionary),
+        {}
+      ),
+    input_number: rooms
+      .map((room) => room.inputNumbers)
+      .filter(notEmpty)
+      .filter((inputNumbers) => inputNumbers.filter(isCreatableInputNumber))
+      .filter((inputNumbers) => inputNumbers.length > 0)
+      .flat()
+      .reduce<HAInputNumberDictionary>(
+        (acc, { id, ...curr }) =>
+          ({
+            [id.replace("input_number.", "")]: curr,
+            ...acc,
+          } as unknown as HAInputNumberDictionary),
         {}
       ),
     homeassistant: {

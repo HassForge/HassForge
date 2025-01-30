@@ -485,6 +485,7 @@ const electricityCost = new InputNumber({
   max: 0.5,
   step: 0.001,
   initial: 0.1906,
+  unit_of_measurement: "EUR/kWh"
 });
 
 const dailyElectricityCost =
