@@ -53,12 +53,14 @@ export class AverageTemperatureTemplateSensor extends TemplateSensor<
         unit_of_measurement: "°C",
         state: `
     ${temperatureSets.map((set) => set.jinjaString).join("\n    ")} 
-    {% if ${temperatureSets
-      .map((set) => `is_number(${set.id})`)
-      .join(" and ")} %}
-      {{ ((${temperatureSets
-        .map((set) => `(${set.id} | float)`)
-        .join(" + ")}) / ${temperatureSets.length}) | round(1, default=0) }}
+    {% set data = namespace(valid_temps=[]) %}
+    {% for temp in [${temperatureSets.map((set) => set.id).join(", ")}] %}
+      {% if is_number(temp) %}
+        {% set data.valid_temps = data.valid_temps + [temp | float] %}
+      {% endif %}
+    {% endfor %}
+    {% if data.valid_temps | length > 0 %}
+      {{ (data.valid_temps | sum) / (data.valid_temps | length) | round(1, default=0) }}
     {% else %}
       Unknown
     {% endif %}
