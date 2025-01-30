@@ -87,6 +87,7 @@ const pruneEmptyKeys = ({
   input_boolean,
   input_datetime,
   input_text,
+  input_number,
   ...rest
 }: HAPackage): HAPackage => {
   return {
@@ -99,6 +100,7 @@ const pruneEmptyKeys = ({
     input_boolean: isEmptyObject(input_boolean) ? undefined : input_boolean,
     input_datetime: isEmptyObject(input_datetime) ? undefined : input_datetime,
     input_text: isEmptyObject(input_text) ? undefined : input_text,
+    input_number: isEmptyObject(input_number) ? undefined : input_number,
     homeassistant:
       Object.keys(homeassistant?.customize ?? {}).length === 0
         ? undefined
