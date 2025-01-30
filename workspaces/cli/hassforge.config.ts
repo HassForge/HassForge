@@ -8,6 +8,9 @@ import {
   Trigger,
   Action,
   InputDateTime,
+  InputText,
+  DEFAULT_HEAT_MODE_ATTRIBUTE,
+  TemplateSensor,
 } from "@hassforge/base";
 import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
 import { WithRoomHeating } from "@hassforge/room-heating";
@@ -18,6 +21,11 @@ import {
 import { MushroomDashboard, roomToMushroom } from "@hassforge/mush-room";
 import { WithWebOSTV } from "@hassforge/webostv";
 import { MushroomEntityCard } from "@hassforge/mush-room/src/cards/mushroom-entity-card";
+import {
+  EntityRowCard,
+  MiniGraphCard,
+  VerticalStackInCard,
+} from "@hassforge/types";
 
 const wardrobe = new Room("Wardrobe")
   .addLights({
@@ -103,6 +111,40 @@ const mainBedroom = new Room("Main Bedroom")
   .addMediaPlayers({
     name: "Main Bedroom TV",
     id: "media_player.samsung_7_series_49",
+  })
+  .addAutomations({
+    alias:
+      "When Main bedroom light is turned off, turn off wardrobe and bathrooms",
+    condition: [
+      Condition.sun({
+        after: "sunrise",
+        after_offset: "+01:00:00",
+      }),
+      Condition.sun({
+        before: "sunset",
+        before_offset: "-01:00:00",
+      }),
+    ],
+    trigger: [
+      Trigger.state("switch.master_bedroom", {
+        to: "off",
+      }),
+    ],
+    action: [
+      Action.parallel(
+        ...[
+          wardrobe.lights,
+          wardrobe.switches,
+          ensuiteShower.lights,
+          ensuiteToilet.lights,
+          ensuiteShower.switches,
+          ensuiteToilet.switches,
+        ]
+          .flat()
+          .map(({ id }) => id)
+          .map(Action.turnOff)
+      ),
+    ],
   })
   .extend(WithRoomHeating);
 
@@ -230,8 +272,8 @@ const lounge = new Room("Lounge")
     name: "Music Room Light",
   })
   .addTemperatureSensors({
-    id: 'sensor.temp_sensor_9ee_temperature',
-    name: 'Above Painting Temp Sensor'
+    id: "sensor.temp_sensor_9ee_temperature",
+    name: "Above Painting Temp Sensor",
   })
   .addSwitches({
     id: "switch.tze200_6rdj8dzm_ts0601_switch_3",
@@ -268,8 +310,8 @@ const kitchen = new Room("Kitchen")
     }
   )
   .addTemperatureSensors({
-    id: 'sensor.temp_sensor_a1f_temperature',
-    name: 'Counter Temperature'
+    id: "sensor.temp_sensor_a1f_temperature",
+    name: "Counter Temperature",
   })
   .addSwitches({
     id: "switch.switch_00a_switch",
@@ -351,13 +393,13 @@ const endBedroom = new Room("End Bedroom")
   .extend(WithRoomHeating);
 
 const spareBedroom = new Room("Spare Bedroom")
-  .addClimates(
-    new GenericThermostatClimate({
-      name: "Spare Bedroom Electric",
-      heater: "switch.switch_92e_switch_2",
-      target_sensor: "sensor.temp_sensor_667_temperature_3",
-    })
-  )
+  // .addClimates(
+  //   new GenericThermostatClimate({
+  //     name: "Spare Bedroom Electric",
+  //     heater: "switch.switch_92e_switch_2",
+  //     target_sensor: "sensor.temp_sensor_667_temperature_3",
+  //   })
+  // )
   .extend(WithRoomHeating);
 
 const datePressedInputBoolean = new InputDateTime({
@@ -377,7 +419,7 @@ const talisBedroom = new Room("Talis Bedroom")
     },
     new GenericThermostatClimate({
       name: "Talis Bedroom Electric",
-      heater: "switch.lumi_lumi_plug_maeu01_switch_2",
+      heater: "switch.switch_92e_switch_2",
       target_sensor: "sensor.tali_room_temperature_sensor_temperature_4",
     })
   )
@@ -433,19 +475,75 @@ const roomsWithHeating = [
   tomsOffice,
 ];
 
-const boilerRoom = new Room("Boiler Room").extend(
-  WithSwitchControlledThermostat,
-  {
-    boilerOptions: {
-      haSwitch: boilerSwitch,
-      powerConsumptionSensor: boilerPowerConsumptionSensor,
-      powerConsumptionStandbyRange: [130, 200],
-    },
-    rooms: roomsWithHeating,
-    includeClimate: (_, climate) =>
-      climate.id.includes("ts0601") || climate.id.includes("sonoff_trvzb"),
-  }
-);
+const electricityCost = new InputText({
+  name: "Electricity Price",
+  min: 0.1,
+  max: 0.5,
+});
+
+const dailyElectricityCost =
+  new (class DailyElectricityPriceSensor extends TemplateSensor {
+    constructor() {
+      super({
+        name: "Daily Heat Pump Electricity Price",
+        unit_of_measurement: "€",
+        state: `
+        {{ states('sensor.altherma_climatecontrol_heating_daily_electrical_consumption') | float * states('input_number.electricity_cost') | float }}
+      `,
+      });
+    }
+  })();
+
+const boilerRoom = new Room("Boiler Room")
+  .addSensors(dailyElectricityCost)
+  .addAutomations(
+    new Automation({
+      alias: "Turn off Heat pump when all rads are off",
+      condition: [
+        Condition.and(
+          ...roomsWithHeating
+            .flatMap((room) => room.climates)
+            .filter(
+              (climate) =>
+                climate.id.includes("ts0601") ||
+                climate.id.includes("sonoff_trvzb")
+            )
+            .map((climate) =>
+              Condition.state(climate.id, {
+                attribute:
+                  DEFAULT_HEAT_MODE_ATTRIBUTE ?? climate.heatModeAttribute,
+                state: "off",
+              })
+            )
+        ),
+      ],
+      action: [Action.turnOff("climate.altherma_leaving_water_offset")],
+      trigger: [Trigger.timePattern({ minutes: "/15" })],
+    }),
+    new Automation({
+      alias: "Turn on Heat pump when at least 1 rad is on",
+      condition: [
+        Condition.or(
+          ...roomsWithHeating
+            .flatMap((room) => room.climates)
+            .filter(
+              (climate) =>
+                climate.id.includes("ts0601") ||
+                climate.id.includes("sonoff_trvzb")
+            )
+            .map((climate) =>
+              Condition.state(climate.id, {
+                attribute:
+                  DEFAULT_HEAT_MODE_ATTRIBUTE ?? climate.heatModeAttribute,
+                state: "on",
+              })
+            )
+        ),
+      ],
+      action: [Action.turnOn("climate.altherma_leaving_water_offset")],
+      trigger: [Trigger.timePattern({ minutes: "/15" })],
+    })
+  );
 
 const _1_home = new MushroomDashboard("Home");
 
@@ -474,7 +572,9 @@ const turnAllOffAutomation = new Automation({
     Action.parallel(
       ...allRooms
         .flatMap((room) => [
-          ...room.lights.map(({ id }) => id),
+          ...room.lights
+            .map(({ id }) => id)
+            .filter((id) => id !== "light.ensuite_shower_light"),
           ...room.switches.map(({ id }) => id),
           ...room.mediaPlayers.map(({ id }) => id),
         ])
@@ -508,7 +608,54 @@ _1_home
 
 const _2_heatingDashboard = new Dashboard("Heating")
   .addCard(climateSchedulerCard(roomsWithHeating))
-  .addCard(boilerRoom.extensions.switchControlledThermostat.card())
+  .addCard({
+    type: "custom:vertical-stack-in-card",
+    title: "Boiler Room",
+    cards: [
+      {
+        type: "custom:mini-graph-card",
+        name: "Water Temp",
+        entities: ["sensor.altherma_climatecontrol_leaving_water_temperature"],
+        line_width: 2,
+        font_size: 75,
+        smoothing: false,
+        hours_to_show: 6,
+        points_per_hour: 60,
+        color_thresholds: [
+          { color: "#0e7490", value: 40 },
+          { color: "#64748b", value: 55 },
+          { color: "#ea580c", value: 65 },
+        ],
+        color_thresholds_transition: "smooth",
+      } as MiniGraphCard,
+      {
+        type: "custom:multiple-entity-row",
+        entity: "climate.altherma_leaving_water_offset",
+        toggle: true,
+        entities: [
+          {
+            entity:
+              "sensor.altherma_climatecontrol_heating_daily_electrical_consumption",
+            name: "Daily Energy",
+          },
+          {
+            entity: dailyElectricityCost.id,
+            name: "Daily Energy",
+          },
+          {
+            entity: "sensor.altherma_climatecontrol_outdoor_temperature",
+            name: "Outdoor Temp",
+          },
+          {
+            entity: boilerRoom.sensors[0].id,
+            name: "Daily Cost",
+          },
+        ],
+        icon: "mdi:fire",
+        name: "Heat Pump",
+      } as EntityRowCard,
+    ],
+  } as VerticalStackInCard)
   .addCards(
     roomsWithHeating.map((heating) => heating.extensions.roomHeating.card())
   );
