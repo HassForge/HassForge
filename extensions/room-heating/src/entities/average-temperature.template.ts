@@ -48,20 +48,16 @@ export class AverageTemperatureTemplateSensor extends TemplateSensor<
       {
         name: `Average ${name} temperature`,
         unit_of_measurement: "°C",
-        state: `
-    ${temperatureSets.map((set) => set.jinjaString).join("\n    ")} 
-    {% set data = namespace(valid_temps=[]) %}
-    {% for temp in [${temperatureSets.map((set) => set.id).join(", ")}] %}
-      {% if is_number(temp) %}
-        {% set data.valid_temps = data.valid_temps + [temp | float] %}
-      {% endif %}
-    {% endfor %}
-    {% if data.valid_temps | length > 0 %}
-      {{ (data.valid_temps | sum) / (data.valid_temps | length) | round(1, default=0) }}
-    {% else %}
-      Unknown
-    {% endif %}
-`,
+        state: `{% set data = namespace(all_temps=[${climates.map((climate) =>
+      getTemperatureJinjaString(
+        climate.id,
+        isClimateTarget(climate)
+          ? climate.temperatureAttribute ?? DEFAULT_TEMPERATURE_ATTRIBUTE
+          : undefined
+      )
+    )}]) %}
+    {% set valid = data.all_temps | select('is_number') | map('float') | list %}
+    {{ 'Unknown' if valid | count == 0 else (valid | sum / valid | count) }}`,
       },
       climates
     );
