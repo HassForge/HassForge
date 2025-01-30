@@ -8,6 +8,7 @@ import {
   MediaPlayerTarget,
   CameraTarget,
   InputBooleanTarget,
+  InputNumberTarget,
 } from "./configuration";
 import {
   backendProviderToHAPackage,
@@ -170,6 +171,17 @@ export class Room implements BackendProvider<any>, FrontendProvider {
     ];
   }
 
+  _inputNumbers: InputNumberTarget[] = [];
+  get inputNumbers() {
+    return [
+      ...this._inputNumbers,
+      ...Object.values(this.extensions)
+        .map((extension) => extension.inputNumbers)
+        .flat()
+        .filter(notEmpty),
+    ];
+  }
+
   _inputTexts: InputTextTarget[] = [];
   get inputTexts() {
     return [
@@ -259,6 +271,11 @@ export class Room implements BackendProvider<any>, FrontendProvider {
 
   addInputBoolean(...inputBoolean: InputBooleanTarget[]) {
     this._inputBooleans.push(...inputBoolean);
+    return this;
+  }
+
+  addInputNumber(...inputNumber: InputNumberTarget[]) {
+    this._inputNumbers.push(...inputNumber);
     return this;
   }
 

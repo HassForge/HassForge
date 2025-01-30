@@ -11,6 +11,7 @@ import {
   InputText,
   DEFAULT_HEAT_MODE_ATTRIBUTE,
   TemplateSensor,
+  InputNumber,
 } from "@hassforge/base";
 import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
 import { WithRoomHeating } from "@hassforge/room-heating";
@@ -475,11 +476,15 @@ const roomsWithHeating = [
   tomsOffice,
 ];
 
-const electricityCost = new InputText({
+const heatPumpDailyKwhSensorId =
+  "sensor.altherma_climatecontrol_heating_daily_electrical_consumption";
+
+const electricityCost = new InputNumber({
   name: "Electricity Price",
   min: 0.1,
   max: 0.5,
-  initial: "0.22"
+  step: 0.001,
+  initial: 0.1906,
 });
 
 const dailyElectricityCost =
@@ -489,14 +494,14 @@ const dailyElectricityCost =
         name: "Daily Heat Pump Electricity Price",
         unit_of_measurement: "€",
         state: `
-        {{ states('sensor.altherma_climatecontrol_heating_daily_electrical_consumption') | float * states('${electricityCost.id}') | float }}
+        {{ states('${heatPumpDailyKwhSensorId}') | float * states('${electricityCost.id}') | float }}
       `,
       });
     }
   })();
 
 const boilerRoom = new Room("Boiler Room")
-  .addInputText(electricityCost)
+  .addInputNumber(electricityCost)
   .addSensors(dailyElectricityCost)
   .addAutomations(
     new Automation({
@@ -636,13 +641,12 @@ const _2_heatingDashboard = new Dashboard("Heating")
         toggle: true,
         entities: [
           {
-            entity:
-              "sensor.altherma_climatecontrol_heating_daily_electrical_consumption",
-            name: "Daily Energy",
+            entity: heatPumpDailyKwhSensorId,
+            name: "Daily KWh",
           },
           {
             entity: dailyElectricityCost.id,
-            name: "Daily Energy",
+            name: "Daily Price",
           },
           {
             entity: "sensor.altherma_climatecontrol_outdoor_temperature",

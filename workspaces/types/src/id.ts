@@ -19,7 +19,8 @@ export type EntityClass =
   | "siren"
   | "input_boolean"
   | "input_datetime"
-  | "input_text";
+  | "input_text"
+  | "input_number";
 
 export type EntityID<C extends EntityClass = EntityClass> = `${C}.${string}`;
 

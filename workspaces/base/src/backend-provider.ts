@@ -21,6 +21,7 @@ import {
   CameraTarget,
   InputBooleanTarget,
   InputTextTarget,
+  InputNumberTarget,
 } from "./configuration";
 import {
   CreatableEntity,
@@ -49,6 +50,7 @@ export interface BackendProvider<T extends Record<string, any> = never> {
   readonly inputDateTimes?: InputDateTimeTarget[];
   readonly inputBooleans?: InputBooleanTarget[];
   readonly inputTexts?: InputTextTarget[];
+  readonly inputNumbers?: InputNumberTarget[];
 }
 
 export const isBackendProvider = (x: any): x is BackendProvider => {

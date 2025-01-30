@@ -6,6 +6,7 @@ export * from "./light-target";
 export * from "./binary-sensor-target";
 export * from "./media-player-target";
 export * from "./camera-target";
-export * from './input-boolean-target'
-export * from './input-datetime-target'
-export * from './input-text-target'
+export * from "./input-boolean-target";
+export * from "./input-datetime-target";
+export * from "./input-text-target";
+export * from "./input-number-target";
