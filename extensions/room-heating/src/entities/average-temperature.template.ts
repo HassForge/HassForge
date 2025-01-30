@@ -35,27 +35,18 @@ export class AverageTemperatureTemplateSensor extends TemplateSensor<
   (SensorTarget | ClimateTarget)[]
 > {
   constructor(name: string, climates: (SensorTarget | ClimateTarget)[]) {
-    const temperatureSets = climates.map((climate) => ({
-      id: climate.id,
-      jinjaString: `{% set ${climate.id} = ${getTemperatureJinjaString(
-        climate.id,
-        isClimateTarget(climate)
-          ? climate.temperatureAttribute ?? DEFAULT_TEMPERATURE_ATTRIBUTE
-          : undefined
-      )} %}`,
-    }));
     super(
       {
         name: `Average ${name} temperature`,
         unit_of_measurement: "°C",
         state: `{% set data = namespace(all_temps=[${climates.map((climate) =>
-      getTemperatureJinjaString(
-        climate.id,
-        isClimateTarget(climate)
-          ? climate.temperatureAttribute ?? DEFAULT_TEMPERATURE_ATTRIBUTE
-          : undefined
-      )
-    )}]) %}
+          getTemperatureJinjaString(
+            climate.id,
+            isClimateTarget(climate)
+              ? climate.temperatureAttribute ?? DEFAULT_TEMPERATURE_ATTRIBUTE
+              : undefined
+          )
+        )}]) %}
     {% set valid = data.all_temps | select('is_number') | map('float') | list %}
     {{ 'Unknown' if valid | count == 0 else (valid | sum / valid | count) }}`,
       },
