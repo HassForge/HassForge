@@ -18,7 +18,8 @@ export type EntityClass =
   | "vacuum"
   | "siren"
   | "input_boolean"
-  | "input_datetime";
+  | "input_datetime"
+  | "input_text";
 
 export type EntityID<C extends EntityClass = EntityClass> = `${C}.${string}`;
 
@@ -30,6 +31,7 @@ export type SceneID = EntityID<"scene">;
 export type WaterHeaterID = EntityID<"water_heater">;
 export type ScriptID = EntityID<"script">;
 export type InputBooleanID = EntityID<"input_boolean">;
+export type InputTextID = EntityID<"input_text">;
 export type MediaPlayerID = EntityID<"media_player">;
 export type RemoteID = EntityID<"remote">;
 export type HumidiferID = EntityID<"humidifer">;

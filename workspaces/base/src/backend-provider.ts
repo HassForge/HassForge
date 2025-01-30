@@ -5,6 +5,7 @@ import {
   HACustomizeDictionary,
   HAInputBooleanDictionary,
   HAInputDateTimeDictionary,
+  HAInputTextDictionary,
   HALight,
   HAPackage,
   HASensor,
@@ -19,6 +20,7 @@ import {
   MediaPlayerTarget,
   CameraTarget,
   InputBooleanTarget,
+  InputTextTarget,
 } from "./configuration";
 import {
   CreatableEntity,
@@ -29,6 +31,7 @@ import {
   isCreatableSensor,
   isCreatableInputDateTime,
   isCreatableInputBoolean,
+  isCreatableInputText,
 } from "./creatables";
 import merge from "ts-deepmerge";
 import { InputDateTimeTarget } from "./configuration/input-datetime-target";
@@ -45,6 +48,7 @@ export interface BackendProvider<T extends Record<string, any> = never> {
   readonly integrations?: T;
   readonly inputDateTimes?: InputDateTimeTarget[];
   readonly inputBooleans?: InputBooleanTarget[];
+  readonly inputTexts?: InputTextTarget[];
 }
 
 export const isBackendProvider = (x: any): x is BackendProvider => {
@@ -78,6 +82,7 @@ const pruneEmptyKeys = ({
   light,
   input_boolean,
   input_datetime,
+  input_text,
   ...rest
 }: HAPackage): HAPackage => {
   return {
@@ -89,6 +94,7 @@ const pruneEmptyKeys = ({
     light: isEmptyArray(light) ? undefined : light,
     input_boolean: isEmptyObject(input_boolean) ? undefined : input_boolean,
     input_datetime: isEmptyObject(input_datetime) ? undefined : input_datetime,
+    input_text: isEmptyObject(input_text) ? undefined : input_text,
     homeassistant:
       Object.keys(homeassistant?.customize ?? {}).length === 0
         ? undefined
@@ -160,6 +166,20 @@ export function backendProviderToHAPackage(
             [id.replace("input_boolean.", "")]: curr,
             ...acc,
           } as unknown as HAInputBooleanDictionary),
+        {}
+      ),
+    input_text: rooms
+      .map((room) => room.inputTexts)
+      .filter(notEmpty)
+      .filter((inputTexts) => inputTexts.filter(isCreatableInputText))
+      .filter((inputTexts) => inputTexts.length > 0)
+      .flat()
+      .reduce<HAInputTextDictionary>(
+        (acc, { id, ...curr }) =>
+          ({
+            [id.replace("input_text.", "")]: curr,
+            ...acc,
+          } as unknown as HAInputTextDictionary),
         {}
       ),
     homeassistant: {

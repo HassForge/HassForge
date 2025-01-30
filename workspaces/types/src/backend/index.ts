@@ -10,6 +10,7 @@ export * from "./switch";
 export * from "./template";
 export * from "./input-datetime";
 export * from "./input-boolean";
+export * from "./input-text";
 
 export * from "./package";
 export * from "./homeassistant";

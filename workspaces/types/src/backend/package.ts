@@ -4,6 +4,7 @@ import { HAClimate } from "./climate";
 import { HAHomeassistant } from "./homeassistant";
 import { HAInputBooleanDictionary } from "./input-boolean";
 import { HAInputDateTimeDictionary } from "./input-datetime";
+import { HAInputTextDictionary } from "./input-text";
 import { HALight } from "./light";
 import { HASensor } from "./sensor";
 import { HATemplate } from "./template";
@@ -18,4 +19,5 @@ export interface HAPackage {
   automation?: HAAutomation[];
   input_datetime?: HAInputDateTimeDictionary;
   input_boolean?: HAInputBooleanDictionary;
+  input_text?: HAInputTextDictionary;
 }

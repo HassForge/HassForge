@@ -16,10 +16,11 @@ import {
 import { FrontendProvider, isFrontendProvider } from "./frontend-provider";
 import merge from "ts-deepmerge";
 import { InputDateTimeTarget } from "./configuration/input-datetime-target";
+import { InputTextTarget } from "./configuration/input-text-target";
 
 type PublicInterface<T> = Pick<T, keyof T>;
 
-export type Provider<T extends Record<string, any> = never> =
+export type Provider<T extends Record<string, any> = any> =
   BackendProvider<T> & FrontendProvider;
 
 export type RoomExtension<
@@ -169,6 +170,17 @@ export class Room implements BackendProvider<any>, FrontendProvider {
     ];
   }
 
+  _inputTexts: InputTextTarget[] = [];
+  get inputTexts() {
+    return [
+      ...this._inputTexts,
+      ...Object.values(this.extensions)
+        .map((extension) => extension.inputTexts)
+        .flat()
+        .filter(notEmpty),
+    ];
+  }
+
   get integrations() {
     console.log(
       Object.values(this.extensions)
@@ -247,6 +259,11 @@ export class Room implements BackendProvider<any>, FrontendProvider {
 
   addInputBoolean(...inputBoolean: InputBooleanTarget[]) {
     this._inputBooleans.push(...inputBoolean);
+    return this;
+  }
+
+  addInputText(...inputText: InputTextTarget[]) {
+    this._inputTexts.push(...inputText);
     return this;
   }
 
