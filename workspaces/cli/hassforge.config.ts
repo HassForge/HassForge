@@ -479,6 +479,7 @@ const electricityCost = new InputText({
   name: "Electricity Price",
   min: 0.1,
   max: 0.5,
+  initial: "0.22"
 });
 
 const dailyElectricityCost =
@@ -488,13 +489,14 @@ const dailyElectricityCost =
         name: "Daily Heat Pump Electricity Price",
         unit_of_measurement: "€",
         state: `
-        {{ states('sensor.altherma_climatecontrol_heating_daily_electrical_consumption') | float * states('input_number.electricity_cost') | float }}
+        {{ states('sensor.altherma_climatecontrol_heating_daily_electrical_consumption') | float * states('${electricityCost.id}') | float }}
       `,
       });
     }
   })();
 
 const boilerRoom = new Room("Boiler Room")
+  .addInputText(electricityCost)
   .addSensors(dailyElectricityCost)
   .addAutomations(
     new Automation({
