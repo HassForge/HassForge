@@ -1,4 +1,3 @@
-import { snakeCase } from "change-case";
 import {
   TemplateSensor,
   ClimateTarget,
@@ -37,10 +36,8 @@ export class AverageTemperatureTemplateSensor extends TemplateSensor<
 > {
   constructor(name: string, climates: (SensorTarget | ClimateTarget)[]) {
     const temperatureSets = climates.map((climate) => ({
-      id: snakeCase(climate.name),
-      jinjaString: `{% set ${snakeCase(
-        climate.name
-      )} = ${getTemperatureJinjaString(
+      id: climate.id,
+      jinjaString: `{% set ${climate.id} = ${getTemperatureJinjaString(
         climate.id,
         isClimateTarget(climate)
           ? climate.temperatureAttribute ?? DEFAULT_TEMPERATURE_ATTRIBUTE
