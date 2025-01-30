@@ -9,6 +9,7 @@ import { HAInputTextDictionary } from "./input-text";
 import { HALight } from "./light";
 import { HASensor } from "./sensor";
 import { HATemplate } from "./template";
+import { HAUtilityMeterDictionary } from "./utility-meter";
 
 export interface HAPackage {
   light?: HALight[];
@@ -22,4 +23,5 @@ export interface HAPackage {
   input_boolean?: HAInputBooleanDictionary;
   input_text?: HAInputTextDictionary;
   input_number?: HAInputNumberDictionary;
+  utility_meter?: HAUtilityMeterDictionary;
 }

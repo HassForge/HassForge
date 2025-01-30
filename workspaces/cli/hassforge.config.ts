@@ -27,6 +27,7 @@ import {
   MiniGraphCard,
   VerticalStackInCard,
 } from "@hassforge/types";
+import { UtilityMeter } from "@hassforge/base/src/creatables/utility-meter";
 
 const wardrobe = new Room("Wardrobe")
   .addLights({
@@ -485,7 +486,7 @@ const electricityCost = new InputNumber({
   max: 0.5,
   step: 0.001,
   initial: 0.1906,
-  unit_of_measurement: "EUR/kWh"
+  unit_of_measurement: "EUR/kWh",
 });
 
 const dailyElectricityCost =
@@ -499,9 +500,32 @@ const dailyElectricityCost =
     }
   })();
 
+const heatPumpMonthlyUtilityMeter = new UtilityMeter({
+  source: heatPumpDailyKwhSensorId,
+  always_available: true,
+  cycle: "monthly",
+  name: "Monthly Heat Pump Electricity",
+  periodically_resetting: true,
+});
+
+const monthlyElectricityCost =
+  new (class MonthlyElectricityPriceSensor extends TemplateSensor {
+    constructor() {
+      super({
+        name: "Monthly Heat Pump Electricity Price",
+        unit_of_measurement: "€",
+        state: `{{ states('${heatPumpDailyKwhSensorId}') | float * states('${heatPumpMonthlyUtilityMeter.id}') | float | round(2) }}`,
+      });
+    }
+  })();
+
 const boilerRoom = new Room("Boiler Room")
   .addInputNumber(electricityCost)
-  .addSensors(dailyElectricityCost)
+  .addSensors(
+    dailyElectricityCost,
+    heatPumpMonthlyUtilityMeter,
+    monthlyElectricityCost
+  )
   .addAutomations(
     new Automation({
       alias: "Turn off Heat pump when all rads are off",

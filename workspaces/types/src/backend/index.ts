@@ -12,6 +12,7 @@ export * from "./input-datetime";
 export * from "./input-boolean";
 export * from "./input-text";
 export * from "./input-number";
+export * from "./utility-meter";
 
 export * from "./package";
 export * from "./homeassistant";

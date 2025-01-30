@@ -11,6 +11,7 @@ import {
   HAPackage,
   HASensor,
   HATemplate,
+  HAUtilityMeterDictionary,
 } from "@hassforge/types";
 import {
   ClimateTarget,
@@ -38,6 +39,7 @@ import {
 } from "./creatables";
 import merge from "ts-deepmerge";
 import { InputDateTimeTarget } from "./configuration/input-datetime-target";
+import { isCreatableUtilityMeter } from "./creatables/utility-meter";
 
 export interface BackendProvider<T extends Record<string, any> = never> {
   readonly automations?: HAAutomation[];
@@ -88,6 +90,7 @@ const pruneEmptyKeys = ({
   input_datetime,
   input_text,
   input_number,
+  utility_meter,
   ...rest
 }: HAPackage): HAPackage => {
   return {
@@ -101,6 +104,7 @@ const pruneEmptyKeys = ({
     input_datetime: isEmptyObject(input_datetime) ? undefined : input_datetime,
     input_text: isEmptyObject(input_text) ? undefined : input_text,
     input_number: isEmptyObject(input_number) ? undefined : input_number,
+    utility_meter: isEmptyObject(utility_meter) ? undefined : utility_meter,
     homeassistant:
       Object.keys(homeassistant?.customize ?? {}).length === 0
         ? undefined
@@ -200,6 +204,20 @@ export function backendProviderToHAPackage(
             [item.id.replace("input_number.", "")]: item,
             ...acc,
           } as unknown as HAInputNumberDictionary),
+        {}
+      ),
+    utility_meter: rooms
+      .map((room) => room.sensors)
+      .filter(notEmpty)
+      .filter((sensors) => sensors.filter(isCreatableUtilityMeter))
+      .filter((sensors) => sensors.length > 0)
+      .flat()
+      .reduce<HAUtilityMeterDictionary>(
+        (acc, item) =>
+          ({
+            [item.id.replace("utility_meter.", "")]: item,
+            ...acc,
+          } as unknown as HAUtilityMeterDictionary),
         {}
       ),
     homeassistant: {
