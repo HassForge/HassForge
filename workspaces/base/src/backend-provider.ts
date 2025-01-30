@@ -167,9 +167,9 @@ export function backendProviderToHAPackage(
       .filter((inputBooleans) => inputBooleans.length > 0)
       .flat()
       .reduce<HAInputBooleanDictionary>(
-        (acc, { id, ...curr }) =>
+        (acc, item) =>
           ({
-            [id.replace("input_boolean.", "")]: curr,
+            [item.id.replace("input_boolean.", "")]: item,
             ...acc,
           } as unknown as HAInputBooleanDictionary),
         {}
@@ -181,9 +181,9 @@ export function backendProviderToHAPackage(
       .filter((inputTexts) => inputTexts.length > 0)
       .flat()
       .reduce<HAInputTextDictionary>(
-        (acc, { id, ...curr }) =>
+        (acc, item) =>
           ({
-            [id.replace("input_text.", "")]: curr,
+            [item.id.replace("input_text.", "")]: item,
             ...acc,
           } as unknown as HAInputTextDictionary),
         {}
@@ -195,9 +195,9 @@ export function backendProviderToHAPackage(
       .filter((inputNumbers) => inputNumbers.length > 0)
       .flat()
       .reduce<HAInputNumberDictionary>(
-        (acc, { id, ...curr }) =>
+        (acc, item) =>
           ({
-            [id.replace("input_number.", "")]: curr,
+            [item.id.replace("input_number.", "")]: item,
             ...acc,
           } as unknown as HAInputNumberDictionary),
         {}

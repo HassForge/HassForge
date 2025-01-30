@@ -194,12 +194,6 @@ export class Room implements BackendProvider<any>, FrontendProvider {
   }
 
   get integrations() {
-    console.log(
-      Object.values(this.extensions)
-        .map(({ integrations }) => integrations)
-        .flat()
-        .filter(notEmpty)
-    );
     return merge(
       {},
       ...Object.values(this.extensions)
