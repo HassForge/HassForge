@@ -167,7 +167,7 @@ export function backendProviderToHAPackage(
     input_boolean: rooms
       .map((room) => room.inputBooleans)
       .filter(notEmpty)
-      .filter((inputBooleans) => inputBooleans.filter(isCreatableInputBoolean))
+      .map((inputBooleans) => inputBooleans.filter(isCreatableInputBoolean))
       .filter((inputBooleans) => inputBooleans.length > 0)
       .flat()
       .reduce<HAInputBooleanDictionary>(
@@ -181,7 +181,7 @@ export function backendProviderToHAPackage(
     input_text: rooms
       .map((room) => room.inputTexts)
       .filter(notEmpty)
-      .filter((inputTexts) => inputTexts.filter(isCreatableInputText))
+      .map((inputTexts) => inputTexts.filter(isCreatableInputText))
       .filter((inputTexts) => inputTexts.length > 0)
       .flat()
       .reduce<HAInputTextDictionary>(
@@ -195,7 +195,7 @@ export function backendProviderToHAPackage(
     input_number: rooms
       .map((room) => room.inputNumbers)
       .filter(notEmpty)
-      .filter((inputNumbers) => inputNumbers.filter(isCreatableInputNumber))
+      .map((inputNumbers) => inputNumbers.filter(isCreatableInputNumber))
       .filter((inputNumbers) => inputNumbers.length > 0)
       .flat()
       .reduce<HAInputNumberDictionary>(
@@ -209,13 +209,13 @@ export function backendProviderToHAPackage(
     utility_meter: rooms
       .map((room) => room.sensors)
       .filter(notEmpty)
-      .filter((sensors) => sensors.filter(isCreatableUtilityMeter))
+      .map((sensors) => sensors.filter(isCreatableUtilityMeter))
       .filter((sensors) => sensors.length > 0)
       .flat()
       .reduce<HAUtilityMeterDictionary>(
         (acc, item) =>
           ({
-            [item.id.replace("utility_meter.", "")]: item,
+            [item.id.replace("sensor.", "")]: item,
             ...acc,
           } as unknown as HAUtilityMeterDictionary),
         {}
