@@ -41,7 +41,7 @@ const wardrobe = new Room("Wardrobe")
   })
   .addClimates({
     name: "Wardrobe TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_9",
+    id: "climate.tze200_6rdj8dzm_ts0601_5",
   })
   .addAutomations(
     new MotionActivatedAutomation({
@@ -99,13 +99,6 @@ const mainBedroom = new Room("Main Bedroom")
     name: "Main Bedroom Temperature Sensor",
     device_class: "temperature",
   })
-  .addClimates(
-    new GenericThermostatClimate({
-      name: "Main Bedroom Electric",
-      heater: "switch.legrand_connected_outlet_switch_3",
-      target_sensor: "sensor.tz3000_fllyghyj_ts0201_temperature",
-    })
-  )
   .addCameras({
     name: "Main Bedroom Camera",
     id: "camera.go2rtc_spare_cam",
@@ -254,11 +247,11 @@ const lounge = new Room("Lounge")
   // })
   .addClimates({
     name: "Near Windows TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_2",
+    id: "climate.tze200_6rdj8dzm_ts0601_6",
   })
   .addClimates({
     name: "Corner TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_5",
+    id: "climate.tze200_6rdj8dzm_ts0601_8",
   })
   .addClimates({
     name: "Near Kitchen TRV",
@@ -266,7 +259,7 @@ const lounge = new Room("Lounge")
   })
   .addClimates({
     name: "Music Room TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_3",
+    id: "climate.tze200_6rdj8dzm_ts0601",
   })
   .addLights({
     id: "light.shellydimmer2_c45bbe56d5c2",
@@ -321,11 +314,11 @@ const kitchen = new Room("Kitchen")
   })
   .addClimates({
     name: "Kitchen Bifolds TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_6",
+    id: "climate.tze200_6rdj8dzm_ts0601_3",
   })
   .addClimates({
     name: "Kitchen Veranda TRV",
-    id: "climate.tze200_6rdj8dzm_ts0601_thermostat_4",
+    id: "climate.tze200_6rdj8dzm_ts0601_2",
   })
   .extend(WithRoomHeating);
 
@@ -371,13 +364,6 @@ const tomsOffice = new Room("Toms Office")
       action: [Action.toggle("climate.toms_office_electric")],
     })
   )
-  .addClimates(
-    new GenericThermostatClimate({
-      name: "Toms Office Electric",
-      heater: "switch.heated",
-      target_sensor: "sensor.tze200_dwcarsat_ts0601_temperature",
-    })
-  )
   .addLights({
     name: "Toms Office Lights",
     id: "switch.toms_office_relay_1",
@@ -385,13 +371,6 @@ const tomsOffice = new Room("Toms Office")
   .extend(WithRoomHeating);
 
 const endBedroom = new Room("End Bedroom")
-  .addClimates(
-    new GenericThermostatClimate({
-      name: "End Bedroom Electric",
-      heater: "switch.switch_7bf_switch_2",
-      target_sensor: "sensor.temp_sensor_7b2_temperature_4",
-    })
-  )
   .extend(WithRoomHeating);
 
 const spareBedroom = new Room("Spare Bedroom")
@@ -417,13 +396,8 @@ const talisBedroom = new Room("Talis Bedroom")
   .addClimates(
     {
       name: "Talis Bedroom TRV",
-      id: "climate.tze200_6rdj8dzm_ts0601_thermostat_7",
-    },
-    new GenericThermostatClimate({
-      name: "Talis Bedroom Electric",
-      heater: "switch.switch_92e_switch_2",
-      target_sensor: "sensor.tali_room_temperature_sensor_temperature_4",
-    })
+      id: "climate.tze200_6rdj8dzm_ts0601_4",
+    }
   )
   .addInputDateTime(datePressedInputBoolean)
   .addAutomations({
