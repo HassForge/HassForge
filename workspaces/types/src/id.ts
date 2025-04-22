@@ -20,7 +20,8 @@ export type EntityClass =
   | "input_boolean"
   | "input_datetime"
   | "input_text"
-  | "input_number";
+  | "input_number"
+  | "number";
 
 export type EntityID<C extends EntityClass = EntityClass> = `${C}.${string}`;
 
@@ -40,6 +41,7 @@ export type CalendarID = EntityID<"calendar">;
 export type SensorID = EntityID<"sensor">;
 export type BinarySensorID = EntityID<"binary_sensor">;
 export type ClimateID = EntityID<"climate">;
+export type NumberID = EntityID<"number">;
 export type LightID = EntityID<"light">;
 export type SwitchID = EntityID<"switch">;
 export type CoverID = EntityID<"cover">;
