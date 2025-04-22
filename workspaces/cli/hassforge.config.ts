@@ -115,7 +115,7 @@ ${climateTemperature(climate)}
               value: newOffset(trv),
             },
             target: {
-              entity_id: trv.id,
+              entity_id: trv.offsetTemperatureSensorId,
             },
           })
         ),
