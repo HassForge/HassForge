@@ -62,10 +62,17 @@ export namespace Action {
     | VacuumID
     | WaterHeaterID;
 
-  export function turnOn(entityId: Switchable): CallServiceAction {
+  export function turnOn(
+    entityId: Switchable,
+    data?: {
+      brightness?: number;
+      rgb_color?: [number, number, number];
+    }
+  ): CallServiceAction {
     const entityClass = getEntityClass(entityId);
     return Action.callService(`${entityClass}.turn_on`, {
       target: { entity_id: entityId },
+      data,
     });
   }
 

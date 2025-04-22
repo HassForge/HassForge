@@ -36,7 +36,6 @@ import {
 } from "@hassforge/types";
 import { UtilityMeter } from "@hassforge/base/src/creatables/utility-meter";
 
-
 interface OffsetTemperatureClimate {
   offsetTemperatureSensorId: string;
 }
@@ -84,7 +83,9 @@ class WithTemperatureOffsetTRVs implements Provider {
     const newOffset = (climate: ClimateTarget & OffsetTemperatureClimate) =>
       `${averageRoomTemp}
 ${climateTemperature(climate)}
-{% set current_offset = (states('${climate.offsetTemperatureSensorId}') | float(0) | round(1)) %}
+{% set current_offset = (states('${
+        climate.offsetTemperatureSensorId
+      }') | float(0) | round(1)) %}
 {% set base_temp = (climate_temp - current_offset) %}
 {% if avg is number and base_temp is number %}
   {% set new_offset = ((avg - base_temp) | round(1)) %}
@@ -137,8 +138,8 @@ const wardrobe = new Room("Wardrobe")
   .addClimates({
     name: "Wardrobe TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_5",
-    offsetTemperatureSensorId: "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_11",
-
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_11",
   })
   .addAutomations(
     new MotionActivatedAutomation({
@@ -348,12 +349,14 @@ const lounge = new Room("Lounge")
   .addClimates({
     name: "Near Windows TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_6",
-    offsetTemperatureSensorId: "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_12"
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_12",
   })
   .addClimates({
     name: "Corner TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_8",
-    offsetTemperatureSensorId: "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_14"
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_14",
   })
   .addClimates({
     name: "Near Kitchen TRV",
@@ -363,7 +366,8 @@ const lounge = new Room("Lounge")
   .addClimates({
     name: "Music Room TRV",
     id: "climate.tze200_6rdj8dzm_ts0601",
-    offsetTemperatureSensorId: "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_7",
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_7",
   })
   .addLights({
     id: "light.shellydimmer2_c45bbe56d5c2",
@@ -420,17 +424,20 @@ const kitchen = new Room("Kitchen")
   .addClimates({
     name: "Kitchen Bifolds TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_3",
-    offsetTemperatureSensorId: "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_9",
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_9",
   })
   .addClimates({
     name: "Kitchen Veranda TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_2",
-    offsetTemperatureSensorId: "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_8"
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_8",
   })
   .addClimates({
     name: "Kitchen Near Oven TRV",
     id: "climate.near_oven_radiator_thermostat_3",
-    offsetTemperatureSensorId: "number.near_oven_radiator_local_temperature_offset_3"
+    offsetTemperatureSensorId:
+      "number.near_oven_radiator_local_temperature_offset_3",
   })
   .extend(WithRoomHeating)
   .extend(WithTemperatureOffsetTRVs);
@@ -455,7 +462,6 @@ const outsideFront = new Room("Front")
     name: "Front Garden Camera",
     id: "camera.go2rtc_front_garden",
   });
-
 
 const tomsOffice = new Room("Toms Office")
   .addSensors({
@@ -515,7 +521,8 @@ const talisBedroom = new Room("Talis Bedroom")
   .addClimates({
     name: "Talis Bedroom TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_4",
-    offsetTemperatureSensorId: "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_10"
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_10",
   })
   .addInputDateTime(datePressedInputBoolean)
   .addAutomations({
@@ -697,11 +704,18 @@ const turnAllOffAutomation = new Automation({
         .flatMap((room) => [
           ...room.lights
             .map(({ id }) => id)
-            .filter((id) => id !== "light.ensuite_shower_light"),
+            .filter(
+              (id) =>
+                id !== "light.ensuite_shower_light" &&
+                id !== "light.shellydimmer2_c45bbe56d5c2"
+            ),
           ...room.switches.map(({ id }) => id),
           ...room.mediaPlayers.map(({ id }) => id),
         ])
-        .map(Action.turnOff)
+        .map(Action.turnOff),
+      Action.turnOn("light.shellydimmer2_c45bbe56d5c2", {
+        brightness: 10,
+      })
     ),
   ],
   trigger: [Trigger.time("05:00:00")],
