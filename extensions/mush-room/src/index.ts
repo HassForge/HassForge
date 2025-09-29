@@ -5,7 +5,11 @@ import {
   Room,
   SwitchTarget,
 } from "@hassforge/base";
-import { HorizontalStackCard, VerticalStackCard } from "@hassforge/types";
+import {
+  HACard,
+  HorizontalStackCard,
+  VerticalStackCard,
+} from "@hassforge/types";
 import { MushroomEntityCard } from "./cards/mushroom-entity-card";
 import { MushroomLightCard } from "./cards/mushroom-light-card";
 import { MushroomTitleCard } from "./cards/mushroom-title-card";
@@ -46,7 +50,7 @@ function toMediaPlayerCard(entity: MediaPlayerTarget): MushroomMediaPlayerCard {
 
 export function roomToMushroom(
   room: Room,
-  extras?: { chips?: MushroomChip[] }
+  extras?: { chips?: MushroomChip[]; preCards?: HACard[]; postCards?: HACard[] }
 ) {
   const title: MushroomTitleCard = {
     type: "custom:mushroom-title-card",
@@ -107,9 +111,15 @@ export function roomToMushroom(
 
   return {
     type: "vertical-stack",
-    cards: [title, chipCard, lights, switches, ...mediaPlayers].filter(
-      isDefined
-    ),
+    cards: [
+      title,
+      chipCard,
+      ...(extras?.preCards ?? []),
+      lights,
+      switches,
+      ...mediaPlayers,
+      ...(extras?.postCards ?? []),
+    ].filter(isDefined),
   } as const satisfies VerticalStackCard;
 }
 
@@ -119,7 +129,12 @@ export class MushroomDashboard extends Dashboard {
   addRooms(...rooms: Room[]) {
     this.cards.push(
       ...rooms
-        .map((room) => roomToMushroom(room))
+        .map((room) =>
+          roomToMushroom(room, {
+            preCards: room.preCards,
+            postCards: room.postCards,
+          })
+        )
         .filter((stack) => stack.cards.length > 1)
     );
     return this;
