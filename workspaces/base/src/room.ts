@@ -1,4 +1,9 @@
-import { HAAutomation, HAPackage, VerticalStackCard } from "@hassforge/types";
+import {
+  HAAutomation,
+  HACard,
+  HAPackage,
+  VerticalStackCard,
+} from "@hassforge/types";
 import {
   ClimateTarget,
   LightTarget,
@@ -19,14 +24,12 @@ import merge from "ts-deepmerge";
 import { InputDateTimeTarget } from "./configuration/input-datetime-target";
 import { InputTextTarget } from "./configuration/input-text-target";
 
-
 type Loose<T> = T | (T & { [key: string]: unknown });
-
 
 type PublicInterface<T> = Pick<T, keyof T>;
 
-export type Provider<T extends Record<string, any> = any> =
-  BackendProvider<T> & FrontendProvider;
+export type Provider<T extends Record<string, any> = any> = BackendProvider<T> &
+  FrontendProvider;
 
 export type RoomExtension<
   T extends string = string,
@@ -282,6 +285,18 @@ export class Room implements BackendProvider<any>, FrontendProvider {
     return this;
   }
 
+  preCards: HACard[] = [];
+  addPreCards<T extends HACard>(...cards: T[]) {
+    this.preCards.push(...cards);
+    return this;
+  }
+  
+  postCards: HACard[] = [];
+  addPostCards<T extends HACard>(...cards: T[]) {
+    this.postCards.push(...cards);
+    return this;
+  }
+
   extend<T extends RoomExtension>(extension: T, ...args: RoomExtensionArgs<T>) {
     const extensionInstance = new extension(this, ...args);
     this.extensions[extension.id] = extensionInstance as InstancedRoomExtension;
@@ -305,7 +320,7 @@ export class Room implements BackendProvider<any>, FrontendProvider {
 
     return {
       type: "vertical-stack",
-      cards: cards,
+      cards: [...this.preCards, ...cards, ...this.postCards],
     };
   };
 
