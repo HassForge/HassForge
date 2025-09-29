@@ -259,18 +259,30 @@ const upstairsHallway = new Room("Upstairs Hallway")
     name: "Landing Lights",
   });
 
+const diningRoom = new Room("Dining Room")
+  .addClimates({
+    name: "Hallway TRV",
+    id: "climate.hallway_radiator_thermostat",
+    offsetTemperatureSensorId:
+      "number.hallway_radiator_local_temperature_offset",
+  })
+  .addClimates({
+    name: "Window TRV",
+    id: "climate.window_radiator_thermostat",
+    offsetTemperatureSensorId:
+      "number.window_radiator_local_temperature_offset",
+  })
+  .extend(WithRoomHeating);
+
 const downstairsHallway = new Room("Downstairs Hallway")
   .addLights({
     id: "light.sonoff_01minizb_light",
     name: "Stairs Light",
   })
-  .addLights({
-    id: "switch.shellyplus1_80646fc82a04_switch_0",
-    name: "Dining Room Light",
-  })
-  .addLights({
-    id: "switch.shellyplus1_80646fc7e7c8_switch_0",
-    name: "Utility Light",
+  .addClimates({
+    id: "climate.sonoff_trv_thermostat",
+    name: "Downstairs Hallway TRV",
+    offsetTemperatureSensorId: "number.sonoff_trv_local_temperature_offset",
   })
   .addAutomations(
     new MotionActivatedAutomation({
@@ -319,7 +331,8 @@ const downstairsHallway = new Room("Downstairs Hallway")
         ),
       ],
     })
-  );
+  )
+  .extend(WithRoomHeating);
 
 const downstairsBathroom = new Room("Downstairs Bathroom")
   .addClimates(
@@ -496,16 +509,12 @@ const tomsOffice = new Room("Toms Office")
   .extend(WithRoomHeating)
   .extend(WithTemperatureOffsetTRVs);
 
-const endBedroom = new Room("End Bedroom").extend(WithRoomHeating);
-
-const spareBedroom = new Room("Spare Bedroom")
-  // .addClimates(
-  //   new GenericThermostatClimate({
-  //     name: "Spare Bedroom Electric",
-  //     heater: "switch.switch_92e_switch_2",
-  //     target_sensor: "sensor.temp_sensor_667_temperature_3",
-  //   })
-  // )
+const endBedroom = new Room("End Bedroom")
+  .addClimates({
+    name: "End Bedroom TRV",
+    id: "climate.sonoff_trvzb_thermostat_4",
+    offsetTemperatureSensorId: "number.sonoff_trvzb_local_temperature_offset_4",
+  })
   .extend(WithRoomHeating);
 
 const datePressedInputBoolean = new InputDateTime({
@@ -513,44 +522,61 @@ const datePressedInputBoolean = new InputDateTime({
   has_date: true,
   has_time: true,
 });
-const talisBedroom = new Room("Talis Bedroom")
+
+const miasBedroom = new Room("Mias Bedroom")
   .addLights({
     id: "switch.spare_bed_lights",
-    name: "Talis Bedroom Light",
+    name: "Mia Bedroom Light",
+  })
+  .addCameras({
+    name: "Mia Bedroom Camera",
+    id: "camera.go2rtc_mia_room",
   })
   .addClimates({
-    name: "Talis Bedroom TRV",
+    name: "Mia Bedroom TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_4",
     offsetTemperatureSensorId:
       "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_10",
   })
   .addInputDateTime(datePressedInputBoolean)
-  .addAutomations({
-    alias: "On Tali Room Button Press",
-    trigger: [
-      Trigger.event("zha_event", {
-        event_data: {
-          device_ieee: "00:12:4b:00:1f:45:16:f5",
-        },
-      }),
-    ],
-    action: [
-      Action.callService("input_datetime.set_datetime", {
-        target: {
-          entity_id: datePressedInputBoolean.id,
-        },
-        data: {
-          timestamp: "{{ now().timestamp() }}",
-        },
-      }),
-      Action.delay({
-        seconds: 5,
-      }),
-    ],
-  })
+  // .addAutomations({
+  //   alias: "On Tali Room Button Press",
+  //   trigger: [
+  //     Trigger.event("zha_event", {
+  //       event_data: {
+  //         device_ieee: "00:12:4b:00:1f:45:16:f5",
+  //       },
+  //     }),
+  //   ],
+  //   action: [
+  //     Action.callService("input_datetime.set_datetime", {
+  //       target: {
+  //         entity_id: datePressedInputBoolean.id,
+  //       },
+  //       data: {
+  //         timestamp: "{{ now().timestamp() }}",
+  //       },
+  //     }),
+  //     Action.delay({
+  //       seconds: 5,
+  //     }),
+  //   ],
+  // })
+  .extend(WithRoomHeating);
+
+const talisBedroom = new Room("Talis Bedroom")
   .addCameras({
     name: "Talis Bedroom Camera",
     id: "camera.go2rtc_tali_room",
+  })
+  .addTemperatureSensors({
+    name: "Talis Bedroom Temperature",
+    id: "sensor.temp_sensor_667_temperature_3",
+  })
+  .addClimates({
+    name: "Talis Bedroom TRV",
+    id: "climate.radiator_thermostat",
+    offsetTemperatureSensorId: "number.radiator_local_temperature_offset",
   })
   .extend(WithRoomHeating)
   .extend(WithTemperatureOffsetTRVs);
@@ -566,11 +592,13 @@ const boilerPowerConsumptionSensor = {
 } as const;
 
 const roomsWithHeating = [
-  mainBedroom,
   wardrobe,
-  endBedroom,
+  mainBedroom,
+  miasBedroom,
   talisBedroom,
-  spareBedroom,
+  endBedroom,
+  downstairsHallway,
+  diningRoom,
   downstairsBathroom,
   lounge,
   kitchen,
@@ -692,6 +720,7 @@ const allRooms = [
   tomsOffice,
   endBedroom,
   talisBedroom,
+  miasBedroom,
   boilerRoom,
 ];
 
@@ -807,8 +836,9 @@ export default defineConfig({
     outsideFront,
     tomsOffice,
     endBedroom,
-    spareBedroom,
+    diningRoom,
     talisBedroom,
+    miasBedroom,
     boilerRoom,
     wholeHouse,
   },
