@@ -47,8 +47,8 @@ export class AverageTemperatureTemplateSensor extends TemplateSensor<
               : undefined
           )
         )}]) %}
-    {% set valid = data.all_temps | select('is_number') | map('float') | list %}
-    {{ 'Unknown' if valid | count == 0 else (valid | sum / valid | count) }}`,
+{% set valid = data.all_temps | select('is_number') | map('float') | list %}
+{{ 'Unknown' if valid | count == 0 else ((valid | sum / (valid | count)) | round(1)) }}`,
       },
       climates
     );

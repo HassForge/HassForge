@@ -12,6 +12,9 @@ import {
   DEFAULT_HEAT_MODE_ATTRIBUTE,
   TemplateSensor,
   InputNumber,
+  ClimateTarget,
+  Provider,
+  DEFAULT_TEMPERATURE_ATTRIBUTE,
 } from "@hassforge/base";
 import { WithSwitchControlledThermostat } from "@hassforge/switch-controlled-thermostat";
 import { WithRoomHeating } from "@hassforge/room-heating";
@@ -23,11 +26,104 @@ import { MushroomDashboard, roomToMushroom } from "@hassforge/mush-room";
 import { WithWebOSTV } from "@hassforge/webostv";
 import { MushroomEntityCard } from "@hassforge/mush-room/src/cards/mushroom-entity-card";
 import {
+  ClimateID,
   EntityRowCard,
+  HAAutomation,
   MiniGraphCard,
+  NumberID,
+  SensorID,
   VerticalStackInCard,
 } from "@hassforge/types";
 import { UtilityMeter } from "@hassforge/base/src/creatables/utility-meter";
+
+interface OffsetTemperatureClimate {
+  offsetTemperatureSensorId: string;
+}
+
+const isOffsetTemperatureCapable = (
+  x: unknown
+): x is OffsetTemperatureClimate =>
+  typeof x === "object" && !!x && !!x["offsetTemperatureSensorId"];
+
+const getTemperatureJinjaString = (
+  id: TemplateSensor["id"] | ClimateTarget["id"],
+  temperatureAttribute?: string
+) =>
+  temperatureAttribute
+    ? `state_attr('${id}', '${temperatureAttribute}')`
+    : `states('${id}')`;
+
+class WithTemperatureOffsetTRVs implements Provider {
+  static readonly id = "tempOffsetTRVs";
+
+  automations?: HAAutomation[] | undefined;
+
+  constructor(private room: Room) {
+    const roomTempSensors = room.sensors.filter(
+      (sensor) => sensor.device_class === "temperature"
+    );
+    if (!roomTempSensors.length) return;
+    const tempOffsetTRVs = room.climates.filter((climate) =>
+      isOffsetTemperatureCapable(climate)
+    );
+    if (!tempOffsetTRVs.length) return;
+
+    const averageRoomTemp = `{% set data = namespace(all_temps=[${roomTempSensors.map(
+      (sensor) => `states('${sensor.id}')`
+    )}]) %}
+{% set valid = data.all_temps | select('is_number') | map('float') | list %}
+{% set avg = ('Unknown' if valid | count == 0 else ((valid | sum / (valid | count)) | round(1))) %}`;
+
+    const climateTemperature = (climate: ClimateTarget) =>
+      `{% set climate_temp = (${getTemperatureJinjaString(
+        climate.id,
+        climate.temperatureAttribute ?? DEFAULT_TEMPERATURE_ATTRIBUTE
+      )} | float) %}`;
+
+    const newOffset = (climate: ClimateTarget & OffsetTemperatureClimate) =>
+      `${averageRoomTemp}
+${climateTemperature(climate)}
+{% set current_offset = (states('${
+        climate.offsetTemperatureSensorId
+      }') | float(0) | round(1)) %}
+{% set base_temp = (climate_temp - current_offset) %}
+{% if avg is number and base_temp is number %}
+  {% set new_offset = ((avg - base_temp) | round(1)) %}
+{% else %}
+  {% set new_offset = 0 %}
+{% endif %}
+{{ new_offset }}`;
+
+    // TODO:
+    // AVG_TEMP = Get the average temperature of all external temp sensors in a room
+    // For each TRV:
+    //    BASE_TEMP = Get the current climate temperature - climate current temp offset
+    //    # This will bring it back to its original temperature
+    //    NEW_OFFSET = AVG_TEMP - BASE_TEMP
+    //    Set the new offset
+
+    this.automations = [
+      new Automation({
+        alias: `Update ${room.name} TRV temperature offsets`,
+        trigger: [
+          Trigger.timePattern({
+            hours: "/1",
+          }),
+        ],
+        action: tempOffsetTRVs.map((trv) =>
+          Action.callService("number.set_value", {
+            data: {
+              value: newOffset(trv),
+            },
+            target: {
+              entity_id: trv.offsetTemperatureSensorId,
+            },
+          })
+        ),
+      }),
+    ];
+  }
+}
 
 const wardrobe = new Room("Wardrobe")
   .addLights({
@@ -42,6 +138,8 @@ const wardrobe = new Room("Wardrobe")
   .addClimates({
     name: "Wardrobe TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_5",
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_11",
   })
   .addAutomations(
     new MotionActivatedAutomation({
@@ -53,7 +151,8 @@ const wardrobe = new Room("Wardrobe")
       },
     })
   )
-  .extend(WithRoomHeating);
+  .extend(WithRoomHeating)
+  .extend(WithTemperatureOffsetTRVs);
 
 const ensuiteShower = new Room("Ensuite Shower")
   .addLights(
@@ -84,6 +183,7 @@ const mainBedroom = new Room("Main Bedroom")
   .addClimates({
     name: "Main Bedroom TRV",
     id: "climate.sonoff_trvzb_thermostat",
+    offsetTemperatureSensorId: "number.sonoff_trvzb_local_temperature_offset",
   })
   .addLights({
     name: "Main Bedroom Lights",
@@ -94,7 +194,7 @@ const mainBedroom = new Room("Main Bedroom")
     id: "switch.legrand_connected_outlet_switch_3",
     device_class: "outlet",
   })
-  .addSensors({
+  .addTemperatureSensors({
     id: "sensor.tz3000_fllyghyj_ts0201_temperature",
     name: "Main Bedroom Temperature Sensor",
     device_class: "temperature",
@@ -141,7 +241,8 @@ const mainBedroom = new Room("Main Bedroom")
       ),
     ],
   })
-  .extend(WithRoomHeating);
+  .extend(WithRoomHeating)
+  .extend(WithTemperatureOffsetTRVs);
 
 const upstairsHallway = new Room("Upstairs Hallway")
   .addSwitches({
@@ -251,18 +352,25 @@ const lounge = new Room("Lounge")
   .addClimates({
     name: "Near Windows TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_6",
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_12",
   })
   .addClimates({
     name: "Corner TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_8",
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_14",
   })
   .addClimates({
     name: "Near Kitchen TRV",
     id: "climate.sonoff_trvzb_thermostat_2",
+    offsetTemperatureSensorId: "number.sonoff_trvzb_local_temperature_offset_2",
   })
   .addClimates({
     name: "Music Room TRV",
     id: "climate.tze200_6rdj8dzm_ts0601",
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_7",
   })
   .addLights({
     id: "light.shellydimmer2_c45bbe56d5c2",
@@ -286,7 +394,8 @@ const lounge = new Room("Lounge")
       id: "media_player.lg_webos_tv_oled65cx6la",
       name: "Lounge TV",
     },
-  });
+  })
+  .extend(WithTemperatureOffsetTRVs);
 
 const kitchen = new Room("Kitchen")
   .addLights(
@@ -318,12 +427,23 @@ const kitchen = new Room("Kitchen")
   .addClimates({
     name: "Kitchen Bifolds TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_3",
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_9",
   })
   .addClimates({
     name: "Kitchen Veranda TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_2",
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_8",
   })
-  .extend(WithRoomHeating);
+  .addClimates({
+    name: "Kitchen Near Oven TRV",
+    id: "climate.near_oven_radiator_thermostat_3",
+    offsetTemperatureSensorId:
+      "number.near_oven_radiator_local_temperature_offset_3",
+  })
+  .extend(WithRoomHeating)
+  .extend(WithTemperatureOffsetTRVs);
 
 const outsideBack = new Room("Back").addLights({
   name: "Patio Lights",
@@ -371,9 +491,25 @@ const tomsOffice = new Room("Toms Office")
     name: "Toms Office Lights",
     id: "switch.toms_office_relay_1",
   })
-  .extend(WithRoomHeating);
+  .addClimates({
+    name: "Toms Office TRV",
+    id: "climate.sonoff_trvzb_thermostat_3",
+    offsetTemperatureSensorId: "number.sonoff_trvzb_local_temperature_offset_3",
+  })
+  .extend(WithRoomHeating)
+  .extend(WithTemperatureOffsetTRVs);
 
 const endBedroom = new Room("End Bedroom").extend(WithRoomHeating);
+
+const spareBedroom = new Room("Spare Bedroom")
+  // .addClimates(
+  //   new GenericThermostatClimate({
+  //     name: "Spare Bedroom Electric",
+  //     heater: "switch.switch_92e_switch_2",
+  //     target_sensor: "sensor.temp_sensor_667_temperature_3",
+  //   })
+  // )
+  .extend(WithRoomHeating);
 
 const datePressedInputBoolean = new InputDateTime({
   name: "Tali Room Date Time Pressed",
@@ -393,6 +529,12 @@ const miasBedroom = new Room("Mias Bedroom")
   .addClimates({
     name: "Mia Bedroom TRV",
     id: "climate.tze200_6rdj8dzm_ts0601_4",
+  })
+  .addClimates({
+    name: "Talis Bedroom TRV",
+    id: "climate.tze200_6rdj8dzm_ts0601_4",
+    offsetTemperatureSensorId:
+      "number.tze200_6rdj8dzm_ts0601_local_temperature_offset_10",
   })
   .addInputDateTime(datePressedInputBoolean)
   // .addAutomations({
@@ -434,7 +576,8 @@ const talisBedroom = new Room("Talis Bedroom")
     name: "Talis Bedroom TRV",
     id: "climate.radiator_thermostat",
   })
-  .extend(WithRoomHeating);
+  .extend(WithRoomHeating)
+  .extend(WithTemperatureOffsetTRVs);
 
 const boilerSwitch = {
   name: "Boiler switch",
@@ -587,11 +730,18 @@ const turnAllOffAutomation = new Automation({
         .flatMap((room) => [
           ...room.lights
             .map(({ id }) => id)
-            .filter((id) => id !== "light.ensuite_shower_light"),
+            .filter(
+              (id) =>
+                id !== "light.ensuite_shower_light" &&
+                id !== "light.shellydimmer2_c45bbe56d5c2"
+            ),
           ...room.switches.map(({ id }) => id),
           ...room.mediaPlayers.map(({ id }) => id),
         ])
-        .map(Action.turnOff)
+        .map(Action.turnOff),
+      Action.turnOn("light.shellydimmer2_c45bbe56d5c2", {
+        brightness: 10,
+      })
     ),
   ],
   trigger: [Trigger.time("05:00:00")],

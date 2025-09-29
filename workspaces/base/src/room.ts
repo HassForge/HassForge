@@ -19,6 +19,10 @@ import merge from "ts-deepmerge";
 import { InputDateTimeTarget } from "./configuration/input-datetime-target";
 import { InputTextTarget } from "./configuration/input-text-target";
 
+
+type Loose<T> = T | (T & { [key: string]: unknown });
+
+
 type PublicInterface<T> = Pick<T, keyof T>;
 
 export type Provider<T extends Record<string, any> = any> =
@@ -219,7 +223,7 @@ export class Room implements BackendProvider<any>, FrontendProvider {
     return this;
   }
 
-  addClimates(...climates: ClimateTarget[]) {
+  addClimates(...climates: Loose<ClimateTarget>[]) {
     this._climates.push(...climates);
     return this;
   }
